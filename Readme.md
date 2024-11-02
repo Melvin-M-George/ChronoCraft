@@ -1,1 +1,1 @@
-# Melomix is an eCommerce Website made by using Node.js
+# "Melomix is an eCommerce website built using Node.js."
