@@ -16,7 +16,28 @@ const pageNotFound = async (req,res)=>{
     }
 }
 
+const loadSignup = async (req,res) => {
+    try {
+        return res.render("signup");
+    } catch (error) {
+        console.log("Sign up page is not loading: ",error);
+        res.status(500).send("Server error")
+    }
+}
+const loadLogin = async (req,res) => {
+    try {
+        return res.render("login");
+    } catch (error) {
+        console.log("Login page is not loading: ",error);
+        res.status(500).send("Server error")
+    }
+}
+
+
+
 module.exports = {
     loadHomepage,
-    pageNotFound
+    pageNotFound,
+    loadSignup,
+    loadLogin,
 }
