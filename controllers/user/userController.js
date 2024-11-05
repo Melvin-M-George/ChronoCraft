@@ -3,15 +3,21 @@ const nodemailer = require("nodemailer")
 const env = require("dotenv").config();
 const bcrypt = require('bcrypt');
 
-const loadHomepage = async (req,res)=>{
+const loadHomepage = async (req, res) => {
     try {
-        console.log("home page")
-        return res.render("home")
+        const user = req.session.user;
+        if (user) {
+            const userData = await User.findOne({ _id: user._id });
+            return res.render("home", { user: userData });
+        } else {
+            return res.render("home", { user: null });  // Explicitly set user to null if not logged in
+        }
     } catch (error) {
         console.log("Home page not found");
-        res.status(500).send("Server error");
+        return res.status(500).send("Server error");
     }
-}
+};
+
 
 const pageNotFound = async (req,res)=>{
     try {
@@ -176,11 +182,27 @@ const login = async (req,res)=>{
             return res.render("login",{message:"Incorrect Password"})
         }
 
-        req.session.user = findUser._id;
+        req.session.user = findUser;
         res.redirect("/");
     } catch (error) {
         console.error("login error",error);
         res.render("login",{message:"Login failed. Please try again."})
+    }
+}
+
+
+const logout = async (req,res)=>{
+    try {
+        req.session.destroy((err)=>{
+            if(err){
+                console.log("Session destruction error",err.message)
+                return res.redirect("/PageNotFound")
+            }
+            return res.redirect("/login")
+        })
+    } catch (error) {
+        console.log("Logout error",error);
+        res.redirect("/PageNotFound");  
     }
 }
 
@@ -194,6 +216,7 @@ module.exports = {
     verifyOtp,
     resendOtp,
     login,
+    logout,
 
     
 }
