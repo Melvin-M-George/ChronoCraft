@@ -29,14 +29,6 @@ const loadSignup = async (req,res) => {
         res.status(500).send("Server error")
     }
 }
-const loadLogin = async (req,res) => {
-    try {
-        return res.render("login");
-    } catch (error) {
-        console.log("Login page is not loading: ",error);
-        res.status(500).send("Server error")
-    }
-}
 
 function generateOtp(){
     return Math.floor(100000 + Math.random()*900000).toString();
@@ -90,7 +82,7 @@ const signup = async (req,res) => {
         req.session.userOtp = otp;
         req.session.userData = {name,phone,email,password};
 
-        res.render("verify-otp");
+        res.render("verify-otp",{message:""});
         console.log("OTP Sent",otp);
 
     } catch (error) {
@@ -160,6 +152,37 @@ const resendOtp = async (req,res) => {
         res.status(500).json({success:false,message:"Internal server error. Please try again"});
     }
 }
+const loadLogin = async (req,res) => {
+    try {
+        return res.render("login",{message:""});    
+    } catch (error) {
+        res.redirect("/PageNotFound");
+    }
+}
+
+const login = async (req,res)=>{
+    try {
+        const {email,password} = req.body;
+        const findUser = await User.findOne({isAdmin:0,email:email});
+        if(!findUser){
+            return res.render("login",{message:"User not found"});
+        }
+        if(findUser.isBlocked){
+            res.render("login",{message:"User is blocked by admin"})
+        }
+
+        const passwordMatch = await bcrypt.compare(password,findUser.password);
+        if(!passwordMatch){
+            return res.render("login",{message:"Incorrect Password"})
+        }
+
+        req.session.user = findUser._id;
+        res.redirect("/");
+    } catch (error) {
+        console.error("login error",error);
+        res.render("login",{message:"Login failed. Please try again."})
+    }
+}
 
 
 module.exports = {
@@ -170,5 +193,7 @@ module.exports = {
     signup,
     verifyOtp,
     resendOtp,
+    login,
+
     
 }
