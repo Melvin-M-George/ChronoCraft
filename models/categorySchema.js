@@ -15,7 +15,7 @@ const categorySchema = new Schema({
         type:Boolean,
         default:true,
     },
-    cateogoryOffer:{
+    categoryOffer:{
         type:Number,
         default:0,
     },
