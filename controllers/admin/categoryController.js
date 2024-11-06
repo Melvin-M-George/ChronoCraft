@@ -105,11 +105,81 @@ const removeCategoryOffer = async (req,res) => {
     }
 }
 
+
+const getListCategory = async (req,res) => {
+    try {
+        let id = req.query.id;
+        await Category.updateOne({_id:id},{$set:{isListed:false}})
+        res.redirect("/admin/category");
+    } catch (error) {
+        res.redirect("/pageerror")
+    }
+}
+
+const getUnlistCategory = async (req,res) => {
+    try {
+        let id = req.query.id;
+        await Category.updateOne({_id:id},{$set:{isListed:true}})
+        res.redirect("/admin/category")
+    } catch (error) {
+        res.redirect("/pageerror")
+    }
+}
+
+const getEditCategory = async (req, res) => {
+    try {
+        const id = req.query.id;
+        const category = await Category.findOne({ _id: id });
+
+        if (!category) {
+            return res.status(404).send("Category not found");
+        }
+
+        res.render("edit-category", { category });
+    } catch (error) {
+        console.error("Error fetching category:", error);
+        res.redirect("/pageerror");
+    }
+};
+
+
+const editCategory = async (req,res) => {
+    try {
+        const id = req.params.id;
+        const {categoryName,description} = req.body;
+        const existingCategory = await Category.findOne({name:categoryName})
+
+        if(existingCategory){
+            return res.status(400).json({error:"Category exists, please choose another name"})
+        }
+
+        const updateCategory = await Category.findByIdAndUpdate(id,{
+            name:categoryName,
+            description:description,    
+        },{new:true});
+
+        if(updateCategory){
+            res.redirect("/admin/category");
+        }else{
+            res.status(404).json({error:"Category not found"})
+        }
+    } catch (error) {
+        res.status(500).json({error:"Internal Server error"})
+    }
+}
+
+
 module.exports = {
     categoryInfo,
     addCategory,
     addCategoryOffer,
     removeCategoryOffer,
+    getListCategory,
+    getUnlistCategory,
+    getEditCategory,
+    editCategory,
+
+
 
 
 
