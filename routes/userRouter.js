@@ -22,7 +22,10 @@ router.get("/google/callback",passport.authenticate("google",{failureRedirect:"/
 router.get("/login",userController.loadLogin);
 router.post("/login",userController.login);
 
-router.get("/logout",userController.logout)
+router.get("/logout",userController.logout);
+
+
+router.get("/productDetails",userController.getProductDetails);
 
 
 module.exports = router;

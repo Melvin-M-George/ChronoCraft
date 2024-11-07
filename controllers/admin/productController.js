@@ -207,54 +207,54 @@ const getEditProduct = async (req,res) => {
 }
 
 
-const editProduct = async (req,res) => {
+const editProduct = async (req, res) => {
     try {
-        
         const id = req.params.id;
-        const product = await Product.findOne({_id:id});
+        const product = await Product.findOne({ _id: id });
         const data = req.body;
+
+        // Check if a product with the same name already exists, excluding the current product
         const existingProduct = await Product.findOne({
-            productName:data.productName,
-            _id:{$ne:id},
-        })
+            productName: data.productName,
+            _id: { $ne: id },
+        });
 
-        if(existingProduct){
-            return res.status(400).json({error:"Product with this name already exists. Please try with another name"});
+        if (existingProduct) {
+            return res.status(400).json({ error: "Product with this name already exists. Please try with another name" });
         }
 
-        const images = [];
-        
-        if(req.files && req.files.length > 0){
-            for(let i=0;i<req.files.length;i++){
-                images.push(req.files[i].filename); 
-            }
-        }
+        // Collect the new image filenames
+        const images = req.files && req.files.length > 0 ? req.files.map(file => file.filename) : [];
+    
 
+        // Define fields to update
         const updateFields = {
-            productName:data.productName,
-            description:data.description,
-            brand:data.brand,
-            category:product.category,
-            regularPrice:data.regularPrice,
-            salePrice:data.salePrice,
-            quantity:data.quantity,
-            size:data.size,
-            color:data.color,
+            productName: data.productName,
+            description: data.description,
+            brand: data.brand,
+            category: product.category,
+            regularPrice: data.regularPrice,
+            salePrice: data.salePrice,
+            quantity: data.quantity,
+            size: data.size,
+            color: data.color,
+        };
 
+        // Add images to `productImages` array if there are new images
+        if (images.length > 0) {
+            updateFields.$push = { productImages: { $each: images } };
         }
 
-        if(req.files.length > 0){
-            updateFields.$push = {productImage:{$each:images}};
-        }
-
-        await Product.findByIdAndUpdate(id,updateFields,{new:true});
+        // Update the product with the specified fields
+        await Product.findByIdAndUpdate(id, updateFields, { new: true });
         res.redirect("/admin/products");
 
     } catch (error) {
         console.error(error);
         res.redirect("/admin/pageerror");
     }
-}
+};
+
 
 
 const deleteSingleImage = async (req,res) => {

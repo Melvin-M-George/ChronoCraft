@@ -15,6 +15,7 @@ const loadHomepage = async (req, res) => {
             }
         )
 
+
         productData.sort((a,b)=>new Date(b.createdOn)-new Date(a.createdOn));
         productData = productData.slice(0,4);
 
@@ -220,6 +221,20 @@ const logout = async (req,res)=>{
     }
 }
 
+const getProductDetails = async (req,res) => {
+    try {
+        const id = req.query.id;
+        const productData = await Product.findById(id);  
+
+        if(productData){
+            return res.render("productDetails",{data:productData})
+        }
+
+    } catch (error) {
+        console.log("Error loading Product details page",error);
+    }
+}
+
 
 module.exports = {
     loadHomepage,
@@ -231,6 +246,7 @@ module.exports = {
     resendOtp,
     login,
     logout,
+    getProductDetails,
 
     
 }
