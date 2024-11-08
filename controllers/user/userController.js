@@ -224,11 +224,15 @@ const logout = async (req,res)=>{
 const getProductDetails = async (req,res) => {
     try {
         const id = req.query.id;
-        const productData = await Product.findById(id);  
+        const userId = req.session.user;
 
+        const productData = await Product.findById(id);  
+        const userData = await User.findById(userId);
         if(productData){
-            return res.render("productDetails",{data:productData})
+            return res.render("productDetails",{data:productData,user:userData})
         }
+
+        
 
     } catch (error) {
         console.log("Error loading Product details page",error);

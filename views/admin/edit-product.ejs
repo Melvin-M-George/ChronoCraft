@@ -61,15 +61,15 @@
                            </div>
                            <div class="mb-4">
                                <label class="form-label">Full description</label>
-                               <input name="descriptionData" value="<%=product.description %>"  class="form-control border"
-                                   rows="4">
+                               <textarea  name="descriptionData"  class="form-control border"
+                                   rows="4"><%=product.description %></textarea>
                                    <div id="description-error" class="error-message"></div>
                            </div>
                            <div class="row">
                                <div class="col-lg-4">
                                    <div class="mb-4">
                                        <label class="form-label">Regular price</label>
-                                       <input placeholder="$" name="regularPrice" type="text"
+                                       <input placeholder="₹" name="regularPrice" type="text"
                                            value="<%=product.regularPrice %>" class="form-control border">
                                            <div id="regularPrice-error" class="error-message"></div>
                                    </div>
@@ -77,7 +77,7 @@
                                <div class="col-lg-4">
                                    <div class="mb-4">
                                        <label class="form-label">Sale price</label>
-                                       <input name="salePrice" type="text" value="<%=product.salePrice %>"
+                                       <input  placeholder="₹" name="salePrice" type="text" value="<%=product.salePrice %>"
                                            class="form-control border">
                                    </div>
                                    <div id="salePrice-error" class="error-message"></div>

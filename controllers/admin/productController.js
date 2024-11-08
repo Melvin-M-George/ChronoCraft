@@ -35,12 +35,12 @@ const addProducts = async (req,res) => {
             if (req.files && req.files.length > 0) {
                 for (let i = 0; i < req.files.length; i++) {
                     const originalImagePath = req.files[i].path;
-                    // Generate a unique path for the resized image
+                    
                     const resizedImagePath = path.join("public", "uploads", "re-image", `resized-${req.files[i].filename}`);
                     
                     await sharp(originalImagePath)
                         .resize({ width: 440, height: 440 })
-                        .toFile(resizedImagePath); // Save to the new resized image path
+                        .toFile(resizedImagePath); 
                     
                     images.push(`resized-${req.files[i].filename}`);
                 }
@@ -213,7 +213,6 @@ const editProduct = async (req, res) => {
         const product = await Product.findOne({ _id: id });
         const data = req.body;
 
-        // Check if a product with the same name already exists, excluding the current product
         const existingProduct = await Product.findOne({
             productName: data.productName,
             _id: { $ne: id },
@@ -223,14 +222,12 @@ const editProduct = async (req, res) => {
             return res.status(400).json({ error: "Product with this name already exists. Please try with another name" });
         }
 
-        // Collect the new image filenames
         const images = req.files && req.files.length > 0 ? req.files.map(file => file.filename) : [];
     
 
-        // Define fields to update
         const updateFields = {
             productName: data.productName,
-            description: data.description,
+            description: data.descriptionData,
             brand: data.brand,
             category: product.category,
             regularPrice: data.regularPrice,
@@ -240,12 +237,10 @@ const editProduct = async (req, res) => {
             color: data.color,
         };
 
-        // Add images to `productImages` array if there are new images
         if (images.length > 0) {
             updateFields.$push = { productImages: { $each: images } };
         }
 
-        // Update the product with the specified fields
         await Product.findByIdAndUpdate(id, updateFields, { new: true });
         res.redirect("/admin/products");
 
