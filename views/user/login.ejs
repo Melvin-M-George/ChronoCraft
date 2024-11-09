@@ -1,60 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .login-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 40px 0;
+        }
 
+        .login-wrap {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
 
-<%-include("../partials/user/header")%>
+        .heading_s1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-        <section class="pt-150 pb-150">
-            <div class="container">
-                <div class="row justify-content-center"> <!-- Center the row -->
-                    <div class="col-lg-5">
-                        <div class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
-                            <div class="padding_eight_all bg-white">
-                                <div class="heading_s1">
-                                    <h3 class="mb-30">Login</h3>
-                                    <%if(locals.message && message.length > 0){
-                                        %>
-                                       <div class="alert alert-danger text-center"> <%= message%></div>
-                                        <%
-                                    }%>
-                                </div>
-                                
-                                <form method="post">
-                                    <div class="form-group">
-                                        <input type="text" required="" name="email" placeholder="Your Email">
-                                    </div>
-                                    <div class="form-group">
-                                        <input required="" type="password" name="password" placeholder="Password">
-                                    </div>
-                                    <div class="login_footer form-group">
-                                        <div class="chek-form">
-                                            <div class="custome-checkbox">
-                                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
-                                                <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
-                                            </div>
-                                        </div>
-                                        <a class="text-muted" href="#">Forgot password?</a>
-                                    </div>
-                                    <div class="form-group text-center">
-                                        <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
-                                    </div>
-                                    <div class="divider-text-center mt-15 mb-15">
-                                        <span> or</span>
-                                    </div>
+        .heading_s1 h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
 
-                                    <ul class="btn-login list_none text-center mb-15" style="list-style-type: none;">
-                                       
-                                        <li><a href="/auth/google" class="btn btn-google hover-up" >Login With Google</a></li>
-                                    </ul>
-                            
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-                                    <div class="text-muted text-center">Don't have an account? <a href="/signup">Sign Up now</a></div>
-                                </form>
-                            </div>
+        .form-control {
+            height: 50px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+
+        .login_footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .custome-checkbox {
+            display: flex;
+            align-items: center;
+        }
+
+        .custome-checkbox input {
+            margin-right: 8px;
+        }
+
+        .custome-checkbox label {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .btn-fill-out {
+            background-color: #00897b;
+            color: white;
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-fill-out:hover {
+            background-color: #00796b;
+        }
+
+        .divider-text-center {
+            text-align: center;
+            position: relative;
+            margin: 25px 0;
+        }
+
+        .divider-text-center::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider-text-center::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider-text-center span {
+            background: white;
+            padding: 0 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .btn-google {
+            background-color: #ea4335;
+            color: white;
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .btn-google:hover {
+            background-color: #d62516;
+            color: white;
+        }
+
+        .text-muted {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .text-muted a {
+            color: #00897b;
+            text-decoration: none;
+        }
+
+        .text-muted a:hover {
+            color: #00796b;
+        }
+
+        .alert {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="login-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <div class="login-wrap">
+                        <div class="heading_s1">
+                            <h3>Login</h3>
+                            <%if(locals.message && message.length > 0){
+                                %>
+                               <div class="alert alert-danger text-center"> <%= message%></div>
+                                <%
+                            }%>
                         </div>
+                        
+                        
+                        <form method="post">
+                            <div class="form-group">
+                                <input type="text" class="form-control" required name="email" placeholder="Your Email">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" required type="password" name="password" placeholder="Password">
+                            </div>
+                            <div class="login_footer form-group">
+                                
+                                <a class="text-muted" href="#">Forgot password?</a>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-fill-out" name="login">Log in</button>
+                            </div>
+                            <div class="divider-text-center">
+                                <span>or</span>
+                            </div>
+                            <a href="/auth/google" class="btn-google">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                                </svg>
+                                Login With Google
+                            </a>
+                            <div class="text-muted">
+                                Don't have an account? <a href="/signup">Sign Up now</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </section>
-        
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 
 
-   
+       
