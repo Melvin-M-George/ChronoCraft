@@ -77,6 +77,70 @@
     <script src="/Melomix-backend/assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/Melomix-backend/assets/js/main.js" type="text/javascript"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const emailInput = form.querySelector("input[name='email']");
+            const passwordInput = form.querySelector("input[name='password']");
+            
+            emailInput.addEventListener("input", function () {
+                validateEmail();
+            });
+            
+            
+            passwordInput.addEventListener("input", function () {
+                validatePassword();
+            });
+    
+            form.addEventListener("submit", function (event) {
+                if (!validateEmail() || !validatePassword()) {
+                    event.preventDefault();
+                }
+            });
+    
+            
+            function validateEmail() {
+                clearError(emailInput); 
+                const email = emailInput.value.trim();
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email || !emailPattern.test(email)) {
+                    showError(emailInput, "Please enter a valid email.");
+                    return false;
+                }
+                return true;
+            }
+    
+            
+            function validatePassword() {
+                clearError(passwordInput); 
+                const password = passwordInput.value.trim();
+                if (!password) {
+                    showError(passwordInput, "Please enter your password.");
+                    return false;
+                }
+                return true;
+            }
+    
+            function showError(input, message) {
+                const errorElement = document.createElement("div");
+                errorElement.className = "error";
+                errorElement.style.color = "red";
+                errorElement.style.fontSize = "small";
+                errorElement.style.marginTop = "5px";
+                errorElement.textContent = message;
+                input.parentNode.appendChild(errorElement);
+            }
+    
+           
+            function clearError(input) {
+                const error = input.parentNode.querySelector(".error");
+                if (error) {
+                    error.remove();
+                }
+            }
+        });
+    </script>
+    
 </body>
 
 </html>
