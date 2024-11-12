@@ -44,7 +44,14 @@ const sendVerificationEmail = async (email,otp) => {
     }
 }
 
-
+const securePassword = async (password) => {
+    try {
+        const passwordHash = await bcrypt.hash(password,10);
+        return passwordHash;
+    } catch (error) {
+        
+    }
+}
 
 const getForgotPassPage = async (req,res) => {
     try {
@@ -83,9 +90,6 @@ const forgotEmailValid = async (req,res) => {
 const verifyForgotPassOtp = async (req,res) => {
     try {
         const enteredOtp = req.body.otp;
-        console.log("Entered OTP:", enteredOtp);
-        console.log("Session OTP:", req.session.userOtp);
-
         if(enteredOtp === req.session.userOtp){
             res.json({success:true,redirectUrl:"/reset-password"})
         }else{
@@ -121,12 +125,32 @@ const resendOtp = async (req,res) => {
     }
 }
 
+const postNewPassword = async (req,res) => {
+    try {
+        const {newPass1, newPass2} = req.body;
+        const email = req.session.email;
+        if(newPass1 === newPass2){
+            const passwordHash = await securePassword(newPass1);
+            await User.updateOne(
+                {email:email},
+                {$set:{password:passwordHash}}
+            )
+            res.redirect("/login");
+        }else{
+            res.render("reset-password",{message:"Password do not match"})
+        }
+    } catch (error) {
+        res.redirect("/pageNotFound")
+    }
+}
+
+
 module.exports = {
     getForgotPassPage,
     forgotEmailValid,
     verifyForgotPassOtp,
     getResetPassPage,
     resendOtp,
-
+    postNewPassword,
 
 }
