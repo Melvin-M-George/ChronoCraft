@@ -15,50 +15,192 @@
     <link rel="shortcut icon" type="image/x-icon" href="/Melomix-frontend/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="/Melomix-frontend/assets/css/main.css?v=3.4">
-    
+
     <style>
-        .dropdown{
+        /* General Header Styling */
+        .header {
+            background-color: #f8f8f8;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 500;
+        }
+
+        /* Header Middle Section */
+        .header-middle {
+            padding: 15px 0;
+        }
+
+        /* Centering the Navigation Links */
+        .header-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 30px;
+        }
+
+        .main-menu ul li a {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 10px;
+            transition: color 0.3s ease;
+        }
+
+        /* Hover effect for nav links */
+        .main-menu ul li a:hover {
+            color: #ff6a00;
+        }
+
+        /* Center alignment for navigation links */
+        .main-menu {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Dropdown Menu */
+
+        .dropdown {
             position: relative;
             display: inline-block;
         }
-        .dropdown-content{
+
+        .dropdown-content {
             display: none;
             position: absolute;
-            background-color: white;
+            background-color: #ffffff;
             min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index : 1000;
-            right:0;
-
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 1000;
+            right: 0;
         }
 
-        .dropdown-content a{
-            color:black;
-            padding:12px 16px;
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
             text-decoration: none;
             display: block;
-            width: 100%;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
         }
-        .dropdown-content a:hover{
+
+        /* Hover effect for dropdown items */
+        .dropdown-content a:hover {
             background-color: #f1f1f1;
         }
-        .dropdown:hover .dropdown-content{
+
+        .dropdown:hover .dropdown-content {
             display: block;
         }
-        .header{
-            position: relative;
-            z-index:500;
+
+        /* Adjust spacing and positioning if needed */
+        .main-menu .dropdown .dropdown-content {
+            top: 100%;
+            left: 0;
         }
+
+
+        /* Styling for Logo */
+        .logo img {
+            max-height: 50px;
+        }
+
+        /* Action Icons (Wishlist, Cart) */
+        .header-action-icon-2 {
+            margin-left: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .header-action-icon-2 img {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Hover effect for icons */
+        .header-action-icon-2:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Styling for Search Bar */
+        .search-style-2 input {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        /* Responsive Styling */
+        @media (max-width: 991px) {
+            .header-nav {
+                display: none;
+            }
+
+            .search-style-2 input {
+                width: 100%;
+            }
+        }
+
+        /* General Button Styling */
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .auth-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Log In Button Style */
+        .login-button {
+            background-color: #00897b;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .login-button:hover {
+            background-color: #00796b;
+        }
+
+        /* Sign Up Button Style */
+        .signup-button {
+            background-color: #00897b;
+            color: white;
+        }
+
+        .signup-button:hover {
+            background-color: #00796b;
+        }
+        
     </style>
-    
+
+
 </head>
 
 <body>
     <!-- Quick view -->
-   
-  
-    
-    <header class="header-area header-style-1 header-height-2"> 
+
+
+
+    <header class="header-area header-style-1 header-height-2">
         <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
             <div class="container">
                 <div class="header-wrap">
@@ -67,41 +209,48 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="#">   
+                            <form action="#">
                                 <input type="text" placeholder="Search for items...">
                             </form>
                         </div>
                         <div class="header-action-right">
                             <% if (locals.user) { %>
                                 <div class="dropdown">
-                                    <a href="#" class="sign-in-link"><%= locals.user.name %></a>
+                                    <a href="#" class="sign-in-link">
+                                        <%= locals.user.name %>
+                                    </a>
                                     <div class="dropdown-content">
                                         <a href="/userProfile">Profile</a>
                                         <a href="/logout">Logout</a>
                                     </div>
                                 </div>
-                            <% } else { %>
-                                <li><i class="fi-rs-user"></i><a href="/login">Log In</a></li>
-                                <li><i class="fi-rs-user"></i><a href="/signup">Sign Up</a></li>
-                            <% } %>
-                            
-                            <div class="header-action-2">
-                                
+                                <% } else { %>
+                                    <button class="auth-button login-button" onclick="window.location.href='/login'">Log
+                                        In</button>
+                                    <button class="auth-button signup-button"
+                                        onclick="window.location.href='/signup'">Sign Up</button>
 
-                                <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
-                                        <img class="svgInject" alt="Evara" src="/Melomix-frontend/assets/imgs/theme/icons/icon-heart.svg">
-                                        
-                                    </a>
-                                </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="shop-cart.html">
-                                        <img alt="Evara" src="/Melomix-frontend/assets/imgs/theme/icons/icon-cart.svg">
-                                    
-                                    </a>
-                                    
-                                </div>
-                            </div>
+                                    <% } %>
+
+                                        <div class="header-action-2">
+
+
+                                            <div class="header-action-icon-2">
+                                                <a href="shop-wishlist.html">
+                                                    <img class="svgInject" alt="Evara"
+                                                        src="/Melomix-frontend/assets/imgs/theme/icons/icon-heart.svg">
+
+                                                </a>
+                                            </div>
+                                            <div class="header-action-icon-2">
+                                                <a class="mini-cart-icon" href="shop-cart.html">
+                                                    <img alt="Evara"
+                                                        src="/Melomix-frontend/assets/imgs/theme/icons/icon-cart.svg">
+
+                                                </a>
+
+                                            </div>
+                                        </div>
                         </div>
                     </div>
                 </div>
@@ -122,12 +271,12 @@
                                     <li><a href="shop-grid-right.html">Shop <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="shop-grid-right.html">Categories</a></li>
-                                            <li><a href="shop-grid-left.html">Brands</a></li>                                                                               
+                                            <li><a href="shop-grid-left.html">Brands</a></li>
                                         </ul>
                                     </li>
                                     <li>
                                         <a href="page-about.html">About</a>
-                                    </li>                                                              
+                                    </li>
                                     <li>
                                         <a href="page-contact.html">Contact</a>
                                     </li>
@@ -135,8 +284,8 @@
                             </nav>
                         </div>
                     </div>
-                    
-                    
+
+
                 </div>
             </div>
         </div>
