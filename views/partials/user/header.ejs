@@ -15,9 +15,10 @@
     <link rel="shortcut icon" type="image/x-icon" href="/Melomix-frontend/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="/Melomix-frontend/assets/css/main.css?v=3.4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
     <style>
-        /* General Header Styling */
         .header {
             background-color: #f8f8f8;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -25,16 +26,8 @@
             z-index: 500;
         }
 
-        /* Header Middle Section */
         .header-middle {
             padding: 15px 0;
-        }
-
-        /* Centering the Navigation Links */
-        .header-nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .main-menu ul {
@@ -51,22 +44,22 @@
             color: #333;
             text-transform: uppercase;
             text-decoration: none;
-            padding: 10px;
+            padding: 8px;
             transition: color 0.3s ease;
         }
 
-        /* Hover effect for nav links */
+
         .main-menu ul li a:hover {
             color: #ff6a00;
         }
 
-        /* Center alignment for navigation links */
+
         .main-menu {
             text-align: center;
             flex-grow: 1;
         }
 
-        /* Dropdown Menu */
+
 
         .dropdown {
             position: relative;
@@ -94,7 +87,7 @@
             transition: background-color 0.3s ease;
         }
 
-        /* Hover effect for dropdown items */
+
         .dropdown-content a:hover {
             background-color: #f1f1f1;
         }
@@ -103,19 +96,19 @@
             display: block;
         }
 
-        /* Adjust spacing and positioning if needed */
+
         .main-menu .dropdown .dropdown-content {
             top: 100%;
             left: 0;
         }
 
 
-        /* Styling for Logo */
+
         .logo img {
             max-height: 50px;
         }
 
-        /* Action Icons (Wishlist, Cart) */
+
         .header-action-icon-2 {
             margin-left: 15px;
             position: relative;
@@ -128,12 +121,12 @@
             transition: transform 0.3s ease;
         }
 
-        /* Hover effect for icons */
+
         .header-action-icon-2:hover img {
             transform: scale(1.1);
         }
 
-        /* Styling for Search Bar */
+
         .search-style-2 input {
             padding: 8px 15px;
             border-radius: 20px;
@@ -142,7 +135,7 @@
             max-width: 300px;
         }
 
-        /* Responsive Styling */
+
         @media (max-width: 991px) {
             .header-nav {
                 display: none;
@@ -153,7 +146,7 @@
             }
         }
 
-        /* General Button Styling */
+
         .auth-buttons {
             display: flex;
             gap: 10px;
@@ -189,7 +182,19 @@
         .signup-button:hover {
             background-color: #00796b;
         }
-        
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+        }
+
+        .username {
+            font-size: 16px;
+            font-weight: 600;
+            color: #c63939;
+        }
     </style>
 
 
@@ -197,8 +202,6 @@
 
 <body>
     <!-- Quick view -->
-
-
 
     <header class="header-area header-style-1 header-height-2">
         <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
@@ -216,9 +219,19 @@
                         <div class="header-action-right">
                             <% if (locals.user) { %>
                                 <div class="dropdown">
-                                    <a href="#" class="sign-in-link">
-                                        <%= locals.user.name %>
-                                    </a>
+
+                                    <div class="user-info">
+                                        <i class="fa-solid fa-circle-user"></i>
+                                        <span class="username"><a href="#" class="sign-in-link">
+                                                <%= locals.user.name %>
+                                            </a></span>
+                                    </div>
+
+
+
+
+
+
                                     <div class="dropdown-content">
                                         <a href="/userProfile">Profile</a>
                                         <a href="/logout">Logout</a>
@@ -250,6 +263,10 @@
                                                 </a>
 
                                             </div>
+                                            <div>
+                                                <a href=""><i class="fa-solid fa-wallet"></i></a>
+                                            </div>
+
                                         </div>
                         </div>
                     </div>

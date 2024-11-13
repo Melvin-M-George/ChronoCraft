@@ -144,6 +144,19 @@ const postNewPassword = async (req,res) => {
     }
 }
 
+const userProfile = async (req,res) => {
+    try {
+        const userId = req.session.user;
+        const userData = await User.findById(userId);
+        res.render('profile',{
+            user:userData,
+        })
+    } catch (error) {
+        console.error("Error retreiving profile data",error);
+        res.redirect("/pageNotFound")
+    }
+}
+
 
 module.exports = {
     getForgotPassPage,
@@ -152,5 +165,7 @@ module.exports = {
     getResetPassPage,
     resendOtp,
     postNewPassword,
+    userProfile,
+
 
 }
