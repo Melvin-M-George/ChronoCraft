@@ -3,7 +3,8 @@ const router = express.Router();
 const passport = require('passport');
 const userController = require("../controllers/user/userController");
 const profileController = require("../controllers/user/profileController"); 
-const {userAuth, adminAuth} = require("../middlewares/auth")
+const {userAuth, adminAuth} = require("../middlewares/auth");
+const cartController = require("../controllers/user/cartController");
 
 
 //Error management
@@ -45,7 +46,8 @@ router.get("/editAddress",userAuth,profileController.editAddress);
 router.post("/editAddress",userAuth,profileController.postEditAddress);
 router.get("/deleteAddress",userAuth,profileController.deleteAddress);
 
-
+//cart management
+router.get("/cart",cartController.getCart);
 
 
 
