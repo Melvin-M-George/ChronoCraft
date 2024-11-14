@@ -1,6 +1,8 @@
 <%- include("../../views/partials/user/header") %>
 
-
+    <style>
+        
+    </style>
     <main class="main">
         <!-- breadcrumbs -->
         <div class="page-header breadcrumb-wrap">
@@ -8,7 +10,7 @@
                 <div class="breadcrumb">
                     <a href="/" rel="nofollow">Home</a>
                     <span></span> Shop
-                    <span></span> Your Cart
+                    <span></span> Cart
                 </div>
             </div>
         </div>
@@ -29,81 +31,69 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% if(cart){ %>
-                                        <% for(let i=0;i<cart.items.length;i++){ %>
+                                    <% if(cart && cart.items.length>0){ %>
+                                        <% for(let i=0;i<products.length;i++){ %>
                                             <tr>
-                                                <td class="image product-thumbnail"><img src="/Melomix-frontend/assets/imgs/shop/product-1-2.jpg" alt="#"></td>
-                                                <td class="product-des product-name">
-                                                    <h5 class="product-name"><a href="shop-product-right.html"><%=cart.items[i].productId.name%></a></h5>
-                                                    <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus.
-                                                    </p>
+                                                <td class="image product-thumbnail">
+                                                    <img src="/uploads/re-image/<%= products[i].productId.productImages[0] %>"
+                                                        alt="#">
                                                 </td>
-                                                <td class="price" data-title="Price"><span>$65.00 </span></td>
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name">
+                                                        <span>
+                                                            <%= products[i].productId.productName %>
+                                                        </span>
+                                                        <a href=""></a>
+                                                    </h5>
+                                                </td>
+
+                                                <td class="price" data-title="Price">
+                                                    <span>₹<%= products[i].productId.salePrice %></span>
+                                                </td>
+
                                                 <td class="text-center" data-title="Stock">
-                                                    <div class="detail-qty border radius  m-auto">
-                                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                        <span class="qty-val">1</span>
-                                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                    <div class="detail-qty border radius m-auto">
+                                                        <a href="javascript:void(0);" class="qty-down"
+                                                            onclick="updateQuantity('<%= products[i].productId._id %>', -1, 5)">
+                                                            <i class="fi-rs-angle-small-down"></i>
+                                                        </a>
+                                                        <input readonly class="qty-val"
+                                                            id="qty-<%= products[i].productId._id %>"
+                                                            value="<%= products[i].quantity %>">
+                                                        <a href="javascript:void(0);" class="qty-up"
+                                                            onclick="updateQuantity('<%= products[i].productId._id %>', 1, 5)">
+                                                            <i class="fi-rs-angle-small-up"></i>
+                                                        </a>
                                                     </div>
                                                 </td>
+
                                                 <td class="text-right" data-title="Cart">
-                                                    <span>$65.00 </span>
+                                                    <span id="totalPrice-<%= products[i].productId._id %>">₹<%=
+                                                            products[i].totalPrice %></span>
                                                 </td>
-                                                <td class="action" data-title="Remove"><a href="#" class="text-muted"><i class="fi-rs-trash"></i></a></td>
+
+
+                                                <td class="action" data-title="Remove">
+                                                    <a href="javascript:void(0);"
+                                                        onclick="confirmRemoveProduct('<%= products[i].productId._id %>')"
+                                                        class="text-muted">
+                                                        <i class="fi-rs-trash"></i>
+                                                    </a>
+                                                </td>
+
                                             </tr>
                                             <% } %>
-                                    <% } %>
+                                                <% } %>
                                 </tbody>
                             </table>
                         </div>
                         <div class="cart-action text-end">
-                            <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a>
-                            <a class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+                            
+                            <a href="/" class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
                         </div>
                         <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
                         <div class="row mb-50">
-                            <div class="col-lg-6 col-md-12">
-                                <div class="heading_s1 mb-3">
-                                    <h4>Calculate Shipping</h4>
-                                </div>
-                                <p class="mt-15 mb-30">Flat rate: <span class="font-xl text-brand fw-900">5%</span></p>
-                                <form class="field_form shipping_calculator">
-                                    <div class="form-row row">
-                                        <div class="form-group col-lg-6">
-                                            <input required="required" placeholder="State / Country" name="name" type="text">
-                                        </div>
-                                        <div class="form-group col-lg-6">
-                                            <input required="required" placeholder="PostCode / ZIP" name="name" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-lg-12">
-                                            <button class="btn  btn-sm"><i class="fi-rs-shuffle mr-10"></i>Update</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <div class="mb-30 mt-50">
-                                    <div class="heading_s1 mb-3">
-                                        <h4>Apply Coupon</h4>
-                                    </div>
-                                    <div class="total-amount">
-                                        <div class="left">
-                                            <div class="coupon">
-                                                <form action="#" target="_blank">
-                                                    <div class="form-row row justify-content-center">
-                                                        <div class="form-group col-lg-6">
-                                                            <input class="font-medium" name="Coupon" placeholder="Enter Your Coupon">
-                                                        </div>
-                                                        <div class="form-group col-lg-6">
-                                                            <button class="btn  btn-sm"><i class="fi-rs-label mr-10"></i>Apply</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="col-lg-6 col-md-12">
                                 <div class="border p-md-4 p-30 border-radius cart-totals">
                                     <div class="heading_s1 mb-3">
@@ -113,21 +103,16 @@
                                         <table class="table">
                                             <tbody>
                                                 <tr>
-                                                    <td class="cart_total_label">Cart Subtotal</td>
-                                                    <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">$240.00</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="cart_total_label">Shipping</td>
-                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
-                                                </tr>
-                                                <tr>
                                                     <td class="cart_total_label">Total</td>
-                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">$240.00</span></strong></td>
+                                                    <td class="cart_total_amount"><strong><span
+                                                                class="font-xl fw-900 text-brand">₹<%= totalAmount.toLocaleString() %></span></strong>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                                    <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To
+                                        CheckOut</a>
                                 </div>
                             </div>
                         </div>
@@ -136,6 +121,88 @@
             </div>
         </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmRemoveProduct(productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to remove this product from your cart?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to the remove-from-cart route with the product ID as a query parameter
+                    window.location.href = `/removeFromCart?id=${productId}`;
+                }
+            });
+        }
+
+        async function updateQuantity(productId, change, maxStock) {
+    const quantityElement = document.getElementById(`qty-${productId}`);
+    const totalPriceElement = document.getElementById(`totalPrice-${productId}`);
     
+    // Parse quantity as an integer and handle cases where it might not be a number
+    let quantity = parseInt(quantityElement.value) || 0;
+    const newQuantity = quantity + change;
+
+    console.log('Current quantity:', quantity);
+    console.log('Change:', change);
+    console.log('New quantity:', newQuantity);
+
+    // Check if the new quantity is within valid range
+    if (newQuantity < 1) {
+        Swal.fire({
+            icon: "warning",
+            title: "Minimum quantity reached",
+            text: "The minimum quantity is 1"
+        });
+        return;
+    } else if (newQuantity > maxStock) {
+        Swal.fire({
+            icon: "warning",
+            title: "Maximum quantity reached",
+            text: `The maximum quantity available is ${maxStock}`
+        });
+        return;
+    }
+
+    // Update the quantity in the UI
+    quantityElement.value = newQuantity; // Set new quantity in the input
+
+    // Call backend to update quantity in the cart and fetch new total price
+    try {
+        const response = await fetch(`/updateQuantity`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId, quantity: newQuantity }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            const updatedTotalPrice = data.newTotalPrice; // Get new total price from backend response
+            totalPriceElement.innerText = `₹${updatedTotalPrice}`; // Update total price display
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Update failed",
+                text: "Error updating cart."
+            });
+        }
+    } catch (error) {
+        console.error('Error during fetch request:', error);
+    }
+}
+
+
+    </script>
+
+
+
 
     <%- include("../../views/partials/user/footer") %>

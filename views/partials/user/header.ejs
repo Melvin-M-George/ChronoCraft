@@ -12,12 +12,12 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/Melomix-frontend/assets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="/Chronocraft-frontend/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="./user/css/maind134.css">
-    <link rel="stylesheet" href="/Melomix-frontend/assets/css/main.css?v=3.4">
+    <link rel="stylesheet" href="/Chronocraft-frontend/assets/css/main.css?v=3.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <style>
         .header {
@@ -26,6 +26,9 @@
             position: relative;
             z-index: 500;
         }
+
+
+
 
         .header-middle {
             padding: 15px 0;
@@ -134,7 +137,10 @@
             border: 1px solid #ddd;
             width: 100%;
             max-width: 300px;
+            
         }
+
+        
 
 
         @media (max-width: 991px) {
@@ -188,6 +194,14 @@
             display: flex;
             align-items: center;
             gap: 7px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 8px;
+            transition: color 0.6s ease;
+
 
         }
 
@@ -195,6 +209,19 @@
             font-size: 16px;
             font-weight: 600;
             color: #c63939;
+        }
+
+        .logo {
+            width: auto !important;
+            height: auto !important;
+
+        }
+
+        .logo img {
+            max-width: none !important;
+            max-height: none !important;
+           
+            
         }
     </style>
 
@@ -209,7 +236,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="/"><img src="/Melomix-frontend/assets/imgs/theme/logo.svg" alt="logo"></a>
+                        <a href="/"><img src="/Images/Chronocraft/logo-transparent-png.png" alt="logo"></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -252,14 +279,14 @@
                                             <div class="header-action-icon-2">
                                                 <a href="shop-wishlist.html">
                                                     <img class="svgInject" alt="Evara"
-                                                        src="/Melomix-frontend/assets/imgs/theme/icons/icon-heart.svg">
+                                                        src="/Chronocraft-frontend/assets/imgs/theme/icons/icon-heart.svg">
 
                                                 </a>
                                             </div>
                                             <div class="header-action-icon-2">
                                                 <a class="mini-cart-icon" href="/cart">
                                                     <img alt="Evara"
-                                                        src="/Melomix-frontend/assets/imgs/theme/icons/icon-cart.svg">
+                                                        src="/Chronocraft-frontend/assets/imgs/theme/icons/icon-cart.svg">
 
                                                 </a>
 
@@ -278,7 +305,7 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="/"><img src="/Melomix-frontend/assets/imgs/theme/logo.svg" alt="logo"></a>
+                        <a href="/"><img src="/Chronocraft-frontend/assets/imgs/theme/logo.svg" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
@@ -290,6 +317,7 @@
                                         <ul class="sub-menu">
                                             <li><a href="shop-grid-right.html">Categories</a></li>
                                             <li><a href="shop-grid-left.html">Brands</a></li>
+                                            <li><a href="/cart">Cart</a></li>
                                         </ul>
                                     </li>
                                     <li>
