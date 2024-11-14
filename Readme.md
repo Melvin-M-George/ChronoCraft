@@ -1,1 +1,1 @@
-# Melomix is an eCommerce website built using Node.js.
+# ChronoCraft is an eCommerce website built using Node.js.
