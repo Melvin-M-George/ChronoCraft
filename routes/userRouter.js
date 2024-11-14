@@ -5,7 +5,7 @@ const userController = require("../controllers/user/userController");
 const profileController = require("../controllers/user/profileController"); 
 const {userAuth, adminAuth} = require("../middlewares/auth");
 const cartController = require("../controllers/user/cartController");
-
+const checkoutController = require("../controllers/user/checkoutController");
 
 //Error management
 router.get("/pageNotFound",userController.pageNotFound)
@@ -26,6 +26,7 @@ router.post("/login",userController.login);
 router.get("/",userController.loadHomepage);
 router.get("/logout",userController.logout);
 router.get("/productDetails",userController.getProductDetails);
+router.get("/sort",userController.sortProducts);
 
 //Profile management
 router.get("/forgot-password",profileController.getForgotPassPage);
@@ -52,7 +53,8 @@ router.get("/addToCart",cartController.addToCart);
 router.get('/removeFromCart', cartController.removeFromCart);
 router.post('/updateQuantity', cartController.updateCartQuantity);
 
-
+//Checkout management
+router.get("/checkout",checkoutController.getCheckout);
 
 
 module.exports = router;

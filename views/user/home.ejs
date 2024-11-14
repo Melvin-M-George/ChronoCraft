@@ -76,11 +76,23 @@
         <section class="product-tabs section-padding position-relative wow fadeIn animated">
            
             <div class="container">
-                
+                <div class="sorting-container">
+                    <label for="sort-by" class="sort-label">Sort by:</label>
+                    <select id="sort-by" class="sort-select" onchange="handleSortChange()">
+                        <option value="default">Default</option>
+                        <option value="popularity">Popularity</option>
+                        <option value="price-low-high">Price: Low to High</option>
+                        <option value="price-high-low">Price: High to Low</option>
+                        <option value="rating">Average Rating</option>
+                        <option value="new-arrivals">New Arrivals</option>
+                        <option value="alphabetical-a-z">Alphabetical (A-Z)</option>
+                        <option value="alphabetical-z-a">Alphabetical (Z-A)</option>
+                    </select>
+                </div>
                 
                 <div class="tab-content wow fadeIn animated" id="myTabContent">
                     <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
-                        <div class="row product-grid-4">
+                        <div class="row product-grid-4" id="products-container">
                             <% for(let i = 0; i < products.length; i++) { %>
                                 <div class="product-cart-wrap mb-30" style="flex: 1 1 23%; box-sizing: border-box; margin: 10px;">
                                     <div class="product-img-action-wrap">
@@ -100,7 +112,7 @@
                                         <h6 style="color:green">Stocks:<%=products[i].quantity%></h6>
                                     </div>
                                     <div class="product-action-1 show">
-                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="/addcart?id=<%= products[i]._id %>">
+                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="/addToCart?id=<%= products[i]._id %>">
                                             <i class="fi-rs-shopping-bag-add"></i>
                                         </a>
                                     </div>
@@ -125,6 +137,62 @@
        
         
     </main>
+
+    <script>
+        function handleSortChange() {
+            const sortBy = document.getElementById('sort-by').value;
+
+            fetch(`/sort?sort=${sortBy}`, {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateProductList(data.products);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function updateProductList(products) {
+            const productsContainer = document.getElementById('products-container');
+            productsContainer.innerHTML = '';
+
+            if (products.length === 0) {
+                productsContainer.innerHTML = '<p>No products found.</p>';
+                return;
+            }
+
+            products.forEach(product => {
+                const productHTML = `
+                    <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                        <div class="product-cart-wrap mb-30">
+                            <div class="product-img-action-wrap">
+                                <div class="product-img product-img-zoom">
+                                    <a href="/productdetails?id=${product._id}">
+                                        <img class="default-img" src="/uploads/re-image/${product.productImages[0]}" alt="${product.productName}">
+                                    </a>
+                                </div>
+                                <div class="product-action-1">
+                                    <a aria-label="Add To Cart" class="action-btn hover-up" href="/add-to-cart?id=${product._id}"><i class="fi-rs-shopping-bag-add"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content-wrap">
+                                <h6>${product.productName}</h6>
+                                <h5>₹${product.salePrice.toLocaleString()}</h5>
+                                ${product.quantity > 0
+                        ? `<span class="text-success">${product.quantity} stocks left</span>`
+                        : `<span class="text-danger">Out of Stock</span>`
+                    }
+                                <p>Rating: ${product.rating !== undefined ? product.rating : 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productsContainer.insertAdjacentHTML('beforeend', productHTML);
+            });
+        }
+
+
+    </script>
     
 
     <%-include("../partials/user/footer")%>

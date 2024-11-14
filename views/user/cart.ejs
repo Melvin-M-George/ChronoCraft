@@ -111,8 +111,13 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To
-                                        CheckOut</a>
+                                    <%if(cart){%>
+                                        <a href="/checkout" class="btn btn-success"> <i class="fi-rs-box-alt mr-10"></i> Proceed To
+                                            CheckOut</a>
+                                        <%}else{%>
+                                            <a href="#" class="btn btn-success"> <i class="fi-rs-box-alt mr-10"></i> Proceed To
+                                                CheckOut</a>
+                                            <%}%>
                                 </div>
                             </div>
                         </div>
@@ -194,6 +199,7 @@
                 text: "Error updating cart."
             });
         }
+        
     } catch (error) {
         console.error('Error during fetch request:', error);
     }
