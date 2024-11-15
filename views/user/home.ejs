@@ -109,7 +109,7 @@
                                     <div class="product-content-wrap">
                                         <h6><%= products[i].productName %></h6>
                                         <h6>₹ <%= products[i].salePrice.toLocaleString() %></h6>
-                                        <h6 style="color:green">Stocks:<%=products[i].quantity%></h6>
+                                        <h6 style="color:green">Stock:<%=products[i].quantity%></h6>
                                     </div>
                                     <div class="product-action-1 show">
                                         <a aria-label="Add To Cart" class="action-btn hover-up" href="/addToCart?id=<%= products[i]._id %>">

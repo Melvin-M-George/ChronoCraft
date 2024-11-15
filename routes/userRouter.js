@@ -7,6 +7,7 @@ const {userAuth, adminAuth} = require("../middlewares/auth");
 const cartController = require("../controllers/user/cartController");
 const checkoutController = require("../controllers/user/checkoutController");
 
+
 //Error management
 router.get("/pageNotFound",userController.pageNotFound)
 
@@ -54,7 +55,10 @@ router.get('/removeFromCart', cartController.removeFromCart);
 router.post('/updateQuantity', cartController.updateCartQuantity);
 
 //Checkout management
-router.get("/checkout",checkoutController.getCheckout);
+router.get("/checkout",userAuth,checkoutController.getCheckout);
+router.post("/placeOrder",checkoutController.placeOrder);
+
+
 
 
 module.exports = router;

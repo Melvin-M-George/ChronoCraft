@@ -17,7 +17,7 @@ const orderSchema = new Schema({
             required:true,
         },
         quantity:{
-            typea:Number,
+            type:Number,
             required:true,
         },
         price:{
@@ -58,8 +58,8 @@ const orderSchema = new Schema({
     couponApplied:{
         type:Boolean,
         default:false,
-    }
+    },
 })
 
 const Order = mongoose.model("Order",orderSchema);
-module.exports = mongoose;
+module.exports = Order;
