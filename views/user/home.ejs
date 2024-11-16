@@ -135,6 +135,8 @@
                         <option value="alphabetical-a-z">Alphabetical (A-Z)</option>
                         <option value="alphabetical-z-a">Alphabetical (Z-A)</option>
                     </select>
+
+                    <input type="text" id="search-bar" class="search-bar" placeholder="Search Products..." onkeyup="handleSearch()">
                 </div>
                 
                 <div class="tab-content wow fadeIn animated" id="myTabContent">
@@ -237,6 +239,20 @@
                 productsContainer.insertAdjacentHTML('beforeend', productHTML);
             });
         }
+
+        function handleSearch() {
+        const searchQuery = document.getElementById('search-bar').value.toLowerCase();
+        const allProducts = document.querySelectorAll('.product-cart-wrap');
+        
+        allProducts.forEach(product => {
+            const productName = product.querySelector('h6').textContent.toLowerCase();
+            if (productName.includes(searchQuery)) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    }
 
 
     </script>
