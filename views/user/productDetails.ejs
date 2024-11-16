@@ -6,9 +6,9 @@
 <style>
     .product-extra-link2 {
     display: flex;
-    justify-content: center; /* Aligns the button horizontally */
-    align-items: center;     /* Aligns the button vertically */
-    gap: 15px;               /* Space between buttons (if you have other buttons like wishlist) */
+    justify-content: center; 
+    align-items: center;    
+    gap: 15px;               
     margin-top: 20px;
 }
 
@@ -18,7 +18,7 @@
     font-size: 16px;
     font-weight: 600;
     color: #ffffff;
-    background-color: #007bff; /* Primary color */
+    background-color: #007bff; 
     border: none;
     border-radius: 5px;
     text-transform: uppercase;
@@ -28,7 +28,7 @@
 }
 
 .button-add-to-cart:hover {
-    background-color: #0056b3; /* Darker shade for hover */
+    background-color: #0056b3; 
     transform: scale(1.05);
 }
 
@@ -54,7 +54,7 @@
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <div class="detail-gallery">
                                     <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                    <!-- MAIN SLIDES -->
+                                    
                                     <div class="product-image-slider">
                                         <% for(let i=0;i<data.productImages.length;i++){ %>
                                         <figure class="border-radius-10">
@@ -63,14 +63,14 @@
                                         <% } %>
                                         
                                     </div>
-                                     <!-- THUMBNAILS -->
+                                     
                                      <div class="slider-nav-thumbnails pl-15 pr-15">
                                         <%for(let i=0;i<data.productImages.length;i++){%>
                                             <div><img src="uploads/re-image/<%=data.productImages[i]%>" alt="product image"></div>
                                         <%}%>    
                                     </div>
                                 </div>
-                                <!-- End Gallery -->
+                              
                             </div>
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <div class="detail-info">
@@ -128,13 +128,13 @@
                                         <li>Availability:<span class="in-stock text-success ml-5"><%=data.quantity %> Items In Stock</span></li>
                                     </ul>
                                 </div>
-                                <!-- Detail Info -->
+                                
                             </div>
                         </div>
                         <div class="row">
                             
                                 <h3 class="section-title style-1 mb-30 mt-30">Reviews (3)</h3>
-                                <!--Comments-->
+                                
                                 <div class="comments-area style-2">
                                     <div class="row">
                                         <div class="col-lg-8">
@@ -162,7 +162,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!--single-comment -->
+                                                
                                                 <div class="single-comment justify-content-between d-flex">
                                                     <div class="user justify-content-between d-flex">
                                                         <div class="thumb text-center">
@@ -185,7 +185,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!--single-comment -->
+                                                
                                                 <div class="single-comment justify-content-between d-flex">
                                                     <div class="user justify-content-between d-flex">
                                                         <div class="thumb text-center">
@@ -208,7 +208,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!--single-comment -->
+                                                
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
@@ -244,7 +244,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--comment form-->
+                                
                                 <div class="comment-form">
                                     <h4 class="mb-15">Add a review</h4>
                                     <div class="product-rate d-inline-block mb-30">

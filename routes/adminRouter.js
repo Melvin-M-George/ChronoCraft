@@ -7,7 +7,7 @@ const brandController = require("../controllers/admin/brandController");
 const productController = require("../controllers/admin/productController");
 const stockController = require("../controllers/admin/stockController");
 const orderController = require("../controllers/admin/orderController");
-const {userAuth, adminAuth} = require("../middlewares/auth")
+const {adminAuth} = require("../middlewares/auth")
 const multer = require("multer")
 const storage = require("../helpers/multer")
 const uploads = multer({storage:storage});
@@ -18,7 +18,7 @@ router.get("/pageerror",adminController.pageerror)
 //login management
 router.get("/login",adminController.loadLogin);
 router.post("/login",adminController.login);
-router.get("/",adminController.loadDashboard);
+router.get("/",adminAuth,adminController.loadDashboard);
 router.get("/dashboard",adminAuth,adminController.loadDashboard);
 router.get("/logout",adminController.logout);
 
@@ -65,6 +65,7 @@ router.post('/updateStock',adminAuth,stockController.updateStock);
 
 //Order Mangement
 router.get("/orders",adminAuth,orderController.getOrders);
+router.post("/updateOrderStatus",adminAuth,orderController.updateOrderStatus);
 
 
 

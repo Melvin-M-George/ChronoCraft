@@ -4,7 +4,7 @@ const User = require("../../models/userSchema");
 
 const customerInfo = async (req,res) => {
     try {
-        const search = "";
+        let search = "";
         if(req.query.search){
             search = req.query.search;
         }

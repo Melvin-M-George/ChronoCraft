@@ -125,8 +125,6 @@ const securePassword = async (password)=>{
 const verifyOtp = async (req,res) => {
     try {
         const {otp,googleId} = req.body;
-        console.log(otp);
-        console.log(req.session.userOtp + "hi");
         if(otp === req.session.userOtp){
             const user = req.session.userData;
             const passwordHash = await securePassword(user.password);

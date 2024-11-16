@@ -1,7 +1,54 @@
 
  <%-include("../partials/user/header")%>
 
+<style>
+.sorting-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    font-family: 'Arial', sans-serif;
+}
 
+
+.sort-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+
+.sort-select {
+    width: 150px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    outline: none;
+    transition: all 0.3s ease;
+    appearance: none; 
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+}
+
+
+.sort-select:hover,
+.sort-select:focus {
+    border-color: #666;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+}
+
+
+.sort-select option:disabled {
+    color: #aaa;
+}
+
+</style>
 
     
     <main class="main">       

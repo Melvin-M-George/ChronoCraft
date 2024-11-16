@@ -11,6 +11,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <div id="orders-container">
+                    <h2>Orders List</h2>
                     <table class="table">
                         <thead>
                             <tr>
@@ -123,7 +124,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             async function updateOrderStatus(orderId, newStatus) {
                 try {
-                    const response = await fetch('/admin/update-order-status', {
+                    const response = await fetch('/admin/updateOrderStatus', {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json',
@@ -219,4 +220,4 @@
     </script>
 
 
-    <%- include("../../views/partials/admin/footer") %>
+ 
