@@ -121,7 +121,7 @@ const placeOrder = async (req, res) => {
         console.log("Order placed successfully:", newOrder);
 
         // Redirect or render success page
-        res.render("orderConformation", { orderId: newOrder._id });
+        res.render("orderConfirmation",{orderId:newOrder._id});
     } catch (error) {
         console.error("Error placing order:", error);
         res.status(500).send("Internal Server Error");
@@ -130,9 +130,12 @@ const placeOrder = async (req, res) => {
 
 
 
+
 module.exports = {
     getCheckout,
     placeOrder,
+   
+    
     
 }
 

@@ -6,7 +6,15 @@ const profileController = require("../controllers/user/profileController");
 const {userAuth, adminAuth} = require("../middlewares/auth");
 const cartController = require("../controllers/user/cartController");
 const checkoutController = require("../controllers/user/checkoutController");
+const orderController = require("../controllers/user/orderController");
+const User = require("../models/userSchema");
 
+
+router.use(async(req, res, next) => {
+    const userData = await User.findById(req.session.user);
+    res.locals.user = userData || null;
+    next();
+});
 
 //Error management
 router.get("/pageNotFound",userController.pageNotFound)
@@ -40,6 +48,8 @@ router.get("/userProfile",userAuth,profileController.userProfile);
 router.get("/changePassword",userAuth,profileController.changePassword);
 router.post("/changePassword",userAuth,profileController.changePasswordValid);
 router.post("/verify-changepassword-otp",userAuth,profileController.verifyChangePassOtp);
+router.get("/editProfile",userAuth,profileController.getEditProfile);
+router.post("/updateProfile",userAuth,profileController.UpdateProfile);
 
 //Address management
 router.get("/addAddress",userAuth,profileController.addAddress);
@@ -57,6 +67,8 @@ router.post('/updateQuantity', cartController.updateCartQuantity);
 //Checkout management
 router.get("/checkout",userAuth,checkoutController.getCheckout);
 router.post("/placeOrder",checkoutController.placeOrder);
+router.get("/cancelOrder",orderController.cancelOrder);
+
 
 
 

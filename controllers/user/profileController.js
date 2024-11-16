@@ -1,5 +1,6 @@
 const User = require("../../models/userSchema");
 const Address = require("../../models/addressSchema");
+const Order = require("../../models/orderSchema");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const env = require("dotenv").config();
@@ -150,9 +151,11 @@ const userProfile = async (req,res) => {
         const userId = req.session.user;
         const userData = await User.findById(userId);
         const addressData = await Address.findOne({userId : userId});
+        const orders = await Order.find({ user: userId });
         res.render('profile',{
             user:userData,
             userAddress:addressData,
+            orders,
         })
     } catch (error) {
         console.error("Error retreiving profile data",error);
@@ -336,6 +339,47 @@ const deleteAddress = async (req,res) => {
 }
 
 
+const getEditProfile = async (req,res) => {
+    try {
+        res.render("edit-profile");
+    } catch (error) {
+        res.redirect("/userProfile",{message:"Errror editing user profile"})
+    }
+}
+
+
+
+const UpdateProfile = async (req, res) => {
+    try {
+        const data = req.body; // User-provided updated data
+        const user = req.session.user; // Current logged-in user's session
+        
+        // Find the user to ensure they exist
+        const findUser = await User.findById(user._id);
+        if (!findUser) {
+            return res.redirect("/pageNotFound");
+        }
+
+        // Update the user's profile details
+        await User.updateOne(
+            { _id: user._id },
+            {
+                $set: {
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone,
+                }
+            }
+        );
+
+        res.redirect("/userProfile");
+    } catch (error) {
+        console.error("Error in updating profile:", error);
+        res.redirect("/pageNotFound");
+    }
+};
+
+
 module.exports = {
     getForgotPassPage,
     forgotEmailValid,
@@ -352,6 +396,8 @@ module.exports = {
     editAddress,
     postEditAddress,
     deleteAddress,
+    getEditProfile,
+    UpdateProfile
 
 
 
