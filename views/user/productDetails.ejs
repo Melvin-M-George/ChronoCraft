@@ -130,6 +130,7 @@
                                         </div>
                                         
                                     </div>
+                                    
                                     <div class="product-extra-link2" >
                                         <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/checkout?id=<%=data._id %>">Buy now</a>
                                         
@@ -145,6 +146,7 @@
                                 
                             </div>
                         </div>
+                        
                         <div class="row">
                             
                                 <h3 class="section-title style-1 mb-30 mt-30">Reviews (3)</h3>
@@ -309,16 +311,42 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-      const maxQuantity = '<%= data.quantity %>';
-
+   const maxQuantity = '<%= data.quantity %>'; 
+const maxLimit = 5;  
 function updateQuantity(change) {
     const qtyInput = document.getElementById('qty-val');
     let currentQty = parseInt(qtyInput.value);
-    const maxLimit = 5;
-    currentQty = Math.max(1, Math.min(maxQuantity, maxLimit, currentQty + change));
+
+   
+    if (maxQuantity < maxLimit && currentQty >= maxQuantity && change > 0) {
+        Swal.fire({
+            title: 'Insufficient Stock!',
+            text: `We only have ${maxQuantity} items in stock. You can't add more.`,
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    
+    if (currentQty >= maxLimit && change > 0) {
+        Swal.fire({
+            title: 'Maximum Limit Reached!',
+            text: `You can only add up to ${maxLimit} items.`,
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    
+    currentQty = Math.max(1, Math.min(maxQuantity, currentQty + change));
     qtyInput.value = currentQty;
 }
+
+
 </script>
+
 
 
 <%-include("../partials/user/footer")%>

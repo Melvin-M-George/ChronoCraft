@@ -19,7 +19,7 @@
 
 
 .sort-select {
-    width: 150px;
+    width: 200px;
     padding: 8px 12px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -136,7 +136,14 @@
                         <option value="alphabetical-z-a">Alphabetical (Z-A)</option>
                     </select>
 
-                    <input type="text" id="search-bar" class="search-bar" placeholder="Search Products..." onkeyup="handleSearch()">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8 col-lg-6">
+                                <input type="text" id="search-bar" class="form-control search-bar" placeholder="Search Products..." onkeyup="handleSearch()">
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
                 
                 <div class="tab-content wow fadeIn animated" id="myTabContent">
