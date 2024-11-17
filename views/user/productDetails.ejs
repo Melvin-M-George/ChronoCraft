@@ -111,10 +111,17 @@
                                     
                                     <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                     <div class="detail-extralink">
-                                        <div class="detail-qty border radius">
-                                            <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                            <span class="qty-val">1</span>
-                                            <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                        <div class="detail-qty">
+                                            <input type="text" name="quantity" value="1" class="qty-val" id="qty-val"
+                                                readonly>
+                                            <div class="qty-controls">
+                                                <button type="button" class="qty-up" onclick="updateQuantity(1)">
+                                                    <i class="fi-rs-angle-small-up"></i>
+                                                </button>
+                                                <button type="button" class="qty-down" onclick="updateQuantity(-1)">
+                                                    <i class="fi-rs-angle-small-down"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="product-extra-link2" >
                                             <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/addToCart?id=<%=data._id %>">Add to cart</a>
@@ -130,7 +137,8 @@
                                     </div>
                                     <ul class="product-meta font-xs color-grey mt-50">
                                         
-                                        <li class="mb-5">Category: <a href="#" rel="tag"><%=data.catogory %></a> </li>
+                                        <li class="mb-5">Category: <a href="#" rel="tag"><%= data.category.name %></a> </li>
+
                                         <li>Availability:<span class="in-stock text-success ml-5"><%=data.quantity %> Items In Stock</span></li>
                                     </ul>
                                 </div>
@@ -298,5 +306,19 @@
         </div>
     </section>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+      const maxQuantity = '<%= data.quantity %>';
+
+function updateQuantity(change) {
+    const qtyInput = document.getElementById('qty-val');
+    let currentQty = parseInt(qtyInput.value);
+    const maxLimit = 5;
+    currentQty = Math.max(1, Math.min(maxQuantity, maxLimit, currentQty + change));
+    qtyInput.value = currentQty;
+}
+</script>
+
 
 <%-include("../partials/user/footer")%>

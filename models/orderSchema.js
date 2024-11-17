@@ -64,6 +64,12 @@ const orderSchema = new Schema({
         ref:"User",
         required:true,
     },
+    paymentMethod:{
+        type:String,
+        required:true,
+        enum:["COD","Online","Wallet"],
+
+    }
 
 })
 

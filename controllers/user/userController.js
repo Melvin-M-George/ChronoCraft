@@ -225,7 +225,7 @@ const getProductDetails = async (req,res) => {
         const id = req.query.id;
         const userId = req.session.user;
 
-        const productData = await Product.findById(id);  
+        const productData = await Product.findById(id).populate('category');  
         const userData = await User.findById(userId);
         if(productData){
             return res.render("productDetails",{data:productData,user:userData})
