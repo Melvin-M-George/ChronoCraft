@@ -358,7 +358,8 @@
                             </div>
                             <div class="row">
 
-                                <form id="orderForm" method="POST" action="/placeOrder">
+                                <form id="orderForm" method="POST" action="/placeOrder" onsubmit="return validateAddress()">
+
                                     <div class="payment_option">
                                         <h4>Select Payment Method</h4>
                                         <div class="custome-radio">
