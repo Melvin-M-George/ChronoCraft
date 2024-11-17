@@ -227,6 +227,7 @@
                                         </div>
                                         <% }); %>
                                             <% }); %>
+                                            
                             </div>
 
                             <div class="add-address-section mt-4">
@@ -289,10 +290,28 @@
                                                         </td>
                                                     </tr>
                                                     <% } else { %>
-                                                        <tr>
-                                                            <td colspan="3">No items in the cart</td>
-                                                        </tr>
+                                                        <% if (product) { %>
+                                                            <tr>
+                                                                <td class="image product-thumbnail">
+                                                                    <img src="/uploads/re-image/<%= product.productImages[0] %>" 
+                                                                         alt="<%= product.productName %>">
+                                                                </td>
+                                                                <td>
+                                                                    <h5>
+                                                                        <a href="shop-product-full.html">
+                                                                            <%= product.productName %>
+                                                                        </a>
+                                                                    </h5>
+                                                                    <span class="product-qty">x 1</span>
+                                                                </td>
+                                                                <td>
+                                                                    ₹<%= product.salePrice.toLocaleString() %>
+                                                                </td>
+                                                            </tr>
                                                         <% } %>
+                                                        
+                                                        <% } %>
+                                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -361,8 +380,11 @@
                                     <input type="hidden" name="cart" value='<%= JSON.stringify(cart) %>'>
                                     <input type="hidden" id="totalamount" name="totalPrice"
                                         value="<%= totalAmount.toLocaleString() %>">
-                                    <!-- <input type="hidden" id="discountInput" name="discount" value="<%= %>"> -->
+                                    
                                     <input type="hidden" id="selectedAddressId" name="addressId">
+                                    <% if (product) { %>
+                                        <input type="hidden" name="singleProduct" value="<%= JSON.stringify(product) %>">
+                                        <% } %>
 
                                     <!-- Payment Buttons -->
                                     <div id="paymentButtons" class="mt-4">

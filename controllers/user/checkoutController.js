@@ -2,6 +2,7 @@ const Cart = require("../../models/cartSchema");
 const Address = require("../../models/addressSchema");
 const User = require("../../models/userSchema");
 const Order = require("../../models/orderSchema");
+const Product = require("../../models/ProductSchema");
 
 
 
@@ -20,23 +21,29 @@ const getCheckout = async (req, res) => {
         const cart = await Cart.findOne({ userId: req.session.user }).populate('items.productId');
         const addresses = await Address.find({ userId: req.session.user });
 
-        if (!cart || cart.items.length === 0) {
-            // If the cart is empty, redirect to the cart page with a message
-            return res.redirect('/cart');
-        }
+    
 
         // Calculate the cart total
-        const totalAmount = cart.items.reduce((total, item) => total + item.totalPrice, 0);
+        let totalAmount = cart.items.reduce((total, item) => total + item.totalPrice, 0);
 
-        // Render the checkout page with cart and user data
-        res.render('checkout', {
-            cart:cart,
-            pageTitle: 'Checkout',
-            cartItems: cart.items,
-            totalAmount,
-            addresses,
-            user: user, 
-        },);
+        // Render the checkout page 
+        if (req.query.id) {
+            const product = await Product.findById(req.query.id);
+            console.log(product);
+            if (!product) {
+              return res.redirect('/pageNotFound');
+            }
+            totalAmount = product.salePrice;
+            return res.render('checkout', { cart: null, product, addresses, totalAmount });
+          } else {
+            const cartItems = await Cart.findOne({ userId: user }).populate('items.productId');
+            if (!cartItems) {
+              return res.render('checkout', { cart: null, products: [], addresses, totalAmount, product: null });
+            }
+            totalAmount = cartItems.items.reduce((sum, item) => sum + item.totalPrice, 0);
+            return res.render('checkout', { cart: cartItems, products: cartItems.items, addresses, totalAmount, product: null });
+          }
+       
     } catch (error) {
         console.error('Error loading checkout page:', error);
         res.status(500).send('Server Error');
@@ -45,10 +52,9 @@ const getCheckout = async (req, res) => {
 
 const placeOrder = async (req, res) => {
     try {
-        const { addressId, payment_option } = req.body;
+        const { addressId, payment_option, singleProduct } = req.body;
         const userId = req.session.user;
 
-        console.log(addressId);
 
         // Validate user session
         if (!userId) {
@@ -72,35 +78,44 @@ const placeOrder = async (req, res) => {
 
         // Retrieve user's cart
         const cart = await Cart.findOne({ userId }).populate("items.productId");
-        if (!cart || cart.items.length === 0) {
-            console.log("Cart not found or empty");
-            return res.redirect("/");
-        }
 
         // Calculate totalPrice
-        const totalPrice = cart.items.reduce((acc, item) => acc + item.totalPrice, 0);
+        let totalPrice = cart.items.reduce((acc, item) => acc + item.totalPrice, 0);
 
         // Validate totalPrice
         if (isNaN(totalPrice)) {
             console.log("Invalid totalPrice:", totalPrice);
             return res.status(400).send("Invalid total price");
         }
-
-        // Prepare order items
-        const orderedItems = cart.items.map(item => {
-            const price = item.totalPrice / item.quantity;
-
-            if (isNaN(price)) {
-                console.log("Invalid price for item:", item);
-                return null; // Skip invalid items
-            }
-
-            return {
-                product: item.productId,
+        
+        let orderedItems = [];
+        if (singleProduct) {
+            const product = JSON.parse(singleProduct);
+            console.log(product.salePrice);
+            orderedItems.push({
+                product: product._id,
+                quantity: 1,
+                price: product.salePrice,
+            });
+            totalPrice = product.salePrice;
+            await Product.findByIdAndUpdate(product._id, {
+              $inc: { quantity: -1 }
+          });
+          
+        } else if (cart) {
+            const cartItems = cart.items;
+            console.log(cartItems);
+            orderedItems = cartItems.map(item => ({
+                product: item._id,
                 quantity: item.quantity,
-                price,
-            };
-        }).filter(item => item !== null);
+                price: item.totalPrice / item.quantity,
+            }));
+            cartItems.forEach(async item=>{
+              await Product.findByIdAndUpdate(item.productId.id,{
+                $inc:{quantity:-item.quantity}
+              })
+            })
+        }
 
         // Create new order
         const newOrder = new Order({
@@ -115,6 +130,11 @@ const placeOrder = async (req, res) => {
 
         // Save order and clear cart
         await newOrder.save();
+        // cartItems.forEach(async item=>{
+        //     await Product.findByIdAndUpdate(item.productId,{
+        //       $inc:{quantity:-item.quantity}
+        //     })
+        //   })
         cart.items = [];
         await cart.save();
 
