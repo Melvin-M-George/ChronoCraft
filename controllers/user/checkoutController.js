@@ -90,6 +90,7 @@ const placeOrder = async (req, res) => {
         let orderedItems = [];
         if (singleProduct) {
             const product = JSON.parse(singleProduct);
+            console.log("product id",product._id)
             orderedItems.push({
                 product: product._id,
                 quantity: 1,
@@ -104,7 +105,7 @@ const placeOrder = async (req, res) => {
             const cartItems = cart.items;
             console.log(`dfsfvsd${cartItems}`);
             orderedItems = cartItems.map(item => ({
-                product: item._id,
+                product: item.productId._id,
                 quantity: item.quantity,
                 price: item.totalPrice / item.quantity,
             }));

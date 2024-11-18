@@ -33,24 +33,25 @@
                                             <%= order.orderId %>
                                         </td>
                                         <td>
-                                            <%= order.name %>
+                                            <%= order.user.name %>
                                         </td>
                                         <td>
-                                            <%= order.date %>
+                                            <%= order.createdOn.toLocaleString() %>
                                         </td>
                                         <td>
                                             <ul>
-                                                <% order.items.forEach(item=>{%>
-                                                    <li>
-                                                        <%= item%> 
-                                                    </li>
-                                                <%}) %>
+                                                
+                                                <% order.orderedItems.forEach(item => { %>
+                                                    <li><%= item.product.productName %></li>
+                                                <% }) %>
+                                                
+                                                
                                             </ul>
                                            
                                         </td>
                                         <td>
                                             <ul>
-                                                <% order.items.forEach(item=>{%>
+                                                <% order.orderedItems.forEach(item=>{%>
                                                     <li>
                                                         <%= item.quantity %>
                                                     </li>
@@ -58,7 +59,7 @@
                                             </ul>
                                         </td>
                                         <td>
-                                            <%= order.total %>
+                                            <%= order.finalAmount.toLocaleString() %>
                                         </td>
                                         <td>
                                             <%= order.paymentMethod %>

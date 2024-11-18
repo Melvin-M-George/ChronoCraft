@@ -12,27 +12,14 @@ const getOrders = async (req, res) => {
             const totalPages = Math.ceil(totalOrders / limit);
 
             const orders = await Order.find()
-            .populate('user', 'name email') 
-            .populate('address')          
-            .populate(
-                'orderedItems.product',   
-            )
+    .populate('user') 
+    .populate('address')          
+    .populate('orderedItems.product');
 
-            const formattedOrders = orders.map(order => ({
-                orderId: order.orderId || order._id,
-                name: order.user ? order.user.name : "N/A",
-                quantity: order.quantity,
-                paymentMethod: order.paymentMethod,
-                total: `₹${order.finalAmount.toFixed(2)}`,
-                status: order.status,
-                date: new Date(order.invoiceDate || order.createdOn).toLocaleDateString("en-GB"),
-                items:order.orderedItems
-            }));
-
-            console.log(formattedOrders.items);
-
+           console.log(orders.orderedItems)
+            
             res.render("adminOrder", {
-                orders: formattedOrders,
+                orders: orders,
                 totalPages,
                 currentPage: page
             });
