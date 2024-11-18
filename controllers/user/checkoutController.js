@@ -11,22 +11,21 @@ const getCheckout = async (req, res) => {
     try {
         const userId = req.session.user;
         const user = await User.findById(userId);
-        // Check if the user is logged in
+       
         if (!req.session.user) {
-            // If the user is not logged in, redirect to the login page
             return res.redirect('/login');
         }
         
-        // Fetch the user's cart data from the database
+       
         const cart = await Cart.findOne({ userId: req.session.user }).populate('items.productId');
         const addresses = await Address.find({ userId: req.session.user });
 
     
 
-        // Calculate the cart total
+        
         let totalAmount = cart.items.reduce((total, item) => total + item.totalPrice, 0);
 
-        // Render the checkout page 
+        
         if (req.query.id) {
             const product = await Product.findById(req.query.id);
             console.log(product);
@@ -56,33 +55,33 @@ const placeOrder = async (req, res) => {
         const userId = req.session.user;
 
 
-        // Validate user session
+        
         if (!userId) {
             console.log("User not logged in");
             return res.redirect('/login');
         }
 
-        // Fetch user data
+       
         const user = await User.findById(userId).populate('addresses');
         if (!user) {
             console.log("User not found");
             return res.status(404).send("User not found");
         }
 
-        // Validate address
+        
         const selectedAddress = user.addresses.filter(addr => addr._id.toString() === addressId);
         if (!selectedAddress) {
             console.log("Selected address not found");
             return res.status(400).send("Invalid address selected");
         }
 
-        // Retrieve user's cart
+        
         const cart = await Cart.findOne({ userId }).populate("items.productId");
 
-        // Calculate totalPrice
+        
         let totalPrice = cart.items.reduce((acc, item) => acc + item.totalPrice, 0);
 
-        // Validate totalPrice
+        
         if (isNaN(totalPrice)) {
             console.log("Invalid totalPrice:", totalPrice);
             return res.status(400).send("Invalid total price");
@@ -91,7 +90,6 @@ const placeOrder = async (req, res) => {
         let orderedItems = [];
         if (singleProduct) {
             const product = JSON.parse(singleProduct);
-            console.log(product.salePrice);
             orderedItems.push({
                 product: product._id,
                 quantity: 1,
@@ -104,7 +102,7 @@ const placeOrder = async (req, res) => {
           
         } else if (cart) {
             const cartItems = cart.items;
-            console.log(cartItems);
+            console.log(`dfsfvsd${cartItems}`);
             orderedItems = cartItems.map(item => ({
                 product: item._id,
                 quantity: item.quantity,
@@ -117,7 +115,7 @@ const placeOrder = async (req, res) => {
             })
         }
 
-        // Create new order
+        
         const newOrder = new Order({
             orderedItems,
             user: userId,
@@ -128,19 +126,15 @@ const placeOrder = async (req, res) => {
             status: payment_option === "COD" ? "Pending" : "Processing",
         });
 
-        // Save order and clear cart
+       
         await newOrder.save();
-        // cartItems.forEach(async item=>{
-        //     await Product.findByIdAndUpdate(item.productId,{
-        //       $inc:{quantity:-item.quantity}
-        //     })
-        //   })
+       
         cart.items = [];
         await cart.save();
 
         console.log("Order placed successfully:", newOrder);
 
-        // Redirect or render success page
+        
         res.render("orderConfirmation",{orderId:newOrder._id});
     } catch (error) {
         console.error("Error placing order:", error);

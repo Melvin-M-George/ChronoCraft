@@ -351,16 +351,15 @@ const getEditProfile = async (req,res) => {
 
 const UpdateProfile = async (req, res) => {
     try {
-        const data = req.body; // User-provided updated data
-        const user = req.session.user; // Current logged-in user's session
+        const data = req.body; 
+        const user = req.session.user; 
         
-        // Find the user to ensure they exist
+        
         const findUser = await User.findById(user._id);
         if (!findUser) {
             return res.redirect("/pageNotFound");
         }
 
-        // Update the user's profile details
         await User.updateOne(
             { _id: user._id },
             {

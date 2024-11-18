@@ -11,14 +11,12 @@ const getOrders = async (req, res) => {
             const totalOrders = await Order.countDocuments();
             const totalPages = Math.ceil(totalOrders / limit);
 
-            // Fetch paginated orders
             const orders = await Order.find()
-                .populate('user', 'name email')
-                .populate('address')
-                .populate("orderedItems.product")
-                .skip(skip)
-                .limit(limit)
-                .exec();
+            .populate('user', 'name email') // Populate `user`
+            .populate('address')           // Populate `address`
+            .populate(
+                'orderedItems.product',    // Populate `productName`
+            )
 
             const formattedOrders = orders.map(order => ({
                 orderId: order.orderId || order._id,
@@ -30,6 +28,8 @@ const getOrders = async (req, res) => {
                 date: new Date(order.invoiceDate || order.createdOn).toLocaleDateString("en-GB"),
                 items:order.orderedItems
             }));
+
+            console.log(formattedOrders.items);
 
             res.render("adminOrder", {
                 orders: formattedOrders,
@@ -45,7 +45,6 @@ const getOrders = async (req, res) => {
     }
 };
 
-// Update order status function
 const updateOrderStatus = async (req, res) => {
     if (!req.session.admin) {
         return res.status(401).json({ message: "Unauthorized. Please log in as an admin." });
@@ -62,7 +61,6 @@ const updateOrderStatus = async (req, res) => {
             return res.status(400).json({ message: "Order ID and status are required and must be strings." });
         }
 
-        // Update the order status in the database
         const updatedOrder = await Order.findOneAndUpdate({orderId:orderId}, { status }, { new: true });
 
         if (!updatedOrder) {

@@ -111,28 +111,33 @@
                                     
                                     <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                     <div class="detail-extralink">
-                                        <div class="detail-qty">
-                                            <input type="text" name="quantity" value="1" class="qty-val" id="qty-val"
-                                                readonly>
-                                            <div class="qty-controls">
-                                                <button type="button" class="qty-up" onclick="updateQuantity(1)">
-                                                    <i class="fi-rs-angle-small-up"></i>
-                                                </button>
-                                                <button type="button" class="qty-down" onclick="updateQuantity(-1)">
-                                                    <i class="fi-rs-angle-small-down"></i>
-                                                </button>
+                                        <div class="detail-extralink" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                                            <div class="detail-qty" style="display: flex; align-items: center; gap: 10px;">
+                                                <input type="text" name="quantity" value="1" class="qty-val" id="qty-val" 
+                                                    readonly 
+                                                    style="width: 50px; text-align: center; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
+                                                <div class="qty-controls" style="display: flex; flex-direction: column; gap: 5px;">
+                                                    <button type="button" class="qty-up" onclick="updateQuantity(1)" 
+                                                        style="background: none; border: none; cursor: pointer; padding: 5px;">
+                                                        <i class="fi-rs-angle-small-up" style="font-size: 20px;"></i>
+                                                    </button>
+                                                    <button type="button" class="qty-down" onclick="updateQuantity(-1)" 
+                                                        style="background: none; border: none; cursor: pointer; padding: 5px;">
+                                                        <i class="fi-rs-angle-small-down" style="font-size: 20px;"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
                                         <div class="product-extra-link2" >
                                             <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/addToCart?id=<%=data._id %>">Add to cart</a>
                                             <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/checkout?id=<%=data._id %>">Buy now</a>
                                             
                                         </div>
                                         
                                     </div>
                                     
                                     <div class="product-extra-link2" >
-                                        <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/checkout?id=<%=data._id %>">Buy now</a>
+                                       
                                         
                                         
                                     </div>

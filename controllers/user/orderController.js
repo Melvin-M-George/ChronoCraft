@@ -7,13 +7,13 @@ const Order = require("../../models/orderSchema")
 
 
   
-// Backend controller for cancelling order
+
 const cancelOrder = async (req, res) => {
     const { id } = req.query;
     console.log(id);
 
     try {
-        // Find the order by ID
+       
         const order = await Order.findById(id);
 
         if (!order) {
@@ -24,7 +24,6 @@ const cancelOrder = async (req, res) => {
             return res.status(403).json({ message: 'Cannot cancel this order' });
         }
 
-        // Update the status to 'Cancelled'
         order.status = 'Cancelled';
         await order.save();
 
