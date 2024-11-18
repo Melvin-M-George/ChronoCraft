@@ -12,10 +12,10 @@ const getOrders = async (req, res) => {
             const totalPages = Math.ceil(totalOrders / limit);
 
             const orders = await Order.find()
-            .populate('user', 'name email') // Populate `user`
-            .populate('address')           // Populate `address`
+            .populate('user', 'name email') 
+            .populate('address')          
             .populate(
-                'orderedItems.product',    // Populate `productName`
+                'orderedItems.product',   
             )
 
             const formattedOrders = orders.map(order => ({

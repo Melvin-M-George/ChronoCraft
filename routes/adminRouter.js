@@ -13,8 +13,9 @@ const storage = require("../helpers/multer")
 const uploads = multer({storage:storage});
 
 
-
+//Error management
 router.get("/pageerror",adminController.pageerror)
+
 //login management
 router.get("/login",adminController.loadLogin);
 router.post("/login",adminController.login);

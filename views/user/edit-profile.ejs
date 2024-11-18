@@ -102,10 +102,9 @@
     document.getElementById('profileForm').addEventListener('submit', function (e) {
         let isValid = true;
 
-        // Name validation
         const nameField = document.getElementById('name');
         const nameError = document.getElementById('nameError');
-        const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/; // Only letters, no numbers or special characters
+        const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/; 
         if (!nameRegex.test(nameField.value.trim())) {
             isValid = false;
             nameError.textContent = 'Name must contain only letters and cannot have numbers or special characters.';
@@ -113,7 +112,7 @@
             nameError.textContent = '';
         }
 
-        // Phone validation
+        
         const phoneField = document.getElementById('phone');
         const phoneError = document.getElementById('phoneError');
         if (!/^\d{10}$/.test(phoneField.value.trim())) {
@@ -123,7 +122,7 @@
             phoneError.textContent = '';
         }
 
-        // Prevent form submission if validation fails
+        
         if (!isValid) {
             e.preventDefault();
         }

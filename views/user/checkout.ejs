@@ -417,9 +417,9 @@
 
         document.querySelectorAll('.address-radio').forEach(radio => {
             radio.addEventListener('change', function () {
-                // Get the hidden input field
+                
                 const selectedAddressField = document.getElementById('selectedAddressId');
-                // Update its value with the selected radio button's value
+                
                 selectedAddressField.value = this.value;
             });
         });

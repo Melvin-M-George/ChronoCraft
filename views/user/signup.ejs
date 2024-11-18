@@ -213,7 +213,7 @@
     <!-- form validation -->
     <script>
         document.getElementById("signupForm").addEventListener("submit", function(event) {
-     // Prevent form submission if there are validation errors
+     
      if (!validateForm()) {
          event.preventDefault();
      }
@@ -222,7 +222,7 @@
      function validateForm() {
      let isValid = true;
      
-     // Username validation
+     
      const username = document.getElementById("username").value.trim();
      const usernameError = document.getElementById("usernameError");
      const usernameRegex = /^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/;
@@ -233,7 +233,7 @@
          usernameError.innerText = "";
      }
  
-     // Email validation
+    
      const email = document.getElementById("email").value.trim();
      const emailError = document.getElementById("emailError");
      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -244,7 +244,7 @@
          emailError.innerText = "";
      }
  
-     // Phone number validation
+    
      const phone = document.getElementById("phone").value.trim();
      const phoneError = document.getElementById("phoneError");
      if (!phone || !/^[1-9]\d{9}$/.test(phone)) {
@@ -255,7 +255,7 @@
      }
  
  
-     // Password validation
+    
      const password = document.getElementById("password").value;
      const passwordError = document.getElementById("passwordError");
      if (!password || password.length < 5) {
@@ -265,7 +265,7 @@
          passwordError.innerText = "";
      }
  
-     // Confirm password validation
+    
      const cPassword = document.getElementById("cPassword").value;
      const cPasswordError = document.getElementById("cPasswordError");
      if (cPassword !== password) {
@@ -278,7 +278,7 @@
      return isValid;
      }
  
-     // Real-time validation
+     
      ["username", "email", "phone", "password", "cPassword"].forEach(id => {
      document.getElementById(id).addEventListener("input", validateForm);
      });
