@@ -69,6 +69,9 @@ const orderSchema = new Schema({
         required:true,
         enum:["COD","Online","Wallet"],
 
+    },
+    couponCode:{
+        type:String,
     }
 
 })

@@ -149,12 +149,6 @@ const updateCartQuantity = async (req, res) => {
 };
 
 
-module.exports = {
-    getCart,
-    addToCart,
-    removeFromCart,
-    updateCartQuantity,
-};
 
 
 module.exports = {

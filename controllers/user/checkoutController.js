@@ -28,7 +28,6 @@ const getCheckout = async (req, res) => {
         
         if (req.query.id) {
             const product = await Product.findById(req.query.id);
-            console.log(product);
             if (!product) {
               return res.redirect('/pageNotFound');
             }
@@ -51,7 +50,7 @@ const getCheckout = async (req, res) => {
 
 const placeOrder = async (req, res) => {
     try {
-        const { addressId, payment_option, singleProduct } = req.body;
+        const { addressId, payment_option, singleProduct,discountInput,couponCodeInput } = req.body;
         const userId = req.session.user;
 
 
@@ -125,6 +124,9 @@ const placeOrder = async (req, res) => {
             address: addressId,
             paymentMethod: payment_option,
             status: payment_option === "COD" ? "Pending" : "Processing",
+            couponCode:couponCodeInput,
+            discount:discountInput,
+            couponApplied: Boolean(couponCodeInput && discountInput)
         });
 
        
@@ -132,8 +134,6 @@ const placeOrder = async (req, res) => {
        
         cart.items = [];
         await cart.save();
-
-        console.log("Order placed successfully:", newOrder);
 
         
         res.render("orderConfirmation",{orderId:newOrder._id});

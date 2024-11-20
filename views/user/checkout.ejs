@@ -227,7 +227,7 @@
                                         </div>
                                         <% }); %>
                                             <% }); %>
-                                            
+
                             </div>
 
                             <div class="add-address-section mt-4">
@@ -279,12 +279,12 @@
                                                     </tr>
                                                     <tr>
                                                         <th>Coupon Discount</th>
-                                                        <td colspan="2"><em>₹ 0</em></td>
+                                                        <td colspan="2" id="discount"><em>₹ 0</em></td>
 
                                                     </tr>
                                                     <tr>
                                                         <th>Total</th>
-                                                        <td colspan="2" class="product-subtotal">
+                                                        <td colspan="2" class="product-subtotal" id="finalAmount">
                                                             <span class="font-xl text-brand fw-900">₹<%=
                                                                     totalAmount.toLocaleString() %></span>
                                                         </td>
@@ -293,8 +293,8 @@
                                                         <% if (product) { %>
                                                             <tr>
                                                                 <td class="image product-thumbnail">
-                                                                    <img src="/uploads/re-image/<%= product.productImages[0] %>" 
-                                                                         alt="<%= product.productName %>">
+                                                                    <img src="/uploads/re-image/<%= product.productImages[0] %>"
+                                                                        alt="<%= product.productName %>">
                                                                 </td>
                                                                 <td>
                                                                     <h5>
@@ -308,10 +308,29 @@
                                                                     ₹<%= product.salePrice.toLocaleString() %>
                                                                 </td>
                                                             </tr>
-                                                        <% } %>
-                                                        
-                                                        <% } %>
-                                                        
+                                                            <tr>
+                                                                <th>SubTotal</th>
+                                                                <td class="product-subtotal" colspan="2">₹<%=
+                                                                        totalAmount.toLocaleString() %>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Coupon Discount</th>
+                                                                <td colspan="2" id="discount"><em>₹ 0</em></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Total</th>
+                                                                <td colspan="2" class="product-subtotal"
+                                                                    id="finalAmount">
+                                                                    <span class="font-xl text-brand fw-900">₹<%=
+                                                                            totalAmount.toLocaleString() %></span>
+                                                                </td>
+                                                            </tr>
+                                                            <% } %>
+
+                                                                <% } %>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -337,15 +356,21 @@
                                         <div class="panel-body">
                                             <p class="mb-30 font-sm">If you have a coupon code, please apply it below.
                                             </p>
-                                            <form method="post">
+                                            <form id="coupon-form" method="post" action="/applyCoupon">
                                                 <div class="form-group">
-                                                    <input type="text" placeholder="Enter Coupon Code...">
+                                                    <input type="text" id="couponCode"
+                                                        placeholder="Enter Coupon Code...">
                                                 </div>
                                                 <div class="form-group">
-                                                    <button class="btn  btn-md" name="login">Apply Coupon</button>
+                                                    <button class="btn  btn-md" type="submit" name="login">Apply
+                                                        Coupon</button>
                                                 </div>
                                             </form>
                                         </div>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <a href="/couponList" class="btn btn-success">Show Available coupons</a>
                                     </div>
                                 </div>
                             </div>
@@ -358,7 +383,8 @@
                             </div>
                             <div class="row">
 
-                                <form id="orderForm" method="POST" action="/placeOrder" onsubmit="return validateAddress()">
+                                <form id="orderForm" method="POST" action="/placeOrder"
+                                    onsubmit="return validateAddress()">
 
                                     <div class="payment_option">
                                         <h4>Select Payment Method</h4>
@@ -381,19 +407,25 @@
                                     <input type="hidden" name="cart" value='<%= JSON.stringify(cart) %>'>
                                     <input type="hidden" id="totalamount" name="totalPrice"
                                         value="<%= totalAmount.toLocaleString() %>">
-                                    
+
                                     <input type="hidden" id="selectedAddressId" name="addressId">
+                                    <input type="hidden" id="discountInput" name="discountInput">
+                                    <input type="hidden" id="couponCodeInput" name="couponCodeInput">
+
                                     <% if (product) { %>
-                                        <input type="hidden" name="singleProduct" value="<%= JSON.stringify(product) %>">
+                                        <input type="hidden" name="singleProduct"
+                                            value="<%= JSON.stringify(product) %>">
                                         <% } %>
 
-                                    <!-- Payment Buttons -->
-                                    <div id="paymentButtons" class="mt-4">
-                                        <button type="submit" class="btn btn-fill-out btn-block" id="submitButton">Place
-                                            Order</button>
-                                        <button type="button" class="btn btn-fill-out btn-block" id="razorpayButton"
-                                            style="display: none;">Pay with Razorpay</button>
-                                    </div>
+                                            <!-- Payment Buttons -->
+                                            <div id="paymentButtons" class="mt-4">
+                                                <button type="submit" class="btn btn-fill-out btn-block"
+                                                    id="submitButton" onclick="syncDiscount()">Place
+                                                    Order</button>
+                                                <button type="button" class="btn btn-fill-out btn-block"
+                                                    id="razorpayButton" style="display: none;">Pay with
+                                                    Razorpay</button>
+                                            </div>
                                 </form>
 
 
@@ -415,11 +447,22 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
 
+        function syncDiscount() {
+            const discountDisplay = document.getElementById('discount');
+            if (discountDisplay) {
+                const discountText = discountDisplay.innerText.replace('₹', '').replace(/,/g, '');
+                const discountValue = parseInt(discountText, 10) || 0;
+                document.getElementById('discountInput').value = discountValue || 0;
+                const coupon = document.getElementById('couponCode').value;
+                document.getElementById('couponCodeInput').value = coupon;
+            }
+        }
+
         document.querySelectorAll('.address-radio').forEach(radio => {
             radio.addEventListener('change', function () {
-                
+
                 const selectedAddressField = document.getElementById('selectedAddressId');
-                
+
                 selectedAddressField.value = this.value;
             });
         });
@@ -467,6 +510,48 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             togglePaymentButtons();
+        });
+
+    </script>
+
+    <script>
+        document.getElementById('coupon-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const couponCode = document.getElementById('couponCode').value;
+            const cartTotal = parseInt(document.getElementById('totalamount').value.replace(/[^0-9]/g, ""), 10);
+            console.log(cartTotal);
+
+            if (!couponCode) {
+                alert('Please enter a coupon code.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/applyCoupon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ couponCode, cartTotal }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Update the total price on the UI
+                    console.log(result.discount, result.totalAfterDiscount);
+                    document.getElementById('discount').textContent = result.discount;
+                    document.getElementById('finalAmount').textContent = result.totalAfterDiscount;
+
+                    alert(result.message);
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error('Error applying coupon:', error);
+                alert('Failed to apply coupon. Please try again.');
+            }
         });
 
     </script>
