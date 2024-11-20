@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const couponSchema = new mongoose.Schema({
-    name:{
+    code:{
         type:String,
         required:true,
         unique:true
@@ -12,27 +12,31 @@ const couponSchema = new mongoose.Schema({
         default:Date.now,
         required:true
     },
-    expireOn:{
+    endOn:{
         type:Date,
-        required:true,
+        required:true
     },
-    offerPrice:{
+    price:{
         type:Number,
-        required:true,
+        required:true
     },
-    minimumPrice:{
+    minimumAmount:{
         type:Number,
-        required:true,
+        required:true
     },
-    isList:{
+    maximumAmount:{
+        type:Number,
+        required:true
+    },
+    isActive:{
         type:Boolean,
         default:true,
     },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
+        ref:'User'
     }
 })
 
-const Coupon = mongoose.model("Coupon",couponSchema);
-module.exports = Coupon;
+const Coupons = mongoose.model("Coupons",couponSchema);
+module.exports = Coupons;

@@ -10,6 +10,7 @@ const orderController = require("../controllers/user/orderController");
 const User = require("../models/userSchema");
 
 
+
 router.use(async(req, res, next) => {
     const userData = await User.findById(req.session.user);
     res.locals.user = userData || null;
