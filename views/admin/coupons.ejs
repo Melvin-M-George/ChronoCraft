@@ -86,26 +86,41 @@
                                     <%for(let i=0;i<coupons.length;i++){%>
                                         <tr>
                                             <td>
-                                                <%=coupons[i].name%>
+                                                <%=coupons[i].code%>
                                             </td>
                                             <td>
-                                                <%=coupons[i].offerPercentage%>
+                                                <%=coupons[i].price%>
                                             </td>
-                                            <!-- <%if(coupons[i].isList){%>
+                                            <td>
+                                                <%=coupons[i].createdOn.toLocaleDateString()%>
+                                            </td>
+                                            <td>
+                                                <%=coupons[i].endOn.toLocaleDateString()%>
+                                            </td>
+                                            <td>
+                                                <%=coupons[i].minimumAmount%>
+                                            </td>
+                                            <td>
+                                                <%=coupons[i].maximumAmount%>
+                                            </td>
+                                            <%if(coupons[i].isActive){%>
+                                            
+                                        
                                             <td>
                                                 <span class="badge rounded-pill alert-success">Active</span>
                                             </td>
-                                        <%}else{%>
+                                            <% }else{ %>
                                             <td>
                                                 <span class="badge rounded-pill alert-danger">Inactive</span>
                                             </td>
-                                        <%}%> -->
+                                        <%}%> 
                                             <td>
                                                 <button class="btn btn-danger text-white"
                                                     onclick="confirmDelete('<%= coupons[i]._id %>')">Delete</button>
                                             </td>
                                         </tr>
-                                        <%}%>
+                                    
+                                    <%}%>
                                 </tbody>
                             </table>
                             <%}else{%>
@@ -129,7 +144,27 @@
 </div>
 <br>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    
+
+function confirmDelete(couponId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action will delete the coupon permanently.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/admin/deleteCoupon?id=${couponId}`;
+                }
+            });
+        }
+
+
     function validateCouponForm() {
     let isValid = true;
 
@@ -248,6 +283,7 @@ function validateEndDate() {
 
     endDateError.style.display = "none";
     return true;
-}
+}   
 
 </script>
+

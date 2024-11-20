@@ -4,10 +4,10 @@ const Coupons = require("../../models/couponSchema");
 const getCouponPage = async (req,res) => {
     try {
         const coupons = await Coupons.find();
-        res.render("coupons",{coupons});
+        return res.render("coupons",{coupons});
     } catch (error) {
         console.log("Error getting coupon page",error)
-        res.redirect("/pageerror")
+        return res.redirect("/pageerror")
     }
 }
 
@@ -36,16 +36,29 @@ const addCoupon = async (req,res) => {
         })
 
         await newCoupon.save();
-        return res.redirect("/admin/coupons").json({message:"Coupon Added Successfully",isActive});
+        return res.redirect("/admin/coupons");
     } catch (error) {
         console.error("Error adding coupon:",error);
         return res.status(500).json({message:"An error occured while adding coupon. Please try again later"});
     }
 }
 
+const deleteCoupon = async (req,res) => {
+    try {
+        const couponId = req.query.id;
+        await Coupons.findByIdAndDelete(couponId);
+        return res.redirect("/admin/coupons");
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     getCouponPage,
     addCoupon,
+    deleteCoupon,
+
+
 
 
 }

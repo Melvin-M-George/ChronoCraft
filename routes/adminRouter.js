@@ -72,7 +72,7 @@ router.post("/updateOrderStatus",adminAuth,orderController.updateOrderStatus);
 //coupon management
 router.get("/coupons",adminAuth,couponController.getCouponPage);
 router.post("/addCoupon",adminAuth,couponController.addCoupon);
-
+router.get("/deleteCoupon",adminAuth,couponController.deleteCoupon);
 
 
 module.exports = router;
