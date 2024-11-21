@@ -10,25 +10,25 @@
         --border-light: #E9ECEF;
         --card-shadow: rgba(0, 0, 0, 0.1);
     }
-    
+
     /* General Styling for Coupons Section */
     .coupons-section {
         background-color: var(--background-light);
         padding: 50px 0;
         font-family: 'Arial', sans-serif;
     }
-    
+
     /* Return Link Styling */
     .return-link a {
         color: var(--gray-text);
         text-decoration: none;
         transition: color 0.3s ease;
     }
-    
+
     .return-link a:hover {
         color: var(--primary-color);
     }
-    
+
     /* Section Title Styling */
     .section-title {
         font-size: 2rem;
@@ -36,12 +36,12 @@
         font-weight: 600;
         margin-bottom: 15px;
     }
-    
+
     .coupons-header p {
         color: var(--gray-text);
         font-size: 1rem;
     }
-    
+
     /* Coupons List Styling */
     .coupons-list {
         display: flex;
@@ -49,7 +49,7 @@
         gap: 20px;
         justify-content: center;
     }
-    
+
     /* Coupon Card Styling */
     .coupon-card {
         background-color: #ffffff;
@@ -61,13 +61,13 @@
         width: 100%;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    
+
     .coupon-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 20px var(--card-shadow);
         border-color: var(--secondary-color);
     }
-    
+
     /* Coupon Card Header */
     .coupon-card-header {
         background-color: var(--primary-color);
@@ -77,13 +77,13 @@
         font-size: 1.2rem;
         font-weight: bold;
     }
-    
+
     /* Coupon Card Body */
     .coupon-card-body {
         padding: 20px;
         text-align: center;
     }
-    
+
     .coupon-code,
     .coupon-discount,
     .coupon-minimum,
@@ -92,26 +92,63 @@
         color: var(--secondary-color);
         font-size: 1rem;
     }
-    
+
     .coupon-code strong {
         color: var(--accent-color);
         font-size: 1.2rem;
     }
-    
+
+    /* Copy Button Styling */
+    .copy-btn {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .copy-btn:hover {
+        background-color: var(--accent-color);
+    }
+
+    /* Return Link Button Styling */
+    .return-link {
+        text-align: right;
+        margin-bottom: 20px;
+    }
+
+    .return-link a {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .return-link a:hover {
+        background-color: var(--secondary-color);
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
         .coupons-section {
             padding: 30px 15px;
         }
-    
+
         .section-title {
             font-size: 1.5rem;
         }
-    
+
         .coupon-card-body {
             padding: 15px;
         }
-    
+
         .coupon-code,
         .coupon-discount,
         .coupon-minimum,
@@ -119,23 +156,23 @@
             font-size: 0.9rem;
         }
     }
-    </style>
-    
+</style>
+
 <main class="main">
     <!-- Coupons Section -->
     <section class="coupons-section position-relative pt-50">
         <div class="container">
             <!-- Return to Dashboard Link -->
             <% if(productId){ %>
-                <div class="return-link mb-4 text-center">
-                    <a href="/checkout?id=<%= productId %>" class="text-muted"><i class="fi-rs-angle-left"></i> Return to checkout</a>
+                <div class="return-link">
+                    <a href="/checkout?id=<%= productId %>"><i class="fi-rs-angle-left"></i> Return to checkout</a>
                 </div>
+            <% }else{ %>
+                <div class="return-link">
+                    <a href="/checkout"><i class="fi-rs-angle-left"></i> Return to checkout</a>
+                </div>
+            <% } %>
 
-                <% }else{ %>
-                    <div class="return-link mb-4 text-center">
-                        <a href="/checkout" class="text-muted"><i class="fi-rs-angle-left"></i> Return to checkout</a>
-                    </div>
-                    <% } %>
             <!-- Coupons List Header -->
             <div class="coupons-header d-flex flex-column align-items-center mb-4 text-center">
                 <h2 style="color: #00A08A;" class="section-title">Available Coupons</h2>
@@ -152,6 +189,7 @@
                             </div>
                             <div class="coupon-card-body">
                                 <p class="coupon-code">Code: <strong><%= coupon.code %></strong></p>
+                                <button class="copy-btn" onclick="copyCouponCode('<%= coupon.code %>')">Copy Code</button>
                                 <p class="coupon-discount">Discount: <%= coupon.price %>% off</p>
                                 <p class="coupon-minimum">Minimum Purchase: ₹<%= coupon.minimumAmount.toLocaleString() %></p>
                                 <p class="coupon-expiry">Expires on: <%= coupon.endOn.toLocaleDateString() %></p>
@@ -167,3 +205,22 @@
 </main>
 
 <%- include('../partials/user/footer') %>
+
+<script>
+    // Function to copy coupon code to clipboard
+    function copyCouponCode(code) {
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Coupon Code Copied',
+            text: 'The coupon code has been copied to your clipboard.',
+            confirmButtonColor: '#39b4ac',
+        });
+    }
+</script>

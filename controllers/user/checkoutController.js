@@ -3,6 +3,7 @@ const Address = require("../../models/addressSchema");
 const User = require("../../models/userSchema");
 const Order = require("../../models/orderSchema");
 const Product = require("../../models/ProductSchema");
+const Coupon = require("../../models/couponSchema");
 
 
 
