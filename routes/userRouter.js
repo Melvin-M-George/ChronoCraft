@@ -7,7 +7,8 @@ const {userAuth, adminAuth} = require("../middlewares/auth");
 const cartController = require("../controllers/user/cartController");
 const checkoutController = require("../controllers/user/checkoutController");
 const orderController = require("../controllers/user/orderController");
-const couponController = require("../controllers/user/couponController")
+const couponController = require("../controllers/user/couponController");
+const wishlistController = require("../controllers/user/wishlistController");
 const User = require("../models/userSchema");
 
 
@@ -77,6 +78,11 @@ router.get("/cancelOrder",orderController.cancelOrder);
 //coupon management
 router.get("/couponList",couponController.getCouponList);
 router.post('/applyCoupon', couponController.applyCoupon);
+
+//wishlist management
+router.get("/wishlist",userAuth,wishlistController.getWishList);
+router.get("/addToWishlist",userAuth,wishlistController.addToWishlist);
+router.post("/removeFromWishlist",wishlistController.removeFromWishlist);
 
 
 module.exports = router;

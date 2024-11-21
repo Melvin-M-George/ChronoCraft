@@ -171,7 +171,11 @@
                                         <a aria-label="Add To Cart" class="action-btn hover-up" href="/addToCart?id=<%= products[i]._id %>">
                                             <i class="fi-rs-shopping-bag-add"></i>
                                         </a>
+                                         <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/addToWishlist?id=<%= products[i]._id %>">
+                                            <i class="fi-rs-heart"></i>
+                                        </a>
                                     </div>
+                                    
                                 </div>
                             <% } %>
                         </div>
