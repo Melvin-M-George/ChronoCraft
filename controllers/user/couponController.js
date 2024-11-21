@@ -8,11 +8,16 @@ const getCouponList = async (req,res) => {
         if(!user){
             return res.redirect("/login");
         }
+        
 
         const coupons = await Coupons.find({
             isActive:true,
             userId:{$ne:user}
         })
+        let productId = req.query.id;
+        if(productId){
+            return res.render("couponList",{coupons,productId})
+        }
 
         res.render("couponList",{coupons})
     } catch (error) {

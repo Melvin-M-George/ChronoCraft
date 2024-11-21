@@ -89,7 +89,6 @@ const placeOrder = async (req, res) => {
         let orderedItems = [];
         if (singleProduct) {
             const product = JSON.parse(singleProduct);
-            console.log("product id",product._id)
             orderedItems.push({
                 product: product._id,
                 quantity: 1,
@@ -102,7 +101,6 @@ const placeOrder = async (req, res) => {
           
         } else if (cart) {
             const cartItems = cart.items;
-            console.log(`dfsfvsd${cartItems}`);
             orderedItems = cartItems.map(item => ({
                 product: item.productId._id,
                 quantity: item.quantity,
@@ -115,12 +113,14 @@ const placeOrder = async (req, res) => {
             })
         }
 
+        let finalAmount = totalPrice-discountInput;
+
         
         const newOrder = new Order({
             orderedItems,
             user: userId,
             totalPrice: totalPrice,
-            finalAmount: totalPrice,
+            finalAmount: finalAmount,
             address: addressId,
             paymentMethod: payment_option,
             status: payment_option === "COD" ? "Pending" : "Processing",

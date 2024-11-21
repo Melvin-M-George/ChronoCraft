@@ -126,10 +126,16 @@
     <section class="coupons-section position-relative pt-50">
         <div class="container">
             <!-- Return to Dashboard Link -->
-            <div class="return-link mb-4 text-center">
-                <a href="/checkout" class="text-muted"><i class="fi-rs-angle-left"></i> Return to checkout</a>
-            </div>
+            <% if(productId){ %>
+                <div class="return-link mb-4 text-center">
+                    <a href="/checkout?id=<%= productId %>" class="text-muted"><i class="fi-rs-angle-left"></i> Return to checkout</a>
+                </div>
 
+                <% }else{ %>
+                    <div class="return-link mb-4 text-center">
+                        <a href="/checkout" class="text-muted"><i class="fi-rs-angle-left"></i> Return to checkout</a>
+                    </div>
+                    <% } %>
             <!-- Coupons List Header -->
             <div class="coupons-header d-flex flex-column align-items-center mb-4 text-center">
                 <h2 style="color: #00A08A;" class="section-title">Available Coupons</h2>
