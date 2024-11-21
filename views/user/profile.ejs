@@ -204,6 +204,7 @@
             }
         }
         
+        
     </style>
 
 
@@ -409,6 +410,9 @@
                                                                                 <%= order.status %>
                                                                             </td>
                                                                             <td>₹ <%= order.finalAmount.toFixed(2) %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <a href="/orderDetails?id=<%= order._id %>">View Details</a>
                                                                             </td>
                                                                             <td id="order-action-<%= order._id %>">
                                                                                 <% if (order.status==='Pending' ) { %>

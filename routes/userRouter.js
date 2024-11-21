@@ -66,6 +66,9 @@ router.get("/addToCart",cartController.addToCart);
 router.get('/removeFromCart', cartController.removeFromCart);
 router.post('/updateQuantity', cartController.updateCartQuantity);
 
+//order management
+router.get("/orderDetails",orderController.getOrderDetails)
+
 //Checkout management
 router.get("/checkout",userAuth,checkoutController.getCheckout);
 router.post("/placeOrder",checkoutController.placeOrder);
