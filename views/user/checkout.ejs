@@ -190,7 +190,7 @@
                                         <div class="address-box mb-3">
                                             <input type="radio" name="selectedAddress"
                                                 id="address-<%= index %>-<%= addrIndex %>"
-                                                value="<%= addr._id || addr.pincode %>" class="address-radio" required>
+                                                value="<%= addr._id %>" class="address-radio" required>
                                             <label class="address-label" for="address-<%= index %>-<%= addrIndex %>">
                                                 <div class="address-type-badge <%= addr.addressType.toLowerCase() %>">
                                                     <%= addr.addressType %>
@@ -374,8 +374,17 @@
 
                                     <br>
                                     <div>
-                                        <a href="/couponList?id=<%= product._id %>" class="btn btn-success">Show
-                                            Available coupons</a>
+                                        <% if(product){ %>
+
+                                            <a href="/couponList?id=<%= product._id %>" class="btn btn-success">Show
+                                                Available coupons</a>
+
+                                                <% }else{ %>
+
+                                                    <a href="/couponList" class="btn btn-success">Show
+                                                        Available coupons</a>
+
+                                                        <% } %>
                                     </div>
                                 </div>
                             </div>
@@ -390,20 +399,17 @@
 
                                 <form id="orderForm" method="POST" action="/placeOrder"
                                     onsubmit="return validateAddress()">
-
                                     <div class="payment_option">
                                         <h4>Select Payment Method</h4>
                                         <div class="custome-radio">
                                             <input class="form-check-input" required type="radio" value="COD"
-                                                name="payment_option" id="exampleRadios3" checked
-                                                onchange="togglePaymentButtons()">
+                                                name="payment_option" id="exampleRadios3" checked>
                                             <label class="form-check-label" for="exampleRadios3">Cash on
                                                 Delivery</label>
                                         </div>
                                         <div class="custome-radio">
-                                            <input class="form-check-input" required type="radio" value="Online"
-                                                name="payment_option" id="exampleRadios5"
-                                                onchange="togglePaymentButtons()">
+                                            <input class="form-check-input" required type="radio" value="online"
+                                                name="payment_option" id="exampleRadios5">
                                             <label class="form-check-label" for="exampleRadios5">Online Payment</label>
                                         </div>
                                     </div>
@@ -412,7 +418,6 @@
                                     <input type="hidden" name="cart" value='<%= JSON.stringify(cart) %>'>
                                     <input type="hidden" id="totalamount" name="totalPrice"
                                         value="<%= totalAmount.toLocaleString() %>">
-
                                     <input type="hidden" id="selectedAddressId" name="addressId">
                                     <input type="hidden" id="discountInput" name="discountInput">
                                     <input type="hidden" id="couponCodeInput" name="couponCodeInput">
@@ -422,14 +427,10 @@
                                             value="<%= JSON.stringify(product) %>">
                                         <% } %>
 
-                                            <!-- Payment Buttons -->
+                                            <!-- Single Payment Button -->
                                             <div id="paymentButtons" class="mt-4">
                                                 <button type="submit" class="btn btn-fill-out btn-block"
-                                                    id="submitButton" onclick="syncDiscount()">Place
-                                                    Order</button>
-                                                <button type="button" class="btn btn-fill-out btn-block"
-                                                    id="razorpayButton" style="display: none;">Pay with
-                                                    Razorpay</button>
+                                                    id="submitButton" onclick="syncDiscount()">Place Order</button>
                                             </div>
                                 </form>
 
@@ -450,8 +451,63 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
+        if (performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
+            window.location.reload();
+        }
+
+        //Razorpay
+        function startRazorpayPayment(){
+            const finalAmount = document.getElementById("totalamount").value.replace(/,/g, '');
+            console.log(finalAmount);
+
+            fetch('/createPayment',{
+                method:"POST",
+                headers:{
+                    'Content-Type':'application/json',
+                },
+                body:JSON.stringify({amount:finalAmount})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success){
+                    const options = {
+                        key:"rzp_test_lK0Qx1aLqyD7Ks",
+                        amount:Number(finalAmount) * 100,
+                        currency:'INR',
+                        name:"ChronoCraft",
+                        description:"Order Payment",
+                        order_id:data.order.id,
+                        method:{
+                            card:true,
+                            netbanking:true,
+                            wallet:true,
+                            upi:true,
+                        },
+                        handler: function(response){
+                            document.getElementById("orderForm").submit();
+                        },
+                        prefill:{
+                            name:"Your Name",
+                            email:"your@example.com",
+                            contact:"1234567890"
+                        },
+                        theme:{
+                            color:"#39b4ac"
+                        }
+                    };
+                    const razorpay = new Razorpay(options);
+                    razorpay.open();
+                }else{
+                    Swal.fire("Error","Order Creation failed","error");
+                }
+            })
+            .catch(error => console.error("Error initializing Razorpay payment:",error));
+        }
+
+
         function syncDiscount() {
             const discountDisplay = document.getElementById('discount');
             if (discountDisplay) {
@@ -465,15 +521,15 @@
 
         document.querySelectorAll('.address-radio').forEach(radio => {
             radio.addEventListener('change', function () {
-
                 const selectedAddressField = document.getElementById('selectedAddressId');
-
-                selectedAddressField.value = this.value;
+                selectedAddressField.value = this.value || ''; 
             });
         });
 
+
         function validateAddress() {
             const addressRadioButtons = document.querySelectorAll('input[name="selectedAddress"]');
+            const paymentOption = document.querySelector('input[name="payment_option"]:checked').value;
             let addressSelected = false;
 
             addressRadioButtons.forEach((radio) => {
@@ -491,29 +547,13 @@
                 });
                 return false;
             }
+            if (paymentOption === "online") {
+                    startRazorpayPayment(); 
+                    return false;  
+                }
             return true;
         }
 
-        function togglePaymentButtons() {
-            const submitButton = document.getElementById('submitButton');
-            const razorpayButton = document.getElementById('razorpayButton');
-
-            if (submitButton && razorpayButton) {
-                const paymentOption = document.querySelector('input[name="payment_option"]:checked').value;
-
-                if (paymentOption === 'COD') {
-                    submitButton.style.display = 'block';
-                    razorpayButton.style.display = 'none';
-                } else {
-                    submitButton.style.display = 'none';
-                    razorpayButton.style.display = 'block';
-                }
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            togglePaymentButtons();
-        });
 
         // Apply coupon
 
@@ -609,6 +649,12 @@
                 removeCouponBtn.style.display = 'none';
             }
         }
+
+
+
+
+
+
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

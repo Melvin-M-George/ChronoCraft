@@ -9,6 +9,7 @@ const checkoutController = require("../controllers/user/checkoutController");
 const orderController = require("../controllers/user/orderController");
 const couponController = require("../controllers/user/couponController");
 const wishlistController = require("../controllers/user/wishlistController");
+const paymentController = require("../controllers/user/paymentController");
 const User = require("../models/userSchema");
 
 
@@ -84,5 +85,8 @@ router.get("/wishlist",userAuth,wishlistController.getWishList);
 router.get("/addToWishlist",userAuth,wishlistController.addToWishlist);
 router.post("/removeFromWishlist",wishlistController.removeFromWishlist);
 
+
+//Razorpay Payment
+router.post("/createPayment",paymentController.createRazorpay);
 
 module.exports = router;

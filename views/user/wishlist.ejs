@@ -40,7 +40,7 @@
                                                         <span class="color3 font-weight-bold">In Stock</span>
                                                     </td>
                                                     <td class="text-right" data-title="Cart">
-                                                        <form action="/addToCart" method="POST" style="display:inline;">
+                                                        <form action="/addToCart?id=<%= products[i].productId._id %>" method="get" style="display:inline;">
                                                             <input type="hidden" name="id" value="<%= products[i].productId._id %>">
                                                             <button type="submit" class="btn btn-sm btn-success">
                                                                 <i class="fi-rs-shopping-bag mr-5"></i>Add to cart

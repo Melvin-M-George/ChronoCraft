@@ -4,6 +4,7 @@ const User = require("../../models/userSchema");
 const Order = require("../../models/orderSchema");
 const Product = require("../../models/ProductSchema");
 const Coupon = require("../../models/couponSchema");
+const mongoose = require("mongoose");
 
 
 
@@ -68,6 +69,11 @@ const placeOrder = async (req, res) => {
             return res.status(404).send("User not found");
         }
 
+        if (!addressId || !mongoose.Types.ObjectId.isValid(addressId)) {
+            console.error("Invalid or missing addressId:", addressId);
+            return res.status(400).send("Invalid address selected");
+        }
+        
         
         const selectedAddress = user.addresses.filter(addr => addr._id.toString() === addressId);
         if (!selectedAddress) {
