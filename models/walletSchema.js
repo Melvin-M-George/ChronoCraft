@@ -1,60 +1,56 @@
+
 const mongoose = require("mongoose");
 
-
 const walletSchema = new mongoose.Schema({
-    userId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
     },
-    balance:{
-        type:Number,
-        required:true,
-        default:0,
+    balance: {
+        type: Number,
+        required: true,
+        default: 0,
     },
-    trasactions:[
+    transactions: [
         {
-            type:{
-                type:String,
-                enum:["credit","debit","refund"],
-                required:true,
+            type: {
+                type: String,
+                enum: ["credit", "debit", "refund"],
+                required: true,
             },
-            amount:{
-                type:Number,
-                required:true,
+            amount: {
+                type: Number,
+                required: true,
             },
-            date:{
-                type:Date,
-                default:Date.now
+            date: {
+                type: Date,
+                default: Date.now,
             },
-            description:{
-                type:String,
-                default:""
+            description: {
+                type: String,
+                default: "",
             },
-            orderId:{
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"Order",
-                required:false,
+            orderId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Order",
             },
         },
     ],
-    createdAt:{
-        type:Date,
-        default:Date.now,
+    createdAt: {
+        type: Date,
+        default: Date.now,
     },
-    updatedAt:{
-        type:Date,
-        default:Date.now,
+    updatedAt: {
+        type: Date,
+        default: Date.now,
     },
-
-
 });
 
-
-walletSchema.pre("save",function(next){
+walletSchema.pre("save", function (next) {
     this.updatedAt = Date.now();
     next();
-})
+});
 
-const Wallet = mongoose.model("Wallet",walletSchema);
+const Wallet = mongoose.model("Wallet", walletSchema);
 module.exports = Wallet;

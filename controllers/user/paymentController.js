@@ -18,7 +18,6 @@ const createRazorpay = async (req,res) => {
         };
 
         const order = await razorpay.orders.create(options);
-        console.log(order);
         res.status(200).json({success:true,order});
     } catch (error) {
         console.error("Error creating Razorpay order",error);

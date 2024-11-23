@@ -49,6 +49,18 @@ const orderSchema = new Schema({
         type:String,
         required:true,
         enum:["Pending","Processing","Shipped","Delivered","Cancelled","Return Request","Returned"],
+        default:"Pending"
+    },
+    paymentStatus: {
+        type: String,
+        enum: [
+            "Pending",
+            "Completed",
+            "Failed",
+            "Refunded",
+            "Not Applicable"  
+        ],
+        default: "Pending"
     },
     createdOn:{
         type:Date,
@@ -67,7 +79,7 @@ const orderSchema = new Schema({
     paymentMethod:{
         type:String,
         required:true,
-        enum:["COD","Online","Wallet"],
+        enum:["COD","online","wallet"],
 
     },
     couponCode:{

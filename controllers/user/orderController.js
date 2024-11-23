@@ -3,6 +3,7 @@
 const Address = require("../../models/addressSchema");
 const Order = require("../../models/orderSchema");
 const Product = require("../../models/ProductSchema");
+const Wallet = require("../../models/walletSchema");
 
 
 
@@ -44,10 +45,8 @@ const getOrderDetails = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
     const { id } = req.query;
-    console.log(id);
 
     try {
-       
         const order = await Order.findById(id);
 
         if (!order) {
@@ -58,15 +57,55 @@ const cancelOrder = async (req, res) => {
             return res.status(403).json({ message: 'Cannot cancel this order' });
         }
 
-        order.status = 'Cancelled';
-        await order.save();
+        if (order.paymentMethod === 'COD') {
+            order.status = 'Cancelled';
+            await order.save();
+            return res.json({ message: 'Order cancelled successfully' });
+        }
 
-        return res.redirect("/userProfile");
+        if (order.paymentMethod === 'Online') {
+            const userId = req.session.user;
+
+            if (!userId) {
+                return res.status(400).json({ message: 'User not authenticated' });
+            }
+
+            const amount = order.finalAmount;
+
+            let wallet = await Wallet.findOne({ userId });
+            if (!wallet) {
+                wallet = new Wallet({
+                    userId,
+                    balance: amount,
+                    transactions: [{
+                        type: 'refund',
+                        amount,
+                        orderId: id,
+                        description: 'Order refund',
+                    }],
+                });
+            } else {
+                wallet.balance += amount;
+                wallet.transactions.push({
+                    type: 'refund',
+                    amount,
+                    orderId: id,
+                    description: 'Order refund',
+                });
+            }
+
+            await wallet.save();
+            order.status = 'Cancelled';
+            await order.save();
+
+            return res.json({ message: 'Order cancelled and refund processed successfully' });
+        }
     } catch (error) {
         console.error('Error cancelling order:', error);
         return res.status(500).json({ message: 'Failed to cancel order' });
     }
 };
+
 
 module.exports = {
     

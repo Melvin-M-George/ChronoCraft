@@ -9,11 +9,20 @@ const loadHomepage = async (req, res) => {
     try {
         const user = req.session.user;
         const  categories = await Category.find({isListed:true});
-        let productData = await Product.find(
-            {isBlocked:false,
-                category:{$in:categories.map(category=>category._id)}
-            }
-        )
+
+
+
+        // Get category filter from query
+        const selectedCategory = req.query.category;
+
+        let productQuery = { isBlocked: false };
+        if (selectedCategory) {
+            productQuery.category = selectedCategory; // Filter products by category
+        } else {
+            productQuery.category = { $in: categories.map(category => category._id) };
+        }
+
+        let productData = await Product.find(productQuery);
 
 
 
@@ -24,9 +33,9 @@ const loadHomepage = async (req, res) => {
 
         if (user) {
             const userData = await User.findOne({ _id: user._id });
-            return res.render("home", { user: userData ,products:productData});
+            return res.render("home", { user: userData ,products:productData,categories, selectedCategory});
         } else {
-            return res.render("home", {products:productData}); 
+            return res.render("home", {products:productData , categories, selectedCategory}); 
         }
     } catch (error) {
         console.log("Home page not found");

@@ -9,7 +9,7 @@ const getWallet = async (req,res) => {
             return res.redirect("/login");
         }
         const userId = req.session.user._id;
-        const walletData = await Wallet.findOne({userId}).populate("trasactions.orderId");
+        const walletData = await Wallet.findOne({userId}).populate("transactions.orderId");
 
         if(!walletData){
             return res.render("wallet",{walletData:{balance:0,transactions:[]}});

@@ -121,7 +121,13 @@ const placeOrder = async (req, res) => {
         }
 
         let finalAmount = totalPrice-discountInput;
-
+        let paymentStatus;
+        if(payment_option=="COD"){
+            paymentStatus = "COD"
+            
+        }else{
+            paymentStatus = "pending"
+        }
         
         const newOrder = new Order({
             orderedItems,
@@ -133,7 +139,8 @@ const placeOrder = async (req, res) => {
             status: payment_option === "COD" ? "Pending" : "Processing",
             couponCode:couponCodeInput,
             discount:discountInput,
-            couponApplied: Boolean(couponCodeInput && discountInput)
+            couponApplied: Boolean(couponCodeInput && discountInput),
+            paymentStatus: "Pending",
         });
 
        

@@ -1,6 +1,7 @@
 const User = require("../../models/userSchema");
 const Address = require("../../models/addressSchema");
 const Order = require("../../models/orderSchema");
+const Wallet = require("../../models/walletSchema");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const env = require("dotenv").config();
@@ -151,6 +152,7 @@ const userProfile = async (req,res) => {
         const userId = req.session.user;
         const userData = await User.findById(userId);
         const addressData = await Address.findOne({userId : userId});
+        
         const orders = await Order.find({ user: userId });
         res.render('profile',{
             user:userData,

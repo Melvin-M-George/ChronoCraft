@@ -415,21 +415,13 @@
                                                                                 <a href="/orderDetails?id=<%= order._id %>">View Details</a>
                                                                             </td>
                                                                             <td id="order-action-<%= order._id %>">
-                                                                                <% if (order.status==='Pending' ) { %>
-                                                                                    <button class="cancel-btn"
-                                                                                        onclick="confirmCancelOrder('<%= order._id %>')">
-                                                                                        Cancel
-                                                                                    </button>
-                                                                                    <% } else if
-                                                                                        (order.status==='Processing' ||
-                                                                                        order.status==='Shipped' ) { %>
-                                                                                        <button class="return-btn"
-                                                                                            disabled>
-                                                                                            Return/Cancel Not Available
-                                                                                        </button>
-                                                                                        <% } else { %>
-                                                                                            <span>--</span>
-                                                                                            <% } %>
+                                                                                <% if (order.status === 'Pending') { %>
+                                                                                    <button class="cancel-btn" onclick="confirmCancelOrder('<%= order._id %>')">Cancel</button>
+                                                                                <% } else if (order.status === 'Processing' || order.status === 'Shipped') { %>
+                                                                                    <button class="return-btn" disabled>Return/Cancel Not Available</button>
+                                                                                <% } else { %>
+                                                                                    <span>--</span>
+                                                                                <% } %>
                                                                             </td>
                                                                         </tr>
                                                                         <% }) %>
@@ -525,20 +517,48 @@
 
     <script>
         function confirmCancelOrder(orderId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, cancel it!',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const reason = result.value;
-                    window.location.href = `/cancelOrder?id=${orderId}&reason=${encodeURIComponent(reason)}`;
-                }
-            });
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel it!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/cancelOrder?id=${orderId}`, { method: 'POST' })// Use POST for better REST semantics
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire({
+                            title: 'Cancelled!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonColor: '#3085d6',
+                        }).then(() => {
+                            // Reload or update UI
+                            window.location.reload(); // Reload the page to reflect changes
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to cancel the order.',
+                            icon: 'error',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        icon: 'error',
+                    });
+                });
         }
+    });
+}
+
     </script>
     <%- include("../../views/partials/user/footer") %>

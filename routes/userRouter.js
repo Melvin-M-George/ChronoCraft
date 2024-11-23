@@ -75,7 +75,7 @@ router.get("/orderDetails",orderController.getOrderDetails)
 //Checkout management
 router.get("/checkout",userAuth,checkoutController.getCheckout);
 router.post("/placeOrder",checkoutController.placeOrder);
-router.get("/cancelOrder",orderController.cancelOrder);
+router.post("/cancelOrder",orderController.cancelOrder);
 
 //coupon management
 router.get("/couponList",couponController.getCouponList);

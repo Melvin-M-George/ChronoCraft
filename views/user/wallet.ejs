@@ -1,269 +1,271 @@
-
 <%- include("../../views/partials/user/header") %>
 
-<link
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      /* Previous styles remain the same */
-      .wallet-card {
-        background: #DCD6F7;
-        color: #424874;
-        border-radius: 15px;
-      }
-      
-      .credit {
-        color: rgb(12, 164, 12);
-      }
-      
-      .debit {
-        color: red;
-      }
-      
-      .referral-code {
-        background: #F4EEFF;
-        padding: 15px;
-        border-radius: 10px;
-        border: 2px dashed #A6B1E1;
-      }
-      
-      .add-funds-card {
-        border: none;
-        box-shadow: 0 0 15px rgba(66, 72, 116, 0.1);
-      }
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+  <style>
+    /* Previous styles remain the same */
+    .wallet-card {
+      background: #DCD6F7;
+      color: #424874;
+      border-radius: 15px;
+    }
 
-      /* Table specific styles */
-      .transaction-table th {
-        background-color: #F4EEFF;
-        color: #424874;
-        border-bottom: 2px solid #DCD6F7;
-      }
+    .credit {
+      color: rgb(12, 164, 12);
+    }
 
-      .transaction-table td {
-        color: #424874;
-        border-bottom: 1px solid #DCD6F7;
-      }
+    .debit {
+      color: red;
+    }
 
-      .transaction-table tr:hover {
-        background-color: #F4EEFF;
-      }
+    .referral-code {
+      background: #F4EEFF;
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px dashed #A6B1E1;
+    }
 
-      /* Rest of the button styles remain the same */
-      .btn-primary {
-        background-color: #424874;
-        border-color: #424874;
-      }
+    .add-funds-card {
+      border: none;
+      box-shadow: 0 0 15px rgba(66, 72, 116, 0.1);
+    }
 
-      .btn-primary:hover {
-        background-color: #A6B1E1;
-        border-color: #A6B1E1;
-      }
+    /* Table specific styles */
+    .transaction-table th {
+      background-color: #F4EEFF;
+      color: #424874;
+      border-bottom: 2px solid #DCD6F7;
+    }
 
-      .btn-outline-primary {
-        color: #424874;
-        border-color: #424874;
-      }
+    .transaction-table td {
+      color: #424874;
+      border-bottom: 1px solid #DCD6F7;
+    }
 
-      .btn-outline-primary:hover {
-        background-color: #424874;
-        border-color: #424874;
-      }
+    .transaction-table tr:hover {
+      background-color: #F4EEFF;
+    }
 
-      .btn-light {
-        background-color: #F4EEFF;
-        border-color: #DCD6F7;
-        color: #424874;
-      }
+    /* Rest of the button styles remain the same */
+    .btn-primary {
+      background-color: #424874;
+      border-color: #424874;
+    }
 
-      .btn-light:hover {
-        background-color: #DCD6F7;
-        border-color: #A6B1E1;
-        color: #424874;
-      }
+    .btn-primary:hover {
+      background-color: #A6B1E1;
+      border-color: #A6B1E1;
+    }
 
-      .btn-outline-secondary {
-        color: #A6B1E1;
-        border-color: #A6B1E1;
-      }
+    .btn-outline-primary {
+      color: #424874;
+      border-color: #424874;
+    }
 
-      .btn-outline-secondary:hover {
-        background-color: #A6B1E1;
-        border-color: #A6B1E1;
-        color: #F4EEFF;
-      }
+    .btn-outline-primary:hover {
+      background-color: #424874;
+      border-color: #424874;
+    }
 
-      .card {
-        border-color: #DCD6F7;
-      }
+    .btn-light {
+      background-color: #F4EEFF;
+      border-color: #DCD6F7;
+      color: #424874;
+    }
 
-      .card-header {
-        color: #424874;
-      }
+    .btn-light:hover {
+      background-color: #DCD6F7;
+      border-color: #A6B1E1;
+      color: #424874;
+    }
 
-      .text-muted {
-        color: #A6B1E1 !important;
-      }
+    .btn-outline-secondary {
+      color: #A6B1E1;
+      border-color: #A6B1E1;
+    }
 
-      .input-group-text {
-        background-color: #F4EEFF;
-        border-color: #DCD6F7;
-        color: #424874;
-      }
+    .btn-outline-secondary:hover {
+      background-color: #A6B1E1;
+      border-color: #A6B1E1;
+      color: #F4EEFF;
+    }
 
-      .form-control, .form-select {
-        border-color: #DCD6F7;
-        color: #424874;
-      }
+    .card {
+      border-color: #DCD6F7;
+    }
 
-      .form-control:focus, .form-select:focus {
-        border-color: #A6B1E1;
-        box-shadow: 0 0 0 0.25rem rgba(166, 177, 225, 0.25);
-      }
-    </style>
+    .card-header {
+      color: #424874;
+    }
 
-    <div class="container py-5">
-      <!-- Wallet card remains the same -->
-      <div class="wallet-card p-4 mb-4">
-        <div class="row">
-          <div class="col-md-6">
-            <h5 class="mb-1">Wallet Balance</h5>
-            <h2 class="mb-0">$1,234.56</h2>
+    .text-muted {
+      color: #A6B1E1 !important;
+    }
+
+    .input-group-text {
+      background-color: #F4EEFF;
+      border-color: #DCD6F7;
+      color: #424874;
+    }
+
+    .form-control,
+    .form-select {
+      border-color: #DCD6F7;
+      color: #424874;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #A6B1E1;
+      box-shadow: 0 0 0 0.25rem rgba(166, 177, 225, 0.25);
+    }
+  </style>
+
+  <div class="container py-5">
+    <!-- Wallet card remains the same -->
+    <div class="wallet-card p-4 mb-4">
+      <div class="row">
+        <div class="col-md-6">
+          <h2 style="color: #424874" class="text-left mb-4">Your Wallet</h2>
+          <h5 class="mb-1">Balance</h5>
+          <h2 class="mb-0">₹<%= walletData.balance.toFixed(2)%>
+          </h2>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addFundsModal">
+            <i class="fas fa-plus-circle me-2"></i>Add Funds
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8 mb-4">
+        <div class="card">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">Transaction History</h5>
           </div>
-          <div class="col-md-6 text-md-end">
-            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addFundsModal">
-              <i class="fas fa-plus-circle me-2"></i>Add Funds
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table transaction-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Order ID</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if(walletData.transactions && walletData.transactions.length> 0) {%>
+                    <% walletData.transactions.forEach(transaction=> { %>
+                      <tr>
+                        <td>
+                          <%= new Date(transaction.date).toLocaleDateString() %>
+                        </td>
+                        <td>
+                          <%= transaction.orderId && transaction.orderId.orderId ? transaction.orderId.orderId :
+                            transaction.orderId || 'N/A' %>
+                        </td>
+                        <td class="<%= transaction.type%>">
+                          <%= transaction.type%>
+                        </td>
+                        <td class="font-weight-bold">₹<%= transaction.amount.toFixed(2) %>
+                        </td>
+                        <td>
+                          <%= transaction.description || 'No description' %>
+                        </td>
+                      </tr>
+                      <% }) %>
+
+                        <% }else{ %>
+                          <tr>
+                            <td colspan="5" class="text-muted">No transactions available</td>
+                          </tr>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rest of the code remains the same -->
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">Refer & Earn</h5>
+          </div>
+          <div class="card-body">
+            <p>Share your referral code and earn $50 for each friend who joins!</p>
+            <div class="referral-code mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <code class="fs-5">JOHN50</code>
+                <button class="btn btn-sm btn-outline-primary">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <button class="btn btn-primary w-100">
+              <i class="fas fa-share-alt me-2"></i>Share Code
             </button>
           </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-md-8 mb-4">
-          <div class="card">
-            <div class="card-header bg-white">
-              <h5 class="mb-0">Transaction History</h5>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table transaction-table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Order ID</th>
-                      <th>Type</th>
-                      <th>Amount</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Oct 15, 2024</td>
-                      <td>#ORD-2024-001</td>
-                      <td><span class="debit">Debit</span></td>
-                      <td class="debit">-$199.99</td>
-                      <td>Purchase - Premium Headphones</td>
-                    </tr>
-                    <tr>
-                      <td>Oct 12, 2024</td>
-                      <td>#WLT-2024-002</td>
-                      <td><span class="credit">Credit</span></td>
-                      <td class="credit">+$500.00</td>
-                      <td>Added Funds</td>
-                    </tr>
-                    <tr>
-                      <td>Oct 10, 2024</td>
-                      <td>#REF-2024-003</td>
-                      <td><span class="credit">Credit</span></td>
-                      <td class="credit">+$50.00</td>
-                      <td>Referral Bonus</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+        <div class="card">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">Quick Actions</h5>
           </div>
-        </div>
-
-        <!-- Rest of the code remains the same -->
-        <div class="col-md-4">
-          <div class="card mb-4">
-            <div class="card-header bg-white">
-              <h5 class="mb-0">Refer & Earn</h5>
-            </div>
-            <div class="card-body">
-              <p>Share your referral code and earn $50 for each friend who joins!</p>
-              <div class="referral-code mb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                  <code class="fs-5">JOHN50</code>
-                  <button class="btn btn-sm btn-outline-primary">
-                    <i class="fas fa-copy"></i>
-                  </button>
-                </div>
-              </div>
-              <button class="btn btn-primary w-100">
-                <i class="fas fa-share-alt me-2"></i>Share Code
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-outline-primary">
+                <i class="fas fa-shopping-cart me-2"></i>Shop Now
+              </button>
+              <button class="btn btn-outline-secondary">
+                <i class="fas fa-history me-2"></i>View All Transactions
               </button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <div class="card">
-            <div class="card-header bg-white">
-              <h5 class="mb-0">Quick Actions</h5>
-            </div>
-            <div class="card-body">
-              <div class="d-grid gap-2">
-                <button class="btn btn-outline-primary">
-                  <i class="fas fa-shopping-cart me-2"></i>Shop Now
-                </button>
-                <button class="btn btn-outline-secondary">
-                  <i class="fas fa-history me-2"></i>View All Transactions
-                </button>
+  <!-- Modal remains the same -->
+  <div class="modal fade" id="addFundsModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Funds to Wallet</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="add-funds-card">
+            <div class="mb-3">
+              <label class="form-label">Amount</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" placeholder="Enter amount" />
               </div>
             </div>
+            <div class="mb-3">
+              <label class="form-label">Payment Method</label>
+              <select class="form-select">
+                <option>Credit Card</option>
+                <option>Debit Card</option>
+                <option>PayPal</option>
+                <option>Bank Transfer</option>
+              </select>
+            </div>
+            <button class="btn btn-primary w-100">Add Funds</button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal remains the same -->
-    <div class="modal fade" id="addFundsModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Funds to Wallet</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div class="add-funds-card">
-              <div class="mb-3">
-                <label class="form-label">Amount</label>
-                <div class="input-group">
-                  <span class="input-group-text">$</span>
-                  <input type="number" class="form-control" placeholder="Enter amount" />
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Payment Method</label>
-                <select class="form-select">
-                  <option>Credit Card</option>
-                  <option>Debit Card</option>
-                  <option>PayPal</option>
-                  <option>Bank Transfer</option>
-                </select>
-              </div>
-              <button class="btn btn-primary w-100">Add Funds</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
 
-    <%- include("../../views/partials/user/footer") %>
+  <%- include("../../views/partials/user/footer") %>

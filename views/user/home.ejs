@@ -59,6 +59,15 @@
 .sort-select option:disabled {
     color: #aaa;
 }
+.category-filter {
+    margin: 20px 0;
+    text-align: center;
+}
+#categorySelect {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
 
 </style>
 
@@ -157,6 +166,16 @@
                     </div>
                     
                 </div>
+                <div class="category-filter">
+                    <select id="categorySelect" onchange="filterByCategory()">
+                        <option value="">All Categories</option>
+                        <% categories.forEach(category => { %>
+                            <option value="<%= category._id %>" <%= category._id.toString() === selectedCategory ? 'selected' : '' %>>
+                                <%= category.name %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
                 
                 <div class="tab-content wow fadeIn animated" id="myTabContent">
                     <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
@@ -204,14 +223,11 @@
                             <% } %>
                         </div>
                         
-
-
-                        <!--End product-grid-4-->
                     </div>
-                   
-                    
-                   
                 </div>
+
+
+
                 
             </div>
         </section>
@@ -225,6 +241,14 @@
     </main>
 
     <script>
+        function filterByCategory() {
+        const selectedCategory = document.getElementById('categorySelect').value;
+        const queryParam = selectedCategory ? `?category=${selectedCategory}` : '';
+        window.location.href = `/${queryParam}`;
+    }
+
+
+
         function handleSortChange() {
             const sortBy = document.getElementById('sort-by').value;
 
