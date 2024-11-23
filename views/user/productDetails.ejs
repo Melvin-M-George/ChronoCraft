@@ -50,48 +50,45 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="product-detail accordion-detail">
+
+                        
                         <div class="row mb-50">
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <div class="detail-gallery">
                                     <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                    
                                     <div class="product-image-slider">
-                                        <% for(let i=0;i<data.productImages.length;i++){ %>
+                                        <% for(let i=0; i<data.productImages.length; i++){ %>
                                         <figure class="border-radius-10">
                                             <img src="/uploads/re-image/<%=data.productImages[i] %>" alt="product image">
                                         </figure>
                                         <% } %>
-                                        
                                     </div>
-                                     
-                                     <div class="slider-nav-thumbnails pl-15 pr-15">
-                                        <%for(let i=0;i<data.productImages.length;i++){%>
-                                            <div><img src="uploads/re-image/<%=data.productImages[i]%>" alt="product image"></div>
-                                        <%}%>    
+                                    <div class="slider-nav-thumbnails pl-15 pr-15">
+                                        <% for(let i=0; i<data.productImages.length; i++){ %>
+                                        <div><img src="uploads/re-image/<%=data.productImages[i]%>" alt="product image"></div>
+                                        <% } %>
                                     </div>
                                 </div>
-                              
                             </div>
+                        
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <div class="detail-info">
                                     <h2 class="title-detail"><%=data.productName %></h2>
                                     <div class="product-detail-rating">
                                         <div class="pro-details-brand">
-                                            <span> Brand: <a href="shop-grid-right.html"><%=data.brand %></a></span>
+                                            <span>Brand: <a href="shop-grid-right.html"><%=data.brand %></a></span>
                                         </div>
                                         <div class="product-rate-cover text-end">
                                             <div class="product-rate d-inline-block">
-                                                <div class="product-rating" style="width:90%">
-                                                </div>
+                                                <div class="product-rating" style="width:90%"></div>
                                             </div>
-                                            <span class="font-small ml-5 text-muted"> (25 reviews)</span>
+                                            <span class="font-small ml-5 text-muted">(25 reviews)</span>
                                         </div>
                                     </div>
                                     <div class="clearfix product-price-cover">
                                         <div class="product-price primary-color float-left">
                                             <ins><span class="text-brand">₹<%=data.salePrice %></span></ins>
                                             <ins><span class="old-price font-md ml-15">₹<%=data.regularPrice %></span></ins>
-                                            <span class="save-price  font-md color3 ml-15"></span>
                                         </div>
                                     </div>
                                     <div class="bt-1 border-color-1 mt-15 mb-15"></div>
@@ -105,52 +102,53 @@
                                             <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
                                         </ul>
                                     </div>
-                                    <div>
-                                        
-                                    </div>
-                                    
                                     <div class="bt-1 border-color-1 mt-30 mb-30"></div>
-                                    <div class="detail-extralink">
-                                        <div class="detail-extralink" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                                            <div class="detail-qty" style="display: flex; align-items: center; gap: 10px;">
-                                                <input type="text" name="quantity" value="1" class="qty-val" id="qty-val" 
-                                                    readonly 
-                                                    style="width: 50px; text-align: center; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
-                                                <div class="qty-controls" style="display: flex; flex-direction: column; gap: 5px;">
-                                                    <button type="button" class="qty-up" onclick="updateQuantity(1)" 
-                                                        style="background: none; border: none; cursor: pointer; padding: 5px;">
-                                                        <i class="fi-rs-angle-small-up" style="font-size: 20px;"></i>
-                                                    </button>
-                                                    <button type="button" class="qty-down" onclick="updateQuantity(-1)" 
-                                                        style="background: none; border: none; cursor: pointer; padding: 5px;">
-                                                        <i class="fi-rs-angle-small-down" style="font-size: 20px;"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        <div class="product-extra-link2" >
-                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/addToCart?id=<%=data._id %>">Add to cart</a>
-                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/addToWishList?id=<%= data._id %>"><i class="fi-rs-heart"></i></a>
-                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/checkout?id=<%=data._id %>">Buy now</a>
-                                            
-                                        </div>
-                                        
-                                    </div>
+                        
                                     
-                                    <div class="product-extra-link2" >
-                                       
-                                        
-                                        
+                                    <% if (data.quantity > 0) { %>
+                                    <!-- Display Quantity Selector and Buttons -->
+                                    <div class="detail-extralink" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                                        <div class="detail-qty" style="display: flex; align-items: center; gap: 10px;">
+                                            <input type="text" name="quantity" value="1" class="qty-val" id="qty-val" 
+                                                readonly 
+                                                style="width: 50px; text-align: center; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
+                                            <div class="qty-controls" style="display: flex; flex-direction: column; gap: 5px;">
+                                                <button type="button" class="qty-up" onclick="updateQuantity(1)" 
+                                                    style="background: none; border: none; cursor: pointer; padding: 5px;">
+                                                    <i class="fi-rs-angle-small-up" style="font-size: 20px;"></i>
+                                                </button>
+                                                <button type="button" class="qty-down" onclick="updateQuantity(-1)" 
+                                                    style="background: none; border: none; cursor: pointer; padding: 5px;">
+                                                    <i class="fi-rs-angle-small-down" style="font-size: 20px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="product-extra-link2">
+                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/addToCart?id=<%=data._id %>">Add to Cart</a>
+                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/addToWishList?id=<%= data._id %>">
+                                                <i class="fi-rs-heart"></i>
+                                            </a>
+                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/checkout?id=<%=data._id %>">Buy Now</a>
+                                        </div>
                                     </div>
-                                    <ul class="product-meta font-xs color-grey mt-50">
-                                        
-                                        <li class="mb-5">Category: <a href="#" rel="tag"><%= data.category.name %></a> </li>
+                                    <% } else { %>
 
+
+
+                                    <!-- Display Out of Stock Message -->
+                                    <div class="product-extra-link2">
+                                        <h5 class="text-danger">Out of Stock</h5>
+                                    </div>
+                                    <% } %>
+                        
+                                    <ul class="product-meta font-xs color-grey mt-50">
+                                        <li class="mb-5">Category: <a href="#" rel="tag"><%= data.category.name %></a></li>
                                         <li>Availability:<span class="in-stock text-success ml-5"><%=data.quantity %> Items In Stock</span></li>
                                     </ul>
                                 </div>
-                                
                             </div>
                         </div>
+                        
                         
                         <div class="row">
                             
