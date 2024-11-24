@@ -136,7 +136,6 @@ const placeOrder = async (req, res) => {
             finalAmount: finalAmount,
             address: addressId,
             paymentMethod: payment_option,
-            status: payment_option === "COD" ? "Pending" : "Processing",
             couponCode:couponCodeInput,
             discount:discountInput,
             couponApplied: Boolean(couponCodeInput && discountInput),

@@ -45,6 +45,7 @@ const getOrderDetails = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
     const { id } = req.query;
+    console.log(id,"entered")
 
     try {
         const order = await Order.findById(id);
@@ -62,8 +63,8 @@ const cancelOrder = async (req, res) => {
             await order.save();
             return res.json({ message: 'Order cancelled successfully' });
         }
-
-        if (order.paymentMethod === 'Online') {
+        
+        if (order.paymentMethod === 'online') {
             const userId = req.session.user;
 
             if (!userId) {
@@ -93,7 +94,7 @@ const cancelOrder = async (req, res) => {
                     description: 'Order refund',
                 });
             }
-
+       
             await wallet.save();
             order.status = 'Cancelled';
             await order.save();

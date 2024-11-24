@@ -329,7 +329,24 @@
 
 
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     
+    <script>
+        toastr.options = {
+          "closeButton": true,
+          "progressBar": true,
+          "positionClass": "toast-top-right",
+          "timeOut": "3000",
+          "extendedTimeOut": "1000",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        };
+      </script>
+
+
+
+
+
 
     <%-include("../partials/user/footer")%>
 
