@@ -265,6 +265,26 @@
 
 
         }
+        .header-action-icon-2 {
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #424874;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
     </style>
 </head>
 
@@ -323,11 +343,13 @@
                                 <div class="header-action-icon-2">
                                     <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/Chronocraft-frontend/assets/imgs/theme/icons/icon-heart.svg">
+                                        <span class="badge" id="wishlist-count"><%= locals.wishlistlen %></span>
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/Chronocraft-frontend/assets/imgs/theme/icons/icon-cart.svg">
+                                        <span class="badge" id="cart-count"><%= locals.cartlen %></span>
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
@@ -336,6 +358,7 @@
                                     </a>
                                 </div>
                             </div>
+                            
     
                         </div>
     

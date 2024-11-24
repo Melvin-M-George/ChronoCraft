@@ -12,14 +12,46 @@ const wishlistController = require("../controllers/user/wishlistController");
 const paymentController = require("../controllers/user/paymentController");
 const walletController = require("../controllers/user/walletController");
 const User = require("../models/userSchema");
+const Cart = require("../models/cartSchema");
+const Wishlist = require("../models/wishlistSchema");
 
 
 
-router.use(async(req, res, next) => {
-    const userData = await User.findById(req.session.user);
-    res.locals.user = userData || null;
-    next();
+router.use(async (req, res, next) => {
+    try {
+        const userId = req.session.user;
+        let cartlen = 0; 
+        let wishlistlen = 0;
+
+        if (userId) {
+            const userData = await User.findById(userId);
+
+            const cart = await Cart.findOne({ userId });
+
+            const wishlist = await Wishlist.findOne({userId});
+            console.log(wishlist);
+            if(wishlist && wishlist.products){
+                wishlistlen = wishlist.products.length;
+                console.log(wishlistlen);                                                                
+            }
+            if (cart && cart.items) {
+                cartlen = cart.items.length;
+            }
+
+            res.locals.user = userData || null; 
+        } else {
+            res.locals.user = null;
+        }
+
+        res.locals.cartlen = cartlen;
+        res.locals.wishlistlen = wishlistlen; 
+        next();
+    } catch (error) {
+        console.error("Error in middleware:", error);
+        next(error); 
+    }
 });
+
 
 //Error management
 router.get("/pageNotFound",userController.pageNotFound)
