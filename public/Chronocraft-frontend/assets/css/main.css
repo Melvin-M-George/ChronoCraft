@@ -1886,14 +1886,14 @@ label {
 
 .slider-arrow .slider-btn {
   cursor: pointer;
-  background: #e8f6ea;
+  background: #DCD6F7;
   width: 45px;
   height: 45px;
   position: absolute;
   display: block;
   z-index: 100;
   border-radius: 50%;
-  border: 1px solid #cce7d0;
+  border: 1px solid #DCD6F7;
   -webkit-transition: all .2s ease-out;
   transition: all .2s ease-out;
   text-align: center;
@@ -1973,7 +1973,7 @@ label {
 }
 
 .carausel-6-columns-cover .product-img {
-  border: 1px solid #cce7d0;
+  border: 1px solid #DCD6F7;
 }
 
 .carausel-6-columns-cover .slider-arrow {
@@ -2045,7 +2045,7 @@ label {
   position: relative;
   background: #fff;
   text-align: center;
-  border: 1px solid #cce7d0;
+  border: 1px solid #DCD6F7;
   border-radius: 20px;
 }
 
@@ -2270,7 +2270,7 @@ label {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  border-bottom: 2px solid #cce7d0;
+  border-bottom: 2px solid #DCD6F7;
   margin-bottom: 20px;
 }
 
@@ -3162,7 +3162,7 @@ table .product-thumbnail img {
   text-align: center;
   padding: 25px 15px;
   border-radius: 4px;
-  border: 1px solid #cce7d0;
+  border: 1px solid #DCD6F7;
   -webkit-box-shadow: 20px 20px 54px rgba(0, 0, 0, 0.03);
           box-shadow: 20px 20px 54px rgba(0, 0, 0, 0.03);
 }
@@ -3389,7 +3389,7 @@ table .product-thumbnail img {
 .product-cart-wrap {
   position: relative;
   background-color: #fff;
-  border: 1px solid #cce7d0;
+  border: 1px solid #DCD6F7;
   border-radius: 25px;
   overflow: hidden;
   transition: .2s;
@@ -3473,12 +3473,12 @@ table .product-thumbnail img {
   height: 40px;
   line-height: 44px;
   border-radius: 50px;
-  background-color: #e8f6ea;
+  background-color: #DCD6F7;
   text-align: center;
   margin-right: 3px;
   position: relative;
   display: inline-block;
-  border: 1px solid #cce7d0;
+  border: 1px solid #DCD6F7;
 }
 
 .product-cart-wrap .product-action-1 button.small, .product-cart-wrap .product-action-1 a.action-btn.small {

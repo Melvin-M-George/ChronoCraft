@@ -3,11 +3,11 @@
 <%- include('../partials/user/header') %>
 <style>
     :root {
-        --primary-color: #2C3E50;
-        --secondary-color: #34495E;
+        --primary-color: #424874;
+        --secondary-color: #424874;
         --accent-color: #A9A9A9;
-        --background-light: #F4F6F7;
-        --text-primary: #2C3E50;
+        --background-light: white;
+        --text-primary: #424874;
         --text-secondary: #7F8C8D;
         --border-color: #BDC3C7;
         --card-shadow: rgba(0, 0, 0, 0.08);
@@ -184,6 +184,27 @@
             grid-template-columns: 1fr;
         }
     }
+    .back-to-checkout-btn {
+    display: inline-block; /* Makes the link look like a button */
+    padding: 10px 20px;    /* Adds padding for a button-like feel */
+    font-size: 16px;       /* Adjust text size */
+    font-weight: 600;     /* Make the text bold */
+    text-align: center;    /* Center-align the text */
+    text-decoration: none; /* Remove underline */
+    color: #ffffff;        /* Text color */
+    background-color: #424874; /* Button color */
+    border: none;          /* Remove border */
+    border-radius: 5px;    /* Add rounded corners */
+    cursor: pointer;       /* Add pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+}
+
+.back-to-checkout-btn:hover {
+    background-color: #ffffff; /* Darker shade on hover */
+    color:#424874;
+    border: 2px solid #424874;
+}
+
 </style>
 
 <main class="coupon-container">
@@ -191,7 +212,7 @@
         <h1 class="coupon-title">Exclusive Offers</h1>
         <p class="coupon-subtitle">
             Curated collection of premium discounts. Elevate your shopping experience with our meticulously selected coupon offers.
-        </p>
+        </p> 
     </header>
 
     <div class="coupons-grid">
