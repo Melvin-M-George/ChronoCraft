@@ -123,31 +123,53 @@
 
 <script>
     async function addOffer(productId) {
-        const {value:amount}=await Swal.fire({
-            title:'Offer in percentage',
-            input:'number',
-            inputLabel:'percentage',
-            inputPlaceholder:'%',
+    const { value: amount } = await Swal.fire({
+        title: 'Offer in percentage',
+        input: 'number',
+        inputLabel: 'Percentage',
+        inputPlaceholder: '%',
+        inputAttributes: {
+            min: 0,
+            max: 100,
+            step: 1
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Add Offer',
+        cancelButtonText: 'Cancel',
+    });
 
-        })
-        $.ajax({
-            url:'/admin/addProductOffer',
-            method:'post',
-            data:{
-                percentage:amount,
-                productId:productId,
-            },
-            success:(response)=>{
-                if(response.status===true){
-                    
-                    Swal.fire('Offer added ','the offer has been removed','success')
-                        .then(()=>location.reload())
-                }else{
-                    Swal.fire('Failed', response.message || 'Failed to add offer', 'error');
-                }
-            }
-        })
+    if (amount === null) {
+        return; // If the user cancels the input, do nothing
     }
+
+    // Validate the input to ensure it's between 0 and 100
+    if (amount < 0 || amount > 100) {
+        Swal.fire('Invalid Input', 'Please enter a value between 0 and 100', 'error');
+        return;
+    }
+
+    $.ajax({
+        url: '/admin/addProductOffer',
+        method: 'post',
+        data: {
+            percentage: amount,
+            productId: productId,
+        },
+        success: (response) => {
+            if (response.status === true) {
+                Swal.fire('Offer added', 'The offer has been added successfully', 'success')
+                    .then(() => location.reload());
+            } else {
+                Swal.fire('Failed', response.message || 'Failed to add offer', 'error');
+            }
+        }
+    });
+}
+
+
+
+
+    
     async function removeOffer(productId) {
     try {
         const result = await Swal.fire({

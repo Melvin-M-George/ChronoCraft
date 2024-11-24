@@ -139,16 +139,15 @@ const addProductOffer = async (req,res) => {
         if(findCategory.categoryOffer > percentage){
             return res.json({status:false,message:"This product category already has a category offer"})
         }
-        findProduct.salePrice = findProduct.salePrice - Math.floor(findProduct.regularPrice*(percentage/100));
+        findProduct.salePrice = findProduct.regularPrice - Math.floor(findProduct.regularPrice*(percentage/100));
         findProduct.productOffer =  parseInt(percentage);
         await findProduct.save();
         findCategory.categoryOffer = 0;
         await findCategory.save();
-        res.json({status:true})
+        return res.json({status:true})
 
     } catch (error) {
-        res.redirect("/admin/pageerror")
-        res.status(500).json({status:false,message:"Internal Server Errro"})
+        return res.status(500).json({status:false,message:"Internal Server Error"})
     }
 }
 
@@ -160,10 +159,10 @@ const removeProductOffer = async (req,res) => {
         findProduct.salePrice = findProduct.salePrice + Math.floor(findProduct.regularPrice*(percentage/100));
         findProduct.productOffer = 0;
         await findProduct.save();
-        res.json({status:true});
+        return res.json({status:true});
 
     } catch (error) {
-        res.redirect("/admin/pageerror");
+        return res.redirect("/admin/pageerror");
     }
 }
 
@@ -172,9 +171,9 @@ const blockProduct = async (req,res) => {
     try {
         let id = req.query.id;
         await Product.updateOne({_id:id},{$set:{isBlocked:true}});
-        res.redirect("/admin/products")
+        return res.redirect("/admin/products")
     } catch (error) {
-        res.redirect("/admin/pageerror")
+        return res.redirect("/admin/pageerror")
     }
 }
 
@@ -183,9 +182,9 @@ const unblockProduct = async (req,res) => {
     try {
         let id = req.query.id;
         await Product.updateOne({_id:id},{$set:{isBlocked:false}});
-        res.redirect("/admin/products")
+        return res.redirect("/admin/products")
     } catch (error) {
-        res.redirect("/admin/pageerror")
+        return res.redirect("/admin/pageerror")
     }
 }
 
@@ -202,7 +201,7 @@ const getEditProduct = async (req,res) => {
             brand:brand,
         })
     } catch (error) {
-        res.redirect("/admin/pageerror");
+        return res.redirect("/admin/pageerror");
     }
 }
 

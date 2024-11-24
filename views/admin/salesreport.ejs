@@ -194,7 +194,7 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'pt', 'a4');
 
-            const logoURL = '/uploads/banner/logo.png';
+            const logoURL = '/Images/ChronoCraft/logo-transparent-png.png';
             doc.addImage(logoURL, 'PNG', 15, 10, 40, 40);
             doc.setFontSize(16);
             doc.text('Sales Report', 70, 30);
@@ -275,7 +275,7 @@
         function exportToPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'pt', 'a4');
-            const logoURL = '/uploads/banner/logo.png';
+            const logoURL = '/Images/ChronoCraft/logo-transparent-png.png';
             doc.addImage(logoURL, 'PNG', 15, 10, 40, 40);
             doc.setFontSize(16);
             doc.text('Sales Report', 70, 30);
@@ -338,7 +338,7 @@
             const dateRangeSelect = document.getElementById('dateRangeSelect');
 
             function parseDate(dateStr) {
-                const [month, day, year] = dateStr.split('/').map(Number);
+                const [day,month,year] = dateStr.split('/').map(Number);
                 return new Date(year, month - 1, day);
             }
 
