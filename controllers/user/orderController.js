@@ -45,7 +45,6 @@ const getOrderDetails = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
     const { id } = req.query;
-    console.log(id,"entered")
 
     try {
         const order = await Order.findById(id);

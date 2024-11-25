@@ -10,14 +10,11 @@ const loadHomepage = async (req, res) => {
         const user = req.session.user;
         const  categories = await Category.find({isListed:true});
 
-
-
-        // Get category filter from query
         const selectedCategory = req.query.category;
 
         let productQuery = { isBlocked: false };
         if (selectedCategory) {
-            productQuery.category = selectedCategory; // Filter products by category
+            productQuery.category = selectedCategory; 
         } else {
             productQuery.category = { $in: categories.map(category => category._id) };
         }

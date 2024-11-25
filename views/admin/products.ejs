@@ -139,10 +139,10 @@
     });
 
     if (amount === null) {
-        return; // If the user cancels the input, do nothing
+        return; 
     }
 
-    // Validate the input to ensure it's between 0 and 100
+    
     if (amount < 0 || amount > 100) {
         Swal.fire('Invalid Input', 'Please enter a value between 0 and 100', 'error');
         return;

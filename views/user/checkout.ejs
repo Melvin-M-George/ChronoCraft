@@ -461,7 +461,6 @@
         //Razorpay
         function startRazorpayPayment(){
             const finalAmount = document.getElementById("totalamount").value.replace(/,/g, '');
-            console.log(finalAmount);
 
             fetch('/createPayment',{
                 method:"POST",

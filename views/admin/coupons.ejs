@@ -168,7 +168,7 @@ function confirmDelete(couponId) {
     function validateCouponForm() {
     let isValid = true;
 
-    // Call individual validation functions
+   
     isValid = validateCouponCode() && isValid;
     isValid = validateDiscountPercentage() && isValid;
     isValid = validateMinimumPrice() && isValid;
@@ -179,7 +179,7 @@ function confirmDelete(couponId) {
     return isValid;
 }
 
-// Real-time validation functions
+
 document.getElementById("couponCode").addEventListener("input", validateCouponCode);
 document.getElementById("discountPercentage").addEventListener("input", validateDiscountPercentage);
 document.getElementById("minimumPrice").addEventListener("input", validateMinimumPrice);
@@ -187,7 +187,7 @@ document.getElementById("maximumPrice").addEventListener("input", validateMaximu
 document.getElementById("createdDate").addEventListener("change", validateCreatedDate);
 document.getElementById("endDate").addEventListener("change", validateEndDate);
 
-// Individual validation functions
+
 function validateCouponCode() {
     const couponCode = document.getElementById("couponCode").value.trim();
     const codeError = document.getElementById("codeError");

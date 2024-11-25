@@ -363,39 +363,39 @@
                 let totalDiscount = 0;
                 const uniqueCustomers = new Set();
 
-                // Loop through each row to filter by date and sum values
+                
                 for (const row of rows) {
                     const dateCell = row.cells[5].textContent.trim();
                     const rowDate = parseDate(dateCell);
 
-                    // Skip if no date or outside of range
+                    
                     if (!rowDate) continue;
 
                     let showRow = true;
                     if (startDate && rowDate < startDate) showRow = false;
                     if (endDate && rowDate > endDate) showRow = false;
 
-                    // Show or hide row based on date filter
+                    
                     row.style.display = showRow ? '' : 'none';
 
-                    // Aggregate only if the row is within the date range
+                   
                     if (showRow) {
                         visibleRows++;
 
-                        // Parse and accumulate final amount and discount values
+                        
                         const finalAmount = parseFloat(row.cells[9].textContent.replace(/[₹,]/g, '')) || 0;
                         const discount = parseFloat(row.cells[8].textContent.replace(/[₹,]/g, '')) || 0;
 
                         totalSales += finalAmount;
                         totalDiscount += discount;
 
-                        // Use a unique customer identifier for counting
+                       
                         const customerId = row.cells[1].getAttribute('data-customer-id');
                         if (customerId) uniqueCustomers.add(customerId);
                     }
                 }
 
-                // Format the total sales and discount as currency
+                
                 const formatCurrency = (amount) => {
                     return amount.toLocaleString('en-IN', {
                         style: 'currency',

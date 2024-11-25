@@ -466,7 +466,7 @@
         confirmButtonText: 'Yes, cancel it!',
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`/cancelOrder?id=${orderId}`, { method: 'POST' })// Use POST for better REST semantics
+            fetch(`/cancelOrder?id=${orderId}`, { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
                     if (data.message) {
@@ -476,8 +476,8 @@
                             icon: 'success',
                             confirmButtonColor: '#3085d6',
                         }).then(() => {
-                            // Reload or update UI
-                            window.location.reload(); // Reload the page to reflect changes
+                           
+                            window.location.reload(); 
                         });
                     } else {
                         Swal.fire({
