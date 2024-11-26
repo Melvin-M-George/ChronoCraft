@@ -27,10 +27,10 @@ const login = async (req,res) => {
                 req.session.save();
                 return res.redirect("/admin")
             }else{
-                return res.redirect("/login")
+                return res.render("admin-login",{message:"Email or Password is incorrect"});
             }
         }else{
-            return res.redirect("/login")
+            return res.render("admin-login",{message:"Email or Password is incorrect"});
         }
     } catch (error) {
         console.log("login error",error)

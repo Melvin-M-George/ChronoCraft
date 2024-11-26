@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt');
 const loadHomepage = async (req, res) => {
     try {
         const user = req.session.user;
+        
         const  categories = await Category.find({isListed:true});
 
         const selectedCategory = req.query.category;
@@ -180,7 +181,11 @@ const resendOtp = async (req,res) => {
 }
 const loadLogin = async (req,res) => {
     try {
-        return res.render("login",{message:""});    
+        if(!req.session.user){
+             return res.render("login",{message:""});   
+        }else{
+            return res.redirect("/");  
+        }
     } catch (error) {
         res.redirect("/PageNotFound");
     }

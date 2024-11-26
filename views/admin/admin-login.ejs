@@ -30,6 +30,11 @@
             <div class="card mx-auto card-login">
                 <div class="card-body">
                     <h4 class="card-title mb-4 text-center" style="font-weight: bold;">Login</h4>
+                    <%if(locals.message && message.length > 0){
+                        %>
+                       <div class="alert alert-danger text-center"> <%= message%></div>
+                        <%
+                    }%>
                     <form action="/admin/login" method="POST">
                         <div class="mb-3">
                             <input class="form-control" placeholder="Email" type="text" name="email">

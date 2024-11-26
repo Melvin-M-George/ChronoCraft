@@ -26,10 +26,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //no cache control
-app.use((req,res,next)=>{
-    res.set("cache-control","no-store");
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     next();
-})
+});
+
 
 app.set("view engine","ejs");
 app.set("views",[path.join(__dirname,"views/user"),path.join(__dirname,"views/admin")])
