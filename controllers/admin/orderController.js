@@ -16,7 +16,6 @@ const getOrders = async (req, res) => {
     .populate('address')          
     .populate('orderedItems.product');
 
-           console.log(orders.orderedItems)
             
             res.render("adminOrder", {
                 orders: orders,
