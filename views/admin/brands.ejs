@@ -107,24 +107,26 @@
                     >
                     <% } %>
                   </td>
+
+
                   <td class="text-start">
                     <% if(brand.isBlocked===false){ %>
-                    <button class="btn btn-danger" style="width: 90px">
-                      <a href="/admin/blockBrand?id=<%=brand._id %>" class="text-white">Block</a>
-                    </button>
+                      <button class="btn btn-danger" style="width: 90px" onclick="return confirmBlock('<%=brand._id %>')">
+                        Block
+                      </button>
                     <% }else{ %>
-                    <button class="btn btn-success" style="width: 90px">
-                      <a href="/admin/unBlockBrand?id=<%=brand._id %>" class="text-white">Unblock</a>
-                    </button>
+                      <button class="btn btn-success" style="width: 90px" onclick="return confirmUnblock('<%=brand._id %>')">
+                        Unblock
+                      </button>
                     <% } %>
-                    <button
-                      class="btn btn-danger"
-                      style="width: 90px"
-                      onclick="return confirmDelet()"
-                    >
-                      <a href="/admin/deleteBrand?id=<%=brand._id %>" class="text-white">Delete</a>
+                    <button class="btn btn-danger" style="width: 90px" onclick="return confirmDelete('<%=brand._id %>')">
+                      Delete
                     </button>
                   </td>
+                  
+
+
+
                 </tr>
                 <% }) %>
               </tbody>
@@ -134,14 +136,83 @@
       </div>
     </div>
   </div>
-  <div class="pagination-container">
+
+
+
+  <div class="container mt-3" style="display: flex; justify-content: center; align-items: center;">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mb-20" style="display: flex; margin-right: 0;">
+            <% for(let i=1; i<=totalPages; i++){ %>
+                <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+        </ul>
+    </nav>
 </div>
+
+
+
 </section>
 
-<script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    function confirmDelete(){
-        return confirm("Are you sure you want to delete this brand?")
-    }
+
+<script>
+  // SweetAlert for Block
+  function confirmBlock(brandId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to block this brand?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, block it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/admin/blockBrand?id=${brandId}`;
+      }
+    });
+    return false; // Prevent default behavior
+  }
+
+  // SweetAlert for Unblock
+  function confirmUnblock(brandId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to unblock this brand?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, unblock it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/admin/unBlockBrand?id=${brandId}`;
+      }
+    });
+    return false; // Prevent default behavior
+  }
+
+  // SweetAlert for Delete
+  function confirmDelete(brandId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to delete this brand permanently?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/admin/deleteBrand?id=${brandId}`;
+      }
+    });
+    return false; // Prevent default behavior
+  }
 </script>
+
+
 <%- include("../../views/partials/admin/footer") %>

@@ -3,8 +3,17 @@ const Coupons = require("../../models/couponSchema");
 
 const getCouponPage = async (req,res) => {
     try {
-        const coupons = await Coupons.find();
-        return res.render("coupons",{coupons});
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = 8;
+        const skip = (page - 1)*limit;
+        const count = await Coupons.countDocuments();
+        const totalPages = Math.ceil(count / limit);
+
+        const coupons = await Coupons.find().skip(skip).limit(limit);
+        return res.render("coupons",{coupons,totalPages,currentPage:page});
+
+
     } catch (error) {
         console.log("Error getting coupon page",error)
         return res.redirect("/pageerror")
