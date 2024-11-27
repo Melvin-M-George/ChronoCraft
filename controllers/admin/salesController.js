@@ -5,17 +5,19 @@ const User = require("../../models/userSchema");
 
 const getSalesReport = async (req,res) => {
     try {
-        const page = (req.query.page) || 1;
-        const limit = 10;
+        
+        const page = parseInt(req.query.page) || 1;
+        const limit = 20;
         const skip = (page-1) * limit;
-        const orderData = await Order.find().populate("user").populate("orderedItems.product").sort({createdOn:-1}).skip(skip).limit(limit);
         const count = await Order.countDocuments();
         const totalPages = Math.ceil(count / limit);
+        
+        
+        const orderData = await Order.find().populate("user").populate("orderedItems.product").sort({createdOn:-1}).skip(skip).limit(limit);
 
-
-        if(orderData){
-            res.render("salesreport",{orders:orderData,activePage:"sales-report",count:count,totalPages,page});
-        }
+        
+        res.render("salesreport",{orders:orderData,count,totalPages,currentPage:page});
+        
     } catch (error) {
         console.error("Error loading sales report",error);
         res.redirect("/pageerror");
