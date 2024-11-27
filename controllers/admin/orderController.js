@@ -14,7 +14,9 @@ const getOrders = async (req, res) => {
             const orders = await Order.find()
     .populate('user') 
     .populate('address')          
-    .populate('orderedItems.product');
+    .populate('orderedItems.product')
+    .skip(skip)
+    .limit(limit);
 
             
             res.render("adminOrder", {
