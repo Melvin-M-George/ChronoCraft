@@ -146,38 +146,8 @@
         <section class="product-tabs section-padding position-relative wow fadeIn animated">
            
             <div class="container">
-                <div class="sorting-container">
-                    <label for="sort-by" class="sort-label">Sort by:</label>
-                    <select id="sort-by" class="sort-select" onchange="handleSortChange()">
-                        <option value="default">Default</option>
-                        <option value="popularity">Popularity</option>
-                        <option value="price-low-high">Price: Low to High</option>
-                        <option value="price-high-low">Price: High to Low</option>
-                        <option value="rating">Average Rating</option>
-                        <option value="new-arrivals">New Arrivals</option>
-                        <option value="alphabetical-a-z">Alphabetical (A-Z)</option>
-                        <option value="alphabetical-z-a">Alphabetical (Z-A)</option>
-                    </select>
-
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-12 col-md-8 col-lg-6">
-                                <input type="text" id="search-bar" class="form-control search-bar" placeholder="Search Products..." onkeyup="handleSearch()">
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="category-filter">
-                    <select id="categorySelect" onchange="filterByCategory()">
-                        <option value="">All Categories</option>
-                        <% categories.forEach(category => { %>
-                            <option value="<%= category._id %>" <%= category._id.toString() === selectedCategory ? 'selected' : '' %>>
-                                <%= category.name %>
-                            </option>
-                        <% }); %>
-                    </select>
-                </div>
+                <br>    
+                <br>
                 
                 <div class="tab-content wow fadeIn animated" id="myTabContent">
                     <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
@@ -235,107 +205,9 @@
         </section>
         
         
-        
-        
-        
-       
+    
         
     </main>
-
-    <script>
-        function filterByCategory() {
-        const selectedCategory = document.getElementById('categorySelect').value;
-        const queryParam = selectedCategory ? `?category=${selectedCategory}` : '';
-        window.location.href = `/${queryParam}`;
-    }
-
-
-
-        function handleSortChange() {
-            const sortBy = document.getElementById('sort-by').value;
-
-            fetch(`/sort?sort=${sortBy}`, {
-                method: 'GET',
-            })
-                .then(response => response.json())
-                .then(data => {
-                    updateProductList(data.products);
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        function updateProductList(products) {
-            const productsContainer = document.getElementById('products-container');
-            productsContainer.innerHTML = '';
-
-            if (products.length === 0) {
-                productsContainer.innerHTML = '<p>No products found.</p>';
-                return;
-            }
-
-            products.forEach(product => {
-    const productHTML = `
-        <div class="product-cart-wrap mb-30" 
-            style="flex: 1 1 23%; box-sizing: border-box; margin: 10px; background-color: #ffffff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px #424874;">
-            <div class="product-img-action-wrap">
-                <div class="product-img product-img-zoom">
-                    <a href="/productdetails?id=${product._id}">
-                        <img class="default-img" src="/uploads/re-image/${product.productImages[0]}" alt="${product.productName}">
-                    </a>
-                </div>
-            </div>
-            <br>
-            <div class="product-content-wrap">
-                <h6>${product.productName}</h6>
-                <br>
-                <h6>₹${product.salePrice.toLocaleString()}</h6>
-                <br>
-                ${product.quantity > 0
-                    ? `<h6 style="color:green">Stock: ${product.quantity}</h6>`
-                    : `<h6 style="color:red">Out of Stock</h6>`
-                }
-            </div>
-            ${product.quantity > 0
-                ? `<div class="product-action-1 show">
-                        <a aria-label="Add To Cart" class="action-btn hover-up" href="/addToCart?id=${product._id}">
-                            <i class="fi-rs-shopping-bag-add"></i>
-                        </a>
-                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/addToWishlist?id=${product._id}">
-                            <i class="fi-rs-heart"></i>
-                        </a>
-                    </div>`
-                : `<div class="product-action-1 show">
-                        <span class="text-muted">Unavailable</span>
-                    </div>`
-            }
-        </div>
-    `;
-    productsContainer.insertAdjacentHTML('beforeend', productHTML);
-});
-
-        }
-
-        function handleSearch() {
-        const searchQuery = document.getElementById('search-bar').value.toLowerCase();
-        const allProducts = document.querySelectorAll('.product-cart-wrap');
-        
-        allProducts.forEach(product => {
-            const productName = product.querySelector('h6').textContent.toLowerCase();
-            if (productName.includes(searchQuery)) {
-                product.style.display = 'block';
-            } else {
-                product.style.display = 'none';
-            }
-        });
-    }
-
-
-    </script>
-    
-
-
-
-
 
 
     <%-include("../partials/user/footer")%>
