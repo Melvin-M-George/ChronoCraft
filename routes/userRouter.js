@@ -11,6 +11,7 @@ const couponController = require("../controllers/user/couponController");
 const wishlistController = require("../controllers/user/wishlistController");
 const paymentController = require("../controllers/user/paymentController");
 const walletController = require("../controllers/user/walletController");
+const shopController = require("../controllers/user/shopController");
 const User = require("../models/userSchema");
 const Cart = require("../models/cartSchema");
 const Wishlist = require("../models/wishlistSchema");
@@ -127,6 +128,9 @@ router.post("/createPayment",paymentController.createRazorpay);
 
 //Wallet
 router.get("/wallet",walletController.getWallet);
+
+//shop management
+router.get("/shop",shopController.getShop);
 
 
 module.exports = router;

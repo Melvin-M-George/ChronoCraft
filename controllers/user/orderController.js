@@ -25,8 +25,6 @@ const getOrderDetails = async (req, res) => {
             const addressdoc = await Address.findOne({userId}); 
 
             const address = addressdoc.address.filter(addr => addr._id.toString() === order.address.toString());
-
-            console.log("finded address",address);
             
 
         if (!order) {

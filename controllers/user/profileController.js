@@ -39,7 +39,6 @@ const sendVerificationEmail = async (email,otp) => {
         }
 
         const info = await transporter.sendMail(mailOptions);
-        console.log("Email send:",info.messageId);
         return true;
     } catch (error) {
         console.error("Error sending email",error);

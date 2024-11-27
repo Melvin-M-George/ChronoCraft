@@ -41,9 +41,6 @@ const updateOrderStatus = async (req, res) => {
     try {
         const { orderId, status } = req.body;
 
-        console.log("Request body:", req.body); 
-        console.log("Order ID:", orderId, "Status:", status); 
-
         if (!orderId || typeof orderId !== 'string' || !status || typeof status !== 'string') {
             console.error("Invalid orderId or status");
             return res.status(400).json({ message: "Order ID and status are required and must be strings." });
@@ -56,7 +53,6 @@ const updateOrderStatus = async (req, res) => {
             return res.status(404).json({ message: "Order not found" });
         }
 
-        console.log("Order updated successfully:", updatedOrder); 
         res.json({ message: "Order status updated successfully", updatedOrder });
     } catch (error) {
         console.error('Error updating order status:', error); 
