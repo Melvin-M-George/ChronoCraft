@@ -46,7 +46,7 @@
                 <option value="month">This Month</option>
                 <option value="year">This Year</option>
             </select>
-
+        
             <form class="d-flex align-items-center gap-2">
                 <label for="startDate" class="form-label me-2">Start Date:</label>
                 <input type="date" id="startDate" name="startDate" class="form-control w-auto">
@@ -192,6 +192,14 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+    const today = new Date().toISOString().split('T')[0];
+
+    document.getElementById('startDate').setAttribute('max', today);
+    document.getElementById('endDate').setAttribute('max', today);
+</script>
+
     <script>
         async function previewPDF() {
             const { jsPDF } = window.jspdf;

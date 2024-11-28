@@ -150,10 +150,13 @@
                                             </div>
                                         </div>
                                         <div class="product-extra-link2">
-                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/addToCart?id=<%=data._id %>">Add to Cart</a>
-                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/addToWishList?id=<%= data._id %>">
+                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart" onclick="addToCart('<%= data._id %>')">
+                                                Add to Cart
+                                            </a>
+                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= data._id %>')">
                                                 <i class="fi-rs-heart"></i>
                                             </a>
+                                            
                                             <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/checkout?id=<%=data._id %>">Buy Now</a>
                                         </div>
                                     </div>
@@ -392,6 +395,72 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+<script>
+ async function addToCart(productId) {
+    try {
+        const response = await fetch(`/addToCart?id=${productId}`, { method: "GET" });
+        
+        const data = await response.json();
+
+        if (data.success) {
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: data.message,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops!",
+                text: data.message
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "An unexpected error occurred"
+        });
+        console.error("Error:", error);
+    }
+}
+
+async function addToWishlist(productId) {
+    try {
+        const response = await fetch(`/addToWishlist?id=${productId}`, { method: "GET" });
+        const data = await response.json();
+
+        if (data.success) {
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: data.message,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops!",
+                text: data.message
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "An unexpected error occurred"
+        });
+        console.error("Error:", error);
+    }
+}
+
+</script>
 <script>
    const maxQuantity = '<%= data.quantity %>'; 
 const maxLimit = 5;  

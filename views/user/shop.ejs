@@ -160,12 +160,13 @@
                             </div>
                             <% if (products[i].quantity > 0) { %>
                                 <div class="product-action-1 show">
-                                    <a aria-label="Add To Cart" class="action-btn hover-up" href="/addToCart?id=<%= products[i]._id %>">
-                                        <i class="fi-rs-shopping-bag-add"></i>
-                                    </a>
-                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/addToWishlist?id=<%= products[i]._id %>">
-                                        <i class="fi-rs-heart"></i>
-                                    </a>
+                                  <a aria-label="Add To Cart" class="action-btn hover-up" onclick="addToCart('<%= products[i]._id %>')">
+                                    <i class="fi-rs-shopping-bag-add"></i>
+                                </a>
+                                <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= products[i]._id %>')">
+                                    <i class="fi-rs-heart"></i>
+                                </a>
+                                
                                 </div>
                             <% } else { %>
                                 <div class="product-action-1 show">
@@ -202,6 +203,74 @@
 
     
 </section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+ async function addToCart(productId) {
+    try {
+        const response = await fetch(`/addToCart?id=${productId}`, { method: "GET" });
+        
+        const data = await response.json();
+
+        if (data.success) {
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: data.message,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops!",
+                text: data.message
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "An unexpected error occurred"
+        });
+        console.error("Error:", error);
+    }
+}
+
+async function addToWishlist(productId) {
+    try {
+        const response = await fetch(`/addToWishlist?id=${productId}`, { method: "GET" });
+        const data = await response.json();
+
+        if (data.success) {
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: data.message,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops!",
+                text: data.message
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "An unexpected error occurred"
+        });
+        console.error("Error:", error);
+    }
+}
+
+</script>
 
 
 <script>
@@ -269,6 +338,9 @@ function renderProducts(products) {
     `;
   });
 }
+
+
+
 
 
 

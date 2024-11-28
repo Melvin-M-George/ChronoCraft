@@ -30,17 +30,16 @@ const getCart = async (req,res) => {
     }
 }
 
-
 const addToCart = async (req, res) => {
     try {
         const userId = req.session.user;
         if (!userId) {
-            return res.redirect('/login');
+            return res.status(401).json({ success: false, message: "Please login to add to cart" });
         }
 
         const productId = req.query.id;
         const quantity = parseInt(req.body.quantity) || 1;
-        
+
         let cart = await Cart.findOne({ userId });
         if (!cart) {
             cart = new Cart({ userId, items: [] });
@@ -48,32 +47,31 @@ const addToCart = async (req, res) => {
 
         const product = await Product.findById(productId);
         if (!product) {
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({ success: false, message: "Product not found" });
         }
 
         const itemIndex = cart.items.findIndex(item => item.productId.equals(productId));
 
         if (itemIndex > -1) {
-           
             cart.items[itemIndex].quantity += quantity;
             cart.items[itemIndex].totalPrice = cart.items[itemIndex].quantity * product.salePrice;
         } else {
-           
             cart.items.push({
                 productId,
                 quantity,
-                price: product.salePrice, 
+                price: product.salePrice,
                 totalPrice: quantity * product.salePrice
             });
         }
 
         await cart.save();
-        res.redirect('/cart');
+        res.json({ success: true, message: "Product added to cart" });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "An error occurred" });
+        res.status(500).json({ success: false, message: "An error occurred" });
     }
 };
+
 
 const removeFromCart = async (req, res) => {
     try {
