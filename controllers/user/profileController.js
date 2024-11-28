@@ -148,15 +148,26 @@ const postNewPassword = async (req,res) => {
 
 const userProfile = async (req,res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 6;
+        const skip = (page - 1)*limit;
+        const count = await Order.countDocuments();
+        const totalPages = Math.ceil(count / limit);
+
+
+
+
         const userId = req.session.user;
         const userData = await User.findById(userId);
         const addressData = await Address.findOne({userId : userId});
         
-        const orders = await Order.find({ user: userId });
+        const orders = await Order.find({ user: userId }).skip(skip).limit(limit);
         res.render('profile',{
             user:userData,
             userAddress:addressData,
             orders,
+            currentPage:page,
+            totalPages
         })
     } catch (error) {
         console.error("Error retreiving profile data",error);
