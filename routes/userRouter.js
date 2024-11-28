@@ -26,14 +26,10 @@ router.use(async (req, res, next) => {
 
         if (userId) {
             const userData = await User.findById(userId);
-
             const cart = await Cart.findOne({ userId });
-
             const wishlist = await Wishlist.findOne({userId});
-            console.log(wishlist);
             if(wishlist && wishlist.products){
-                wishlistlen = wishlist.products.length;
-                console.log(wishlistlen);                                                                
+                wishlistlen = wishlist.products.length;                                                               
             }
             if (cart && cart.items) {
                 cartlen = cart.items.length;
@@ -76,7 +72,7 @@ router.post("/login",userController.login);
 router.get("/",userController.loadHomepage);
 router.get("/logout",userController.logout);
 router.get("/productDetails",userController.getProductDetails);
-router.get("/sort",userController.sortProducts);
+router.get("/sortAndFilterProducts",userController.sortAndFilterProducts);
 
 //Profile management
 router.get("/forgot-password",profileController.getForgotPassPage);

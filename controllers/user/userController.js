@@ -251,12 +251,13 @@ const getProductDetails = async (req,res) => {
     }
 }
 
-const sortProducts = async (req, res) => {
+const sortAndFilterProducts = async (req, res) => {
     try {
-      const sortOption = req.query.sort || 'default';
-      let sortCriteria;
+      const { sort = 'default', category = '', search = '' } = req.query;
   
-      switch (sortOption) {
+      // Define sorting criteria
+      let sortCriteria;
+      switch (sort) {
         case 'popularity':
           sortCriteria = { popularity: -1 };
           break;
@@ -282,14 +283,32 @@ const sortProducts = async (req, res) => {
           sortCriteria = { createdAt: -1 };
       }
   
-      const products = await Product.find().sort(sortCriteria);
-      res.json({ products });
+      // Build filter conditions
+      const filterConditions = { isBlocked: false, status: "Available" };
   
+      if (category) {
+        filterConditions.category = category;
+      }
+  
+      if (search) {
+        filterConditions.productName = { $regex: search, $options: 'i' }; // Case-insensitive search
+      }
+  
+      // Fetch products based on conditions and sort criteria
+      const products = await Product.find(filterConditions)
+        .sort(sortCriteria)
+        .populate('category', 'name'); // Populate category name
+  
+      res.json({ products });
     } catch (error) {
-      console.error('Error fetching sorted products:', error);
-      res.status(500).json({ message: 'An error occurred while sorting products.' });
+      console.error('Error fetching filtered and sorted products:', error);
+      res.status(500).json({ message: 'An error occurred while fetching products.' });
     }
   };
+  
+
+
+
 
 
 module.exports = {
@@ -303,7 +322,8 @@ module.exports = {
     login,
     logout,
     getProductDetails,
-    sortProducts,
+    sortAndFilterProducts,
+
 
     
 }
