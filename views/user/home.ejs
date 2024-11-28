@@ -215,7 +215,7 @@
 
 
 <script>
- async function addToCart(productId) {
+async function addToCart(productId) {
     try {
         const response = await fetch(`/addToCart?id=${productId}`, { method: "GET" });
         
@@ -228,12 +228,17 @@
                 text: data.message,
                 showConfirmButton: false,
                 timer: 1500
+            }).then(() => {
+                // Reload the page after the alert is dismissed
+                location.reload();
             });
         } else {
+            // Handle stock limitation or other errors
             Swal.fire({
                 icon: "error",
                 title: "Oops!",
-                text: data.message
+                text: data.message,
+                footer: "Please adjust the quantity or try again later"
             });
         }
     } catch (error) {
@@ -245,6 +250,7 @@
         console.error("Error:", error);
     }
 }
+
 
 async function addToWishlist(productId) {
     try {
@@ -258,6 +264,9 @@ async function addToWishlist(productId) {
                 text: data.message,
                 showConfirmButton: false,
                 timer: 1500
+            }).then(() => {
+                // Reload the page after the alert is dismissed
+                location.reload();
             });
         } else {
             Swal.fire({

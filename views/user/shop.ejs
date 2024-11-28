@@ -222,6 +222,9 @@
                 text: data.message,
                 showConfirmButton: false,
                 timer: 1500
+            }).then(() => {
+                // Reload the page after the alert is dismissed
+                location.reload();
             });
         } else {
             Swal.fire({
@@ -252,6 +255,9 @@ async function addToWishlist(productId) {
                 text: data.message,
                 showConfirmButton: false,
                 timer: 1500
+            }).then(() => {
+                // Reload the page after the alert is dismissed
+                location.reload();
             });
         } else {
             Swal.fire({

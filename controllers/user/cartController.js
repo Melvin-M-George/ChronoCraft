@@ -50,7 +50,15 @@ const addToCart = async (req, res) => {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
 
+        // Check stock availability
         const itemIndex = cart.items.findIndex(item => item.productId.equals(productId));
+        const currentCartQuantity = itemIndex > -1 ? cart.items[itemIndex].quantity : 0;
+        if (currentCartQuantity + quantity > product.quantity) {
+            return res.status(400).json({ 
+                success: false, 
+                message: `${product.quantity - currentCartQuantity} items left in stock` 
+            });
+        }
 
         if (itemIndex > -1) {
             cart.items[itemIndex].quantity += quantity;
@@ -71,6 +79,7 @@ const addToCart = async (req, res) => {
         res.status(500).json({ success: false, message: "An error occurred" });
     }
 };
+
 
 
 const removeFromCart = async (req, res) => {

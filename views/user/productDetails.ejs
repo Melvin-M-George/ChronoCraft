@@ -211,10 +211,10 @@
                                             </div>
                                             <% if (products[i].quantity > 0) { %>
                                                 <div class="product-action-1 show">
-                                                    <a aria-label="Add To Cart" class="action-btn hover-up" href="/addToCart?id=<%= products[i]._id %>">
+                                                    <a aria-label="Add To Cart" class="action-btn hover-up" onclick="addToCart('<%= products[i]._id %>')">
                                                         <i class="fi-rs-shopping-bag-add"></i>
                                                     </a>
-                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/addToWishlist?id=<%= products[i]._id %>">
+                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= products[i]._id %>')">
                                                         <i class="fi-rs-heart"></i>
                                                     </a>
                                                 </div>
@@ -412,6 +412,9 @@
                 text: data.message,
                 showConfirmButton: false,
                 timer: 1500
+            }).then(() => {
+                // Reload the page after the alert is dismissed
+                location.reload();
             });
         } else {
             Swal.fire({
@@ -442,6 +445,9 @@ async function addToWishlist(productId) {
                 text: data.message,
                 showConfirmButton: false,
                 timer: 1500
+            }).then(() => {
+                // Reload the page after the alert is dismissed
+                location.reload();
             });
         } else {
             Swal.fire({
