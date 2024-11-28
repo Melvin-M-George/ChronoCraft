@@ -6,6 +6,13 @@ const User = require("../../models/userSchema");
 
 const getShop = async (req,res) => {
     try {
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = 8;
+        const skip = (page - 1) * limit;
+        const count = await Product.countDocuments();
+        const totalPages = Math.ceil(count / limit);
+
         const user = req.session.user;
         
         const  categories = await Category.find({isListed:true});
@@ -19,7 +26,7 @@ const getShop = async (req,res) => {
             productQuery.category = { $in: categories.map(category => category._id) };
         }
 
-        let productData = await Product.find(productQuery);
+        let productData = await Product.find(productQuery).skip(skip).limit(limit);
 
 
 
@@ -30,9 +37,9 @@ const getShop = async (req,res) => {
 
         if (user) {
             const userData = await User.findOne({ _id: user._id });
-            return res.render("shop", { user: userData ,products:productData,categories, selectedCategory});
+            return res.render("shop", { user: userData ,products:productData,categories, selectedCategory,currentPage:page,totalPages});
         } else {
-            return res.render("shop", {products:productData , categories, selectedCategory}); 
+            return res.render("shop", {products:productData , categories, selectedCategory,currentPage:page,totalPages}); 
         }
     } catch (error) {
         console.error("Error loading shop page",error);

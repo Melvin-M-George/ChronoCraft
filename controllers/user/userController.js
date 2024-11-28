@@ -21,11 +21,12 @@ const loadHomepage = async (req, res) => {
         }
 
         let productData = await Product.find(productQuery);
-
-
+        
+        let totalProductCount = await Product.countDocuments();
+        let disaplayProducts = totalProductCount - 4;
 
         productData.sort((a,b)=>new Date(b.createdOn)-new Date(a.createdOn));
-        productData = productData.slice(8);
+        productData = productData.slice(disaplayProducts);
 
 
 
