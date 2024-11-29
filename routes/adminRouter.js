@@ -69,6 +69,7 @@ router.post('/updateStock',adminAuth,stockController.updateStock);
 //Order Mangement
 router.get("/orders",adminAuth,orderController.getOrders);
 router.post("/updateOrderStatus",adminAuth,orderController.updateOrderStatus);
+router.get("/adminOrderDetails",orderController.getAdminOrderDetails)
 
 //coupon management
 router.get("/coupons",adminAuth,couponController.getCouponPage);

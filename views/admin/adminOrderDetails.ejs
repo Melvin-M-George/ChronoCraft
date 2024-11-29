@@ -1,4 +1,4 @@
-<%- include('../partials/user/header') %>
+<%- include('../partials/admin/header') %>
 
     <style>
         .order-details-section {
@@ -85,7 +85,7 @@
                                 </span>
                             </h5>
                         </div>
-                        <!-- <a href="#" class="btn btn-outline-success btn-success">Track Order</a> -->
+                        
                     </div>
                 </div>
 
@@ -94,7 +94,7 @@
                     <div class="card-body">
                         <% for (let i=0; i < order.orderedItems.length; i++) { %>
                             <div class="product-item d-flex align-items-center mb-4">
-                                <img src="uploads/re-image/<%= order.orderedItems[i].product.productImages[0] %>"
+                                <img src="/uploads/re-image/<%= order.orderedItems[i].product.productImages[0] %>"
                                     alt="<%= order.orderedItems[i].product.productName %>" class="product-image me-3"
                                     width="80">
                                 <div class="product-details">
@@ -166,4 +166,4 @@
         </section>
     </main>
 
-    <%- include('../partials/user/footer') %>
+    <%- include('../partials/admin/footer') %>

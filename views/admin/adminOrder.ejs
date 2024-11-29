@@ -22,6 +22,7 @@
                                 <th>Quantity</th>
                                 <th>Total</th>
                                 <th>Payment Method</th>
+                                <th>Actions</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -63,6 +64,9 @@
                                         </td>
                                         <td>
                                             <%= order.paymentMethod %>
+                                        </td>
+                                        <td>
+                                            <a href="/admin/adminOrderDetails?id=<%= order._id %>">View Details</a>
                                         </td>
                                         <td>
                                             <select class="form-select order-status" data-order-id="<%= order.orderId %>">

@@ -121,13 +121,6 @@ const placeOrder = async (req, res) => {
         }
 
         let finalAmount = totalPrice-discountInput;
-        let paymentStatus;
-        if(payment_option=="COD"){
-            paymentStatus = "COD"
-            
-        }else{
-            paymentStatus = "pending"
-        }
         
         const newOrder = new Order({
             orderedItems,
