@@ -461,20 +461,21 @@
         //Razorpay
         function startRazorpayPayment(){
             const finalAmount = document.getElementById("totalamount").value.replace(/,/g, '');
+            const discount = document.getElementById('discountInput').value || 0;
 
             fetch('/createPayment',{
                 method:"POST",
                 headers:{
                     'Content-Type':'application/json',
                 },
-                body:JSON.stringify({amount:finalAmount})
+                body:JSON.stringify({amount:finalAmount,discount})
             })
             .then(response => response.json())
             .then(data => {
                 if(data.success){
                     const options = {
                         key:"rzp_test_lK0Qx1aLqyD7Ks",
-                        amount:Number(finalAmount) * 100,
+                        amount:Number(finalAmount-discount) * 100,
                         currency:'INR',
                         name:"ChronoCraft",
                         description:"Order Payment",

@@ -9,8 +9,8 @@ const razorpay = new Razorpay({
 
 const createRazorpay = async (req,res) => {
     try {
-        const {amount} = req.body;
-        const amt = Number(amount);
+        const {amount,discount} = req.body;
+        const amt = Number( discount ? Math.max(amount - discount, 0) : amount);
         const options = {
             amount:amt * 100,
             currency:"INR",
