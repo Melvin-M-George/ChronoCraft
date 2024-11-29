@@ -3,15 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>ChronoCraft Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/Images/favicon.ico">
     <style>
-        .login-section {
-            min-height: 100vh;
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .login-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .watch-section {
+            flex: 1;
+            background-color: #f8f9fa;
             display: flex;
             align-items: center;
-            background-color: #f8f9fa;
-            padding: 40px 0;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .watch-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This ensures the image covers the entire section */
+            object-position: center; /* Centers the image */
+        }
+
+        .login-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 40px;
         }
 
         .login-wrap {
@@ -24,6 +52,7 @@
             margin: 0 auto;
         }
 
+        /* Rest of the existing CSS remains the same */
         .heading_s1 {
             text-align: center;
             margin-bottom: 30px;
@@ -54,21 +83,6 @@
             margin-bottom: 20px;
         }
 
-        .custome-checkbox {
-            display: flex;
-            align-items: center;
-        }
-
-        .custome-checkbox input {
-            margin-right: 8px;
-        }
-
-        .custome-checkbox label {
-            font-size: 14px;
-            color: #666;
-            margin: 0;
-        }
-
         .btn-fill-out {
             background-color: #424874;
             color: white;
@@ -81,7 +95,8 @@
         }
 
         .btn-fill-out:hover {
-            background-color: #424874;
+            background-color: #2e3563;
+            color: white;
         }
 
         .divider-text-center {
@@ -156,61 +171,78 @@
         .alert {
             margin-bottom: 20px;
         }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .watch-section, .login-section {
+                flex: none;
+                width: 100%;
+                height: auto;
+            }
+
+            .watch-image {
+                max-height: 50vh;
+                object-fit: cover;
+            }
+        }
     </style>
 </head>
 <body>
-    <section class="login-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-5">
-                    <div class="login-wrap">
-                        <div class="heading_s1">
-                            <h3>Login</h3>
-                            <%if(locals.message && message.length > 0){
-                                %>
-                               <div class="alert alert-danger text-center"> <%= message%></div>
-                                <%
-                            }%>
+    <div class="login-container">
+        <div class="watch-section">
+            <img src="/Images/login image 5.avif" alt="Luxury Watch" class="watch-image">
+        </div>
+        <div class="login-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12">
+                        <div class="login-wrap">
+                            <div class="heading_s1">
+                                <h3>Login</h3>
+                                <%if(locals.message && message.length > 0){
+                                    %>
+                                   <div class="alert alert-danger text-center"> <%= message%></div>
+                                    <%
+                                }%>
+                            </div>
+                            
+                            <form method="post">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" required name="email" placeholder="Your Email">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" required type="password" name="password" placeholder="Password">
+                                </div>
+                                <div class="login_footer form-group">
+                                    <a class="text-muted" href="/forgot-password">Forgot password?</a>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-fill-out" name="login">Log in</button>
+                                </div>
+                                <div class="divider-text-center">
+                                    <span>or</span>
+                                </div>
+                                <a href="/auth/google" class="btn-google">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                                    </svg>
+                                    Login With Google
+                                </a>
+                                <div class="text-muted">
+                                    Don't have an account? <a href="/signup">Sign Up now</a>
+                                </div>
+                            </form>
                         </div>
-                        
-                        
-                        <form method="post">
-                            <div class="form-group">
-                                <input type="text" class="form-control" required name="email" placeholder="Your Email">
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" required type="password" name="password" placeholder="Password">
-                            </div>
-                            <div class="login_footer form-group">
-
-                                <a class="text-muted" href="/forgot-password">Forgot password?</a>
-
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-fill-out" name="login">Log in</button>
-                            </div>
-                            <div class="divider-text-center">
-                                <span>or</span>
-                            </div>
-                            <a href="/auth/google" class="btn-google">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
-                                </svg>
-                                Login With Google
-                            </a>
-                            <div class="text-muted">
-                                Don't have an account? <a href="/signup">Sign Up now</a>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-       
