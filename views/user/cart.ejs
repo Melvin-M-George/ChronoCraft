@@ -163,6 +163,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                
                                 <% if(cart){ %>
                                 <a href="/checkout" class="btn btn-success"><i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
                                 <% }else{ %>
@@ -197,38 +198,44 @@
     }
 
     async function updateQuantity(productId, change, maxStock) {
-        const quantityElement = document.getElementById(`qty-${productId}`);
-        const totalPriceElement = document.getElementById(`totalPrice-${productId}`);   
-        let quantity = parseInt(quantityElement.value) || 0;
-        const newQuantity = quantity + change;
+    const quantityElement = document.getElementById(`qty-${productId}`);
+    const totalPriceElement = document.getElementById(`totalPrice-${productId}`);
+    const totalCartAmountElement = document.querySelector('.cart_total_amount span'); 
 
-        if (newQuantity < 1) {
-            Swal.fire({ icon: "warning", title: "Minimum quantity reached", text: "The minimum quantity is 1" });
-            return;
-        } else if (newQuantity > maxStock) {
-            Swal.fire({ icon: "warning", title: "Maximum quantity reached", text: `The maximum quantity is ${maxStock}` });
-            return;
-        }
+    let quantity = parseInt(quantityElement.value) || 0;
+    const newQuantity = quantity + change;
 
-        quantityElement.value = newQuantity;
-
-        try {
-            const response = await fetch(`/updateQuantity`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ productId, quantity: newQuantity }),
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                totalPriceElement.innerText = `₹${data.newTotalPrice}`;
-            } else {
-                Swal.fire({ icon: "error", title: "Update failed", text: "Error updating cart." });
-            }
-        } catch (error) {
-            console.error('Error during fetch request:', error);
-        }
+    if (newQuantity < 1) {
+        Swal.fire({ icon: "warning", title: "Minimum quantity reached", text: "The minimum quantity is 1" });
+        return;
+    } else if (newQuantity > maxStock) {
+        Swal.fire({ icon: "warning", title: "Maximum quantity reached", text: `The maximum quantity is ${maxStock}` });
+        return;
     }
+
+    quantityElement.value = newQuantity;
+
+    try {
+        const response = await fetch(`/updateQuantity`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId, quantity: newQuantity }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            totalPriceElement.innerText = `₹${data.newTotalPrice}`;
+            totalCartAmountElement.innerText = `₹${data.totalCartAmount.toLocaleString()}`; // Update cart total dynamically
+        } else {
+            Swal.fire({ icon: "error", title: "Update failed", text: data.message || "Error updating cart." });
+        }
+    } catch (error) {
+        console.error('Error during fetch request:', error);
+        Swal.fire({ icon: "error", title: "Error", text: "Unable to update cart. Please try again." });
+    }
+}
+
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 

@@ -147,8 +147,14 @@ const updateCartQuantity = async (req, res) => {
         
         await cart.save();
 
+
+        const totalAmount = cart.items.reduce((sum, item) => sum + item.totalPrice, 0);
         
-        res.json({ success: true, newTotalPrice: cart.items[itemIndex].totalPrice });
+        res.json({
+            success: true,
+            newTotalPrice: cart.items[itemIndex].totalPrice,
+            totalCartAmount: totalAmount, // Include total amount in the response
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Error updating quantity" });
