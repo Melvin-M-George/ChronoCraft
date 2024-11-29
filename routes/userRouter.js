@@ -102,7 +102,7 @@ router.get('/removeFromCart', cartController.removeFromCart);
 router.post('/updateQuantity', cartController.updateCartQuantity);
 
 //order management
-router.get("/orderDetails",orderController.getOrderDetails)
+router.get("/orderDetails",orderController.getIndividualOrderDetails)
 
 //Checkout management
 router.get("/checkout",userAuth,checkoutController.getCheckout);

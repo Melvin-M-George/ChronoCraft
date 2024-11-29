@@ -161,7 +161,7 @@ const userProfile = async (req,res) => {
         const userData = await User.findById(userId);
         const addressData = await Address.findOne({userId : userId});
         
-        const orders = await Order.find({ user: userId }).skip(skip).limit(limit);
+        const orders = await Order.find({ user: userId }).sort({ createdOn: -1 }).skip(skip).limit(limit);
         res.render('profile',{
             user:userData,
             userAddress:addressData,

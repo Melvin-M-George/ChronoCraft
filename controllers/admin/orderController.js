@@ -12,11 +12,12 @@ const getOrders = async (req, res) => {
             const totalPages = Math.ceil(totalOrders / limit);
 
             const orders = await Order.find()
-    .populate('user') 
-    .populate('address')          
-    .populate('orderedItems.product')
-    .skip(skip)
-    .limit(limit);
+            .sort({ createdOn: -1 })
+            .populate('user') 
+            .populate('address')          
+            .populate('orderedItems.product')
+            .skip(skip) 
+            .limit(limit);
 
             
             res.render("adminOrder", {

@@ -8,7 +8,7 @@ const Wallet = require("../../models/walletSchema");
 
 
 
-const getOrderDetails = async (req, res) => {
+const getIndividualOrderDetails = async (req, res) => {
     try {
         const orderId = req.query.id; 
         const userId = req.session.user;
@@ -108,6 +108,6 @@ const cancelOrder = async (req, res) => {
 module.exports = {
     
     cancelOrder,
-    getOrderDetails,
+    getIndividualOrderDetails,
 
 }
