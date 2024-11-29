@@ -3,27 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up Form</title>
+    <title>ChronoCraft Sign Up</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/Images/favicon.ico">
     <style>
-        .login-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            background-color: #f8f9fa;
-            padding: 40px 0;
+        body, html {
+            height: 100%;
+            margin: 0;
         }
 
-        .login-wrap {
+        .signup-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .watch-section {
+            flex: 1;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .watch-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .signup-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 40px;
+        }
+
+        .signup-wrap {
             background: white;
             border-radius: 10px;
             padding: 30px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
         }
-
 
         .heading_s1 {
             text-align: center;
@@ -48,30 +75,8 @@
             font-size: 14px;
         }
 
-        .login_footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .custome-checkbox {
-            display: flex;
-            align-items: center;
-        }
-
-        .custome-checkbox input {
-            margin-right: 8px;
-        }
-
-        .custome-checkbox label {
-            font-size: 14px;
-            color: #666;
-            margin: 0;
-        }
-
         .btn-fill-out {
-            background-color: #424874;
+            background-color: #000000;
             color: white;
             width: 100%;
             height: 50px;
@@ -82,7 +87,8 @@
         }
 
         .btn-fill-out:hover {
-            background-color: #424874;
+            background-color: rgb(48, 48, 48);
+            color: white;
         }
 
         .divider-text-center {
@@ -91,22 +97,24 @@
             margin: 25px 0;
         }
 
-        .divider-text-center::before,
-        .divider-text-center::after {
+        .divider-text-center::before {
             content: '';
             position: absolute;
+            left: 0;
+            top: 50%;
             width: 45%;
             height: 1px;
             background: #ddd;
-            top: 50%;
-        }
-
-        .divider-text-center::before {
-            left: 0;
         }
 
         .divider-text-center::after {
+            content: '';
+            position: absolute;
             right: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
         }
 
         .divider-text-center span {
@@ -117,7 +125,7 @@
         }
 
         .btn-google {
-            background-color: #ea4335;
+            background-color: #000000;
             color: white;
             width: 100%;
             height: 50px;
@@ -133,7 +141,8 @@
         }
 
         .btn-google:hover {
-            background-color: #d62516;
+            background-color: rgb(48, 48, 48);
+            color: white;
         }
 
         .text-muted {
@@ -148,141 +157,162 @@
         }
 
         .text-muted a:hover {
-            color: #36395E;
+            color: #424874;
+        }
+
+        .text-danger {
+            font-size: 12px;
+            margin-top: 5px;
         }
 
         .alert {
             margin-bottom: 20px;
         }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .signup-container {
+                flex-direction: column;
+            }
+
+            .watch-section, .signup-section {
+                flex: none;
+                width: 100%;
+                height: auto;
+            }
+
+            .watch-image {
+                max-height: 50vh;
+                object-fit: cover;
+            }
+        }
     </style>
 </head>
 <body>
-    <section class="login-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-5">
-                    <div class="login-wrap">
-                        <div class="heading_s1">
-                            <h3>Create an Account</h3>
-                        </div>
-                        <%if(locals.message && message.length > 0){ %>
-                            <div class="alert alert-danger text-center"><%= message %></div>
-                        <% } %>
-                        <form method="post" action="/signup" id="signupForm">
-                            <div class="form-group">
-                                <input type="text" class="form-control" required name="name" id="username" placeholder="Username">
-                                <div class="text-danger" id="usernameError"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" required name="email" id="email" placeholder="Email">
-                                <div class="text-danger" id="emailError"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" required name="phone" id="phone" placeholder="Phone">
-                                <div class="text-danger" id="phoneError"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" required name="password" id="password" placeholder="Password">
-                                <div class="text-danger" id="passwordError"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" required name="cPassword" id="cPassword" placeholder="Confirm Password">
-                                <div class="text-danger" id="cPasswordError"></div>
+    <div class="signup-container">
+        <div class="watch-section">
+            <img src="/Images/rado sign up image.jpg" alt="Luxury Watch" class="watch-image">
+        </div>
+        <div class="signup-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12">
+                        <div class="signup-wrap">
+                            <div class="heading_s1">
+                                <h3>Create an Account</h3>
+                                <%if(locals.message && message.length > 0){ %>
+                                    <div class="alert alert-danger text-center"><%= message %></div>
+                                <% } %>
                             </div>
                             
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-fill-out">Submit & Register</button>
-                            </div>
-                            <div class="divider-text-center">
-                                <span>or</span>
-                            </div>
-                            <a href="/auth/google" class="btn-google">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
-                                </svg>
-                                Sign Up With Google
-                            </a>
-                            <div class="text-muted">Already have an account? <a href="/login">Sign in now</a></div>
-                        </form>
+                            <form method="post" action="/signup" id="signupForm">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" required name="name" id="username" placeholder="Username">
+                                    <div class="text-danger" id="usernameError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" required name="email" id="email" placeholder="Email">
+                                    <div class="text-danger" id="emailError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" required name="phone" id="phone" placeholder="Phone">
+                                    <div class="text-danger" id="phoneError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" required name="password" id="password" placeholder="Password">
+                                    <div class="text-danger" id="passwordError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" required name="cPassword" id="cPassword" placeholder="Confirm Password">
+                                    <div class="text-danger" id="cPasswordError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-fill-out">Submit & Register</button>
+                                </div>
+                                <div class="divider-text-center">
+                                    <span>or</span>
+                                </div>
+                                <a href="/auth/google" class="btn-google">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                                    </svg>
+                                    Sign Up With Google
+                                </a>
+                                <div class="text-muted">Already have an account? <a href="/login">Sign in now</a></div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <!-- form validation -->
     <script>
         document.getElementById("signupForm").addEventListener("submit", function(event) {
-     
-     if (!validateForm()) {
-         event.preventDefault();
-     }
-     });
- 
-     function validateForm() {
-     let isValid = true;
-     
-     
-     const username = document.getElementById("username").value.trim();
-     const usernameError = document.getElementById("usernameError");
-     const usernameRegex = /^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/;
-     if (!username || !usernameRegex.test(username)) {
-         usernameError.innerText = "Username can only contain alphanumeric characters and spaces (no special characters).";
-         isValid = false;
-     } else {
-         usernameError.innerText = "";
-     }
- 
-    
-     const email = document.getElementById("email").value.trim();
-     const emailError = document.getElementById("emailError");
-     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-     if (!email || !emailRegex.test(email)) {
-         emailError.innerText = "Please enter a valid email address.";
-         isValid = false;
-     } else {
-         emailError.innerText = "";
-     }
- 
-    
-     const phone = document.getElementById("phone").value.trim();
-     const phoneError = document.getElementById("phoneError");
-     if (!phone || !/^[1-9]\d{9}$/.test(phone)) {
-     phoneError.innerText = "Phone number must be 10 digits and cannot start with zero.";
-     isValid = false;
-     } else {
-     phoneError.innerText = "";
-     }
- 
- 
-    
-     const password = document.getElementById("password").value;
-     const passwordError = document.getElementById("passwordError");
-     if (!password || password.length < 5) {
-         passwordError.innerText = "Password must be at least 5 characters.";
-         isValid = false;
-     } else {
-         passwordError.innerText = "";
-     }
- 
-    
-     const cPassword = document.getElementById("cPassword").value;
-     const cPasswordError = document.getElementById("cPasswordError");
-     if (cPassword !== password) {
-         cPasswordError.innerText = "Passwords do not match.";
-         isValid = false;
-     } else {
-         cPasswordError.innerText = "";
-     }
- 
-     return isValid;
-     }
- 
-     
-     ["username", "email", "phone", "password", "cPassword"].forEach(id => {
-     document.getElementById(id).addEventListener("input", validateForm);
-     });
- 
-     </script>
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+            
+            const username = document.getElementById("username").value.trim();
+            const usernameError = document.getElementById("usernameError");
+            const usernameRegex = /^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/;
+            if (!username || !usernameRegex.test(username)) {
+                usernameError.innerText = "Username can only contain alphanumeric characters and spaces (no special characters).";
+                isValid = false;
+            } else {
+                usernameError.innerText = "";
+            }
+
+            const email = document.getElementById("email").value.trim();
+            const emailError = document.getElementById("emailError");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                emailError.innerText = "Please enter a valid email address.";
+                isValid = false;
+            } else {
+                emailError.innerText = "";
+            }
+
+            const phone = document.getElementById("phone").value.trim();
+            const phoneError = document.getElementById("phoneError");
+            if (!phone || !/^[1-9]\d{9}$/.test(phone)) {
+                phoneError.innerText = "Phone number must be 10 digits and cannot start with zero.";
+                isValid = false;
+            } else {
+                phoneError.innerText = "";
+            }
+
+            const password = document.getElementById("password").value;
+            const passwordError = document.getElementById("passwordError");
+            if (!password || password.length < 5) {
+                passwordError.innerText = "Password must be at least 5 characters.";
+                isValid = false;
+            } else {
+                passwordError.innerText = "";
+            }
+
+            const cPassword = document.getElementById("cPassword").value;
+            const cPasswordError = document.getElementById("cPasswordError");
+            if (cPassword !== password) {
+                cPasswordError.innerText = "Passwords do not match.";
+                isValid = false;
+            } else {
+                cPasswordError.innerText = "";
+            }
+
+            return isValid;
+        }
+
+        ["username", "email", "phone", "password", "cPassword"].forEach(id => {
+            document.getElementById(id).addEventListener("input", validateForm);
+        });
+    </script>
 </body>
 </html>
