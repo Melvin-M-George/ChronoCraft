@@ -97,7 +97,7 @@ router.get("/deleteAddress",userAuth,profileController.deleteAddress);
 
 //cart management
 router.get("/cart",cartController.getCart);
-router.get("/addToCart",cartController.addToCart);
+router.post("/addToCart",cartController.addToCart);
 router.get('/removeFromCart', cartController.removeFromCart);
 router.post('/updateQuantity', cartController.updateCartQuantity);
 

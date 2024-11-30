@@ -302,10 +302,10 @@
                                                                             <%= product.productName %>
                                                                         </a>
                                                                     </h5>
-                                                                    <span class="product-qty">x 1</span>
+                                                                    <span class="product-qty">x&nbsp;<%= qty %></span>
                                                                 </td>
                                                                 <td>
-                                                                    ₹<%= product.salePrice.toLocaleString() %>
+                                                                    ₹<%= totalAmount.toLocaleString() %>
                                                                 </td>
                                                             </tr>
                                                             <tr>

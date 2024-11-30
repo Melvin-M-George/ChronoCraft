@@ -29,7 +29,6 @@ const getCart = async (req,res) => {
         res.redirect('/page-not-found');
     }
 }
-
 const addToCart = async (req, res) => {
     try {
         const userId = req.session.user;
@@ -79,6 +78,7 @@ const addToCart = async (req, res) => {
         res.status(500).json({ success: false, message: "An error occurred" });
     }
 };
+
 
 
 

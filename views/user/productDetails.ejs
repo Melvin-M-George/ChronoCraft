@@ -152,12 +152,16 @@
                                         <div class="product-extra-link2">
                                             <a style="width: 200px;" type="submit" class="button button-add-to-cart" onclick="addToCart('<%= data._id %>')">
                                                 Add to Cart
-                                            </a>
+                                            </a>                                            
                                             <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= data._id %>')">
                                                 <i class="fi-rs-heart"></i>
                                             </a>
                                             
-                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart" href="/checkout?id=<%=data._id %>">Buy Now</a>
+                                            <a style="width: 200px;" type="submit" class="button button-add-to-cart"
+                                                onclick="redirectToCheckout('<%= data._id %>')">
+                                                Buy Now
+                                                </a>
+
                                         </div>
                                     </div>
                                     <% } else { %>
@@ -399,10 +403,25 @@
 
 
 <script>
+
+
+function redirectToCheckout(productId) {
+            const qtyValue = document.getElementById('qty-val').value;
+            window.location.href = `/checkout?productId=${productId}&qty=${qtyValue}`;
+        }
+
+
  async function addToCart(productId) {
     try {
-        const response = await fetch(`/addToCart?id=${productId}`, { method: "GET" });
-        
+        const quantity = document.getElementById('qty-val').value; // Get the selected quantity
+        const response = await fetch(`/addToCart?id=${productId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ quantity: parseInt(quantity) }),
+        });
+
         const data = await response.json();
 
         if (data.success) {
@@ -432,6 +451,7 @@
         console.error("Error:", error);
     }
 }
+
 
 async function addToWishlist(productId) {
     try {
