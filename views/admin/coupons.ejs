@@ -62,8 +62,9 @@
                             <small id="endDateError" style="color: red; display: none;">End date is required</small>
                         </div>
                         <div class="d-grid">
-                            <button class="btn btn-primary" type="submit">Create Coupon</button>
+                            <button class="btn btn-primary" type="button" onclick="addCouponHandler()">Create Coupon</button>
                         </div>
+                        
                     </form>
                 </div>
                 <div class="col-md-9">
@@ -149,6 +150,88 @@
 <br>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    async function addCouponHandler() {
+        try {
+            // Gather form data
+            const couponCode = document.getElementById('couponCode').value.trim();
+            const discountPercentage = document.getElementById('discountPercentage').value.trim();
+            const minimumPrice = document.getElementById('minimumPrice').value.trim();
+            const maximumPrice = document.getElementById('maximumPrice').value.trim();
+            const createdDate = document.getElementById('createdDate').value.trim();
+            const endDate = document.getElementById('endDate').value.trim();
+
+            // Validate required fields (basic validation here)
+            if (!couponCode || !discountPercentage || !minimumPrice || !maximumPrice || !createdDate || !endDate) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please fill in all fields before submitting!',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            // Send POST request to add the coupon
+            const response = await fetch('/admin/addCoupon', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    couponCode,
+                    discountPercentage,
+                    minimumPrice,
+                    maximumPrice,
+                    createdDate,
+                    endDate
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: result.message || 'Coupon added successfully!',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                }).then(() => {
+                location.reload();
+            });
+
+                // Optionally clear the form
+                document.querySelector('form').reset();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Add Coupon',
+                    text: result.message || 'An error occurred. Please try again.',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Unexpected Error',
+                text: 'Something went wrong. Please try again later.',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+    }
+</script>
+
 <script>
     
 

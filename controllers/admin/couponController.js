@@ -23,7 +23,7 @@ const getCouponPage = async (req,res) => {
 const addCoupon = async (req,res) => {
     try {
         const {couponCode,discountPercentage,minimumPrice, maximumPrice, createdDate, endDate} = req.body;
-        const couponExisting = await Coupons.findOne({couponCode});
+        const couponExisting = await Coupons.findOne({code:couponCode});
 
         if(couponExisting){
             return res.status(400).json({message:"This coupon already exists"});
@@ -45,7 +45,7 @@ const addCoupon = async (req,res) => {
         })
 
         await newCoupon.save();
-        return res.redirect("/admin/coupons");
+        return res.json({ success: true, message: "Coupon added successfully" });
     } catch (error) {
         console.error("Error adding coupon:",error);
         return res.status(500).json({message:"An error occured while adding coupon. Please try again later"});

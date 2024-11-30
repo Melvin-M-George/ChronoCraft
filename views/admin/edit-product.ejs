@@ -289,17 +289,21 @@
                 isValid = false;
             }
             if (isValid) {
-            // Show success message using SweetAlert
-            Swal.fire({
-                title: 'Success!',
-                text: 'Product has been updated successfully.',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-            }).then(() => {
-                // Submit the form after SweetAlert
-                document.querySelector('form').submit();
-            });
-        }
+                // Show success message using SweetAlert
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Product has been updated successfully.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    toast: true,
+                    position: "top-end",
+                    timer: 1500,
+                    timerProgressBar: true,
+                }).then(() => {
+                    // Submit the form after SweetAlert
+                    document.querySelector('form').submit();
+                });
+            }
             return isValid;
         }
 

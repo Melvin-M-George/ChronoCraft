@@ -2,26 +2,24 @@
 
 
 <style>
-  .pagination-container {
-    text-align: center;
-  }
-  .pagination {
-    display: inline-block;
-  }
+  .pagination-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-  .pagination a,
-  .pagination .current-page {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 0 2px;
-    border: 1px solid #ddd;
-    text-decoration: none;
-    color: #333;
-  }
+.pagination .page-item .page-link {
+    margin: 0 5px;
+    color: #088178; /* Customize link color */
+    border-radius: 50%; /* Circular buttons */
+}
 
-  .pagination a:hover {
-    background-color: #f5f5f5;
-  }
+.pagination .page-item.active .page-link {
+    background-color: #088178;
+    color: white;
+    border: none;
+}
+
   .error-message {
     color: red;
   }
@@ -36,28 +34,30 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-3">
-          <form method="post" action="/admin/addBrand" enctype="multipart/form-data">
+          <form id="addBrandForm" enctype="multipart/form-data">
             <div class="mb-4">
-              <label for="product_name" class="form-label">Brand Name</label>
-              <input
-                type="text"
-                name="name"
-                placeholder="Type here"
-                class="form-control"
-                required
-              />
+                <label for="brand_name" class="form-label">Brand Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    id="brand_name"
+                    placeholder="Type here"
+                    class="form-control"
+                    required
+                />
             </div>
-            <label for="product_name" class="form-label">Brand Image</label>
+            <label for="brand_image" class="form-label">Brand Image</label>
             <div class="input-upload">
-              <img src="" alt=""/>
-              <input class="form-control border" name="image" type="file" required/>
+                <img src="" alt="" />
+                <input class="form-control border" name="image" id="brand_image" type="file" required />
             </div>
             <div class="d-grid">
-              <button class="btn btn-primary mt-20" type="submit">
-                Add Brand
-              </button>
+                <button class="btn btn-primary mt-20" type="button" onclick="addBrand(event)">
+                    Add Brand
+                </button>
             </div>
-          </form>
+        </form>
+        
         </div>
         <div class="col-md-7 ml-105">
           <div class="table-responsive">
@@ -139,21 +139,20 @@
 
 
 
-  <div class="container mt-3" style="display: flex; justify-content: center; align-items: center;">
-    <div class="pagination-area mt-15 mb-50">
-      <nav aria-label="Page navigation example">
-          <ul class="pagination justify-content-center">
-              <% for (let i=1; i <=totalPages; i++) { %>
-                  <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
-                      <a class="page-link" href="?page=<%= i %>">
-                          <%= i %>
-                      </a>
-                  </li>
-                  <% } %>
-          </ul>
-      </nav>
-  </div>
+  <div class="pagination-area mt-15 mb-50">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center"> <!-- Use justify-content-center for centering -->
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>">
+                        <%= i %>
+                    </a>
+                </li>
+            <% } %>
+        </ul>
+    </nav>
 </div>
+
 
 
 
@@ -163,6 +162,54 @@
 
 
 <script>
+
+async function addBrand(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const form = document.getElementById("addBrandForm");
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch("/admin/addBrand", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to add brand");
+        }
+
+        const data = await response.json();
+
+        await Swal.fire({
+          toast:true,
+          position:"top-end",
+            icon: "success",
+            title: "Success",
+            text: data.message || "Brand added successfully",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        });
+
+        form.reset(); // Clear the form after success
+        location.reload(); // Optionally reload the page
+    } catch (error) {
+        await Swal.fire({
+          toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: error.message || "An error occurred while adding the brand",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        });
+    }
+}
+
+
+
   // SweetAlert for Block
   function confirmBlock(brandId) {
     Swal.fire({

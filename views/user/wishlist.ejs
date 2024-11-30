@@ -29,6 +29,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <% products=products.reverse()%>
                                         <%for(let i=0;i<products.length;i++){%>
                                             <tr>
                                                 <td class="image product-thumbnail"><img src="/uploads/re-image/<%=products[i].productId.productImages[0]%>" alt="<%=products[i].productId.productName%>"></td>
@@ -53,8 +54,9 @@
                                                         <span class="color3 font-weight-bold">No Stock</span>
                                                     </td>
                                                     <td class="text-right" data-title="Cart">
-                                                        <button class="btn btn-sm btn-danger"></i>Out of Stock</button>
+                                                        <button class="btn btn-sm btn-danger" style="background-color: rgb(231, 33, 33); color: white;">Out of Stock</button>
                                                     </td>
+                                                    
                                                 <%}%>
                                                 <td class="action" data-title="Remove">
                                                     <form id="remove-form-<%= products[i].productId._id %>"

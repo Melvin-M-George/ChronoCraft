@@ -227,7 +227,10 @@ async function addToCart(productId) {
                 title: "Success!",
                 text: data.message,
                 showConfirmButton: false,
-                timer: 1500
+                toast:true,
+                position:"top-end",
+                timer:1500,
+                timerProgressBar:true,
             }).then(() => {
                 // Reload the page after the alert is dismissed
                 location.reload();
@@ -235,6 +238,10 @@ async function addToCart(productId) {
         } else {
             // Handle stock limitation or other errors
             Swal.fire({
+                toast:true,
+                position:"top-end",
+                timer:1500,
+                timerProgressBar:true,
                 icon: "error",
                 title: "Oops!",
                 text: data.message,
@@ -243,6 +250,10 @@ async function addToCart(productId) {
         }
     } catch (error) {
         Swal.fire({
+            toast:true,
+            position:"top-end",
+            timer:1500,
+            timerProgressBar:true,
             icon: "error",
             title: "Error!",
             text: "An unexpected error occurred"
@@ -263,13 +274,20 @@ async function addToWishlist(productId) {
                 title: "Success!",
                 text: data.message,
                 showConfirmButton: false,
-                timer: 1500
+                toast:true,
+                position:"top-end",
+                timer:1500,
+                timerProgressBar:true,
             }).then(() => {
                 // Reload the page after the alert is dismissed
                 location.reload();
             });
         } else {
             Swal.fire({
+                toast:true,
+                position:"top-end",
+                timer:1500,
+                timerProgressBar:true,
                 icon: "error",
                 title: "Oops!",
                 text: data.message
@@ -277,6 +295,10 @@ async function addToWishlist(productId) {
         }
     } catch (error) {
         Swal.fire({
+            toast:true,
+            position:"top-end",
+            timer:1500,
+            timerProgressBar:true,
             icon: "error",
             title: "Error!",
             text: "An unexpected error occurred"

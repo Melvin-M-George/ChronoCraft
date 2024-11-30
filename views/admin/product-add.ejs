@@ -210,7 +210,7 @@
     </section>
     <script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
 
 
 
@@ -317,7 +317,9 @@
 
 
         function validateForm(event) {
+            event.preventDefault(); // Prevent the default form submission
             clearErrorMessages();
+
             const name = document.getElementsByName('productName')[0].value;
             const description = document.getElementById('descriptionid').value;
             const brand = document.getElementsByName('brand')[0].value;
@@ -325,9 +327,11 @@
             const saleprice = document.getElementsByName('salePrice')[0].value;
             const color = document.getElementsByName('color')[0].value;
             const category = document.getElementsByName('category')[0].value;
-            const images = document.getElementById('input1')
+            const images = document.getElementById('input1');
             const quantity = document.getElementsByName('quantity')[0].value;
-            let isValid = true
+
+            let isValid = true;
+
             if (name.trim() === "") {
                 displayErrorMessage('productName-error', 'Please enter a product name.');
                 isValid = false;
@@ -372,22 +376,23 @@
             }
 
             if (!isValid) {
-                event.preventDefault();
-            } else {
-                // If validation is passed, show SweetAlert
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Product has been added successfully!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // If SweetAlert is confirmed, submit the form
-                        document.forms[0].submit();
-                    }
-                });
+                return; // Stop the function execution if validation fails
             }
+
+            // Show SweetAlert for successful validation
+            Swal.fire({
+                title: 'Success!',
+                text: 'Product has been added successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If SweetAlert is confirmed, submit the form programmatically
+                    document.forms[0].submit();
+                }
+            });
         }
+
 
 
 

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
+    <title>ChronoCraft Categories</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -351,21 +351,41 @@
                 }
                 return response.json();
             })
-            .then(data=>{
-                location.reload();
-            })
+            .then(data => {
+            Swal.fire({
+                toast:true,
+                position:"top-end",
+                icon: "success",
+                title: "Success",
+                text: "Category added successfully",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar:true,
+            }).then(() => {
+                location.reload(); // Reload the page after the user clicks "OK"
+            });
+        })
             .catch(error=>{
                 if(error.message === "Category already exists"){
                     Swal.fire({
+                        toast:true,
+                        position:"top-end",
+                        timer:2000,
+                        timerProgressBar:true,
                         icon:"error",
                         title:"Oops",
-                        text:"Category already exists"
+                        text:"Category already exists",
+                       
                     })
                 }else{
                     Swal.fire({
+                        toast:true,
+                        position:"top-end",
                         icon:"error",
                         title:"oops",
                         text:"An error occured while adding the category", 
+                        timer:2000,
+                        timerProgressBar:true,
                     })
                 }
             })

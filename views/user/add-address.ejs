@@ -72,11 +72,18 @@
                         title: "Address Added!",
                         text: "Your address has been successfully added.",
                         showConfirmButton: false,
-                        timer: 1500,
+                        toast: true,
+                        position: "top-end",
+                        timer: 2000,
+                        timerProgressBar: true,
                     });
                     window.location.href = "/userProfile";
                 } else {
                     Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        timer: 2000,
+                        timerProgressBar: true,
                         icon: "error",
                         title: "Oops!",
                         text: data.message,
@@ -85,6 +92,10 @@
                 }
             } catch (error) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
                     icon: "error",
                     title: "Error!",
                     text: "An unexpected error occurred",
@@ -138,6 +149,11 @@
 
             if (name && !namePattern.test(name)) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
                     title: "Error",
                     text: "Name should contain alphabets only.",
                     icon: "error",
@@ -147,6 +163,11 @@
 
             if (city && !namePattern.test(city)) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
                     title: "Error",
                     text: "City should contain alphabets only.",
                     icon: "error",
@@ -156,6 +177,11 @@
 
             if (landMark && !namePattern.test(landMark)) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
                     title: "Error",
                     text: "Landmark should contain alphabets only.",
                     icon: "error",
@@ -165,6 +191,11 @@
 
             if (state && !namePattern.test(state)) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
                     title: "Error",
                     text: "State should contain alphabets only.",
                     icon: "error",
@@ -174,6 +205,11 @@
 
             if (pincode && !pincodePattern.test(pincode)) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
                     title: "Error",
                     text: "Pincode should be a 6-digit number.",
                     icon: "error",
@@ -183,6 +219,11 @@
 
             if (phone && !phonePattern.test(phone)) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
                     title: "Error",
                     text: "Phone number should be a 10-digit number.",
                     icon: "error",
@@ -192,6 +233,11 @@
 
             if (altPhone && altPhone !== "" && !phonePattern.test(altPhone)) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
                     title: "Error",
                     text: "Alternate phone number should be a 10-digit number.",
                     icon: "error",
@@ -201,6 +247,11 @@
 
             if (phone && altPhone && phone === altPhone) {
                 Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
                     title: "Error",
                     text: "Phone number and alternate phone number should be different.",
                     icon: "error",

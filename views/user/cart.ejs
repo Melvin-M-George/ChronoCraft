@@ -194,7 +194,9 @@
             if (result.isConfirmed) {
                 window.location.href = `/removeFromCart?id=${productId}`;
             }
-        });
+            
+        })
+
     }
 
     async function updateQuantity(productId, change, maxStock) {
