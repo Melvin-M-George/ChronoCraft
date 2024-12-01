@@ -212,7 +212,6 @@
  async function addToCart(productId) {
     try {
         const response = await fetch(`/addToCart?id=${productId}`, { method: "POST" });
-        
         const data = await response.json();
 
         if (data.success) {
@@ -221,38 +220,40 @@
                 title: "Success!",
                 text: data.message,
                 showConfirmButton: false,
-                toast:true,
-                        position:"top-end",
-                        timer:1500,
-                        timerProgressBar:true,
+                toast: true,
+                position: "top-end",
+                timer: 1500,
+                timerProgressBar: true,
             }).then(() => {
                 // Reload the page after the alert is dismissed
                 location.reload();
             });
         } else {
+            // Handle errors like exceeding the limit
             Swal.fire({
-              toast:true,
-                        position:"top-end",
-                        timer:1500,
-                        timerProgressBar:true,
-                icon: "error",
-                title: "Oops!",
-                text: data.message
+                icon: "warning",
+                title: "Limit Reached",
+                text: data.message,
+                toast: true,
+                position: "top-end",
+                timer: 1500,
+                timerProgressBar: true,
             });
         }
     } catch (error) {
         Swal.fire({
-          toast:true,
-                        position:"top-end",
-                        timer:1500,
-                        timerProgressBar:true,
             icon: "error",
             title: "Error!",
-            text: "An unexpected error occurred"
+            text: "An unexpected error occurred",
+            toast: true,
+            position: "top-end",
+            timer: 1500,
+            timerProgressBar: true,
         });
         console.error("Error:", error);
     }
 }
+
 
 async function addToWishlist(productId) {
     try {

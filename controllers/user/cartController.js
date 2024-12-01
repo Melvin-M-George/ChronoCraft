@@ -52,6 +52,14 @@ const addToCart = async (req, res) => {
         // Check stock availability
         const itemIndex = cart.items.findIndex(item => item.productId.equals(productId));
         const currentCartQuantity = itemIndex > -1 ? cart.items[itemIndex].quantity : 0;
+
+        if (currentCartQuantity + quantity > 5) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Maximum quantity of 5 items per product allowed in cart" 
+            });
+        }
+
         if (currentCartQuantity + quantity > product.quantity) {
             return res.status(400).json({ 
                 success: false, 

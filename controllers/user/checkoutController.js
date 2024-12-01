@@ -25,7 +25,9 @@ const getCheckout = async (req, res) => {
         const cart = await Cart.findOne({ userId: req.session.user }).populate('items.productId');
         const addresses = await Address.find({ userId: req.session.user });
 
-    
+        if (!cart || cart.items.length === 0) {
+            return res.redirect('/cart'); // Redirect to the cart page
+        }
 
         
         let totalAmount = cart.items.reduce((total, item) => total + item.totalPrice, 0);
