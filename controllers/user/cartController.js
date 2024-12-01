@@ -112,7 +112,7 @@ const removeFromCart = async (req, res) => {
         }
 
        
-        cart.items.splice(itemIndex, 1);
+        cart.items.splice(itemIndex, 1); //Removes the product from the cart
 
         
         await cart.save();
