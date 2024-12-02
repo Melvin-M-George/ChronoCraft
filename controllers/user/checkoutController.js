@@ -25,9 +25,6 @@ const getCheckout = async (req, res) => {
         const cart = await Cart.findOne({ userId: req.session.user }).populate('items.productId');
         const addresses = await Address.find({ userId: req.session.user });
 
-        if (!cart || cart.items.length === 0) {
-            return res.redirect('/cart'); // Redirect to the cart page
-        }
 
         
         let totalAmount = cart.items.reduce((total, item) => total + item.totalPrice, 0);
@@ -35,7 +32,6 @@ const getCheckout = async (req, res) => {
         
         if (req.query.productId) {
             const product = await Product.findById(req.query.productId);
-            console.log(product);
             if (!product) {
               return res.redirect('/pageNotFound');
             }
@@ -44,7 +40,7 @@ const getCheckout = async (req, res) => {
           } else {
             const cartItems = await Cart.findOne({ userId: user }).populate('items.productId');
             if (!cartItems) {
-              return res.render('checkout', { cart: null, products: [], addresses, totalAmount, product: null });
+              return res.redirect('/cart');
             }
             totalAmount = cartItems.items.reduce((sum, item) => sum + item.totalPrice, 0);
             return res.render('checkout', { cart: cartItems, products: cartItems.items, addresses, totalAmount, product: null });
