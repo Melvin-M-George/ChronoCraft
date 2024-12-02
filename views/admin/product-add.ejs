@@ -317,7 +317,7 @@
 
 
         function validateForm(event) {
-            event.preventDefault(); // Prevent the default form submission
+            event.preventDefault(); 
             clearErrorMessages();
 
             const name = document.getElementsByName('productName')[0].value;
@@ -376,10 +376,10 @@
             }
 
             if (!isValid) {
-                return; // Stop the function execution if validation fails
+                return; 
             }
 
-            // Show SweetAlert for successful validation
+            
             Swal.fire({
                 title: 'Success!',
                 text: 'Product has been added successfully!',
@@ -387,7 +387,7 @@
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // If SweetAlert is confirmed, submit the form programmatically
+                    
                     document.forms[0].submit();
                 }
             });

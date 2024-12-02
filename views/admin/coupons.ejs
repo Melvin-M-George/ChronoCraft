@@ -154,7 +154,7 @@
 <script>
     async function addCouponHandler() {
         try {
-            // Gather form data
+            
             const couponCode = document.getElementById('couponCode').value.trim();
             const discountPercentage = document.getElementById('discountPercentage').value.trim();
             const minimumPrice = document.getElementById('minimumPrice').value.trim();
@@ -162,7 +162,7 @@
             const createdDate = document.getElementById('createdDate').value.trim();
             const endDate = document.getElementById('endDate').value.trim();
 
-            // Validate required fields (basic validation here)
+           
             if (!couponCode || !discountPercentage || !minimumPrice || !maximumPrice || !createdDate || !endDate) {
                 Swal.fire({
                     icon: 'error',
@@ -176,7 +176,7 @@
                 return;
             }
 
-            // Send POST request to add the coupon
+            
             const response = await fetch('/admin/addCoupon', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -204,7 +204,7 @@
                 location.reload();
             });
 
-                // Optionally clear the form
+               
                 document.querySelector('form').reset();
             } else {
                 Swal.fire({

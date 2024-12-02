@@ -221,7 +221,7 @@
             let quantity = parseInt(quantityElement.value) || 0;
             const newQuantity = quantity + change;
 
-            // Prevent the quantity from exceeding stock or dropping below 1
+            
             if (newQuantity < 1) {
                 Swal.fire({ icon: "warning", title: "Minimum quantity reached", text: "The minimum quantity is 1" });
                 return;
@@ -231,7 +231,7 @@
             }
 
             try {
-                // Send the new quantity to the server
+                
                 const response = await fetch(`/updateQuantity`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -241,8 +241,8 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Update the UI with the new values
-                    quantityElement.value = newQuantity; // Update quantity only on success
+                    
+                    quantityElement.value = newQuantity; 
                     totalPriceElement.innerText = `₹${data.newTotalPrice}`;
                     totalCartAmountElement.innerText = `₹${data.totalCartAmount.toLocaleString()}`;
                 } else {

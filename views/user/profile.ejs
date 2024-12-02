@@ -481,7 +481,6 @@
     });
 
     if (result.isConfirmed) {
-        // Redirect to the server-side delete route
         window.location.href = `/deleteAddress?id=${addressId}`;
     }
 }
@@ -536,14 +535,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const navLinks = document.querySelectorAll(".dashboard-menu .nav-link");
     const tabContents = document.querySelectorAll(".tab-pane");
 
-    // Retrieve the active tab ID from localStorage
     const activeTabId = localStorage.getItem("activeDashboardTab");
     if (activeTabId) {
-        // Remove 'active' and 'show' classes from all tabs and tab contents
         navLinks.forEach(link => link.classList.remove("active"));
         tabContents.forEach(content => content.classList.remove("active", "show"));
 
-        // Activate the stored tab and its content
+        
         const activeTab = document.getElementById(activeTabId);
         const activeTabContent = document.querySelector(activeTab.getAttribute("href"));
 
@@ -553,7 +550,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Add event listener to store the clicked tab ID in localStorage
+
     navLinks.forEach(link => {
         link.addEventListener("click", function () {
             localStorage.setItem("activeDashboardTab", this.id);

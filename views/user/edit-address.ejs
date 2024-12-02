@@ -57,7 +57,7 @@
             phone: document.getElementById("phone").value,
             altPhone: document.getElementById("altPhone").value,
         };
-        const addressId = "<%= address._id %>"; // Pass the address ID dynamically from your template.
+        const addressId = "<%= address._id %>"; 
 
         try {
             const response = await fetch(`/editAddress?id=${addressId}`, {

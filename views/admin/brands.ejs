@@ -164,7 +164,7 @@
 <script>
 
 async function addBrand(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault(); 
 
     const form = document.getElementById("addBrandForm");
     const formData = new FormData(form);
@@ -193,8 +193,8 @@ async function addBrand(event) {
             timerProgressBar: true,
         });
 
-        form.reset(); // Clear the form after success
-        location.reload(); // Optionally reload the page
+        form.reset(); 
+        location.reload(); 
     } catch (error) {
         await Swal.fire({
           toast: true,
@@ -210,7 +210,7 @@ async function addBrand(event) {
 
 
 
-  // SweetAlert for Block
+ 
   function confirmBlock(brandId) {
     Swal.fire({
       title: 'Are you sure?',
@@ -225,10 +225,10 @@ async function addBrand(event) {
         window.location.href = `/admin/blockBrand?id=${brandId}`;
       }
     });
-    return false; // Prevent default behavior
+    return false; 
   }
 
-  // SweetAlert for Unblock
+  
   function confirmUnblock(brandId) {
     Swal.fire({
       title: 'Are you sure?',
@@ -243,10 +243,10 @@ async function addBrand(event) {
         window.location.href = `/admin/unBlockBrand?id=${brandId}`;
       }
     });
-    return false; // Prevent default behavior
+    return false; 
   }
 
-  // SweetAlert for Delete
+  
   function confirmDelete(brandId) {
     Swal.fire({
       title: 'Are you sure?',
@@ -261,7 +261,7 @@ async function addBrand(event) {
         window.location.href = `/admin/deleteBrand?id=${brandId}`;
       }
     });
-    return false; // Prevent default behavior
+    return false; 
   }
 </script>
 

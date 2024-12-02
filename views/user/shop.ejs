@@ -225,11 +225,11 @@
                 timer: 1500,
                 timerProgressBar: true,
             }).then(() => {
-                // Reload the page after the alert is dismissed
+            
                 location.reload();
             });
         } else {
-            // Handle errors like exceeding the limit
+            
             Swal.fire({
                 icon: "warning",
                 title: "Limit Reached",
@@ -271,7 +271,7 @@ async function addToWishlist(productId) {
                         timer:1500,
                         timerProgressBar:true,
             }).then(() => {
-                // Reload the page after the alert is dismissed
+                
                 location.reload();
             });
         } else {
@@ -320,7 +320,7 @@ async function addToWishlist(productId) {
 
 function renderProducts(products) {
   const productContainer = document.getElementById('product-list');
-  productContainer.innerHTML = ''; // Clear existing products
+  productContainer.innerHTML = ''; 
 
   products.forEach(product => {
     productContainer.innerHTML += `
