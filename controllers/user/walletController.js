@@ -15,6 +15,9 @@ const getWallet = async (req,res) => {
             return res.render("wallet",{walletData:{balance:0,transactions:[]}});
         }
 
+        
+        walletData.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
 
         res.render("wallet",{walletData});
     } catch (error) {

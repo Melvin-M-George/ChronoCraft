@@ -22,6 +22,8 @@ const getWishList = async (req,res) => {
         res.redirect("/pageNotFound");
     }
 }
+
+
 const addToWishlist = async (req, res) => {
     try {
         const productId = req.query.id;
