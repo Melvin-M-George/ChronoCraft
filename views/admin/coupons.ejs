@@ -10,9 +10,7 @@
             <h2 class="content-title card-title">Coupons</h2>
             <p>Add, edit, or delete a coupon</p>
         </div>
-        <div>
-            <input type="text" placeholder="Search Coupons" class="form-control bg-white">
-        </div>
+        
     </div>
     <div class="card">
         <div class="card-body">
@@ -79,7 +77,8 @@
                                         <th>End On</th>
                                         <th>Minimum Price</th>
                                         <th>Maximum Price</th>
-                                        <th>Status</th>
+                                        <th>Status</th>                                        
+                                        <th>Edit</th>                                        
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -115,6 +114,10 @@
                                                 <span class="badge rounded-pill alert-danger">Inactive</span>
                                             </td>
                                         <%}%> 
+                                            <td>
+                                                <a href="/admin/editCoupon?id=<%= coupons[i]._id %>" class="btn btn-primary text-white" style="text-decoration: none; padding: 0.375rem 1rem; font-size: 1rem; display: inline-block;">Edit</a>
+
+                                            </td>
                                             <td>
                                                 <button class="btn btn-danger text-white"
                                                     onclick="confirmDelete('<%= coupons[i]._id %>')">Delete</button>

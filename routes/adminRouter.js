@@ -74,7 +74,9 @@ router.get("/adminOrderDetails",orderController.getAdminOrderDetails)
 //coupon management
 router.get("/coupons",adminAuth,couponController.getCouponPage);
 router.post("/addCoupon",adminAuth,couponController.addCoupon);
-router.get("/deleteCoupon",adminAuth,couponController.deleteCoupon); 
+router.get("/deleteCoupon",adminAuth,couponController.deleteCoupon);
+router.get("/editCoupon",adminAuth,couponController.getEditCoupon);
+router.post("/editCoupon",adminAuth,couponController.postEditCoupon); 
 
 
 //sales
