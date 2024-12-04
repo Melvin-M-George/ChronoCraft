@@ -29,6 +29,9 @@ const getCart = async (req,res) => {
         res.redirect('/page-not-found');
     }
 }
+
+
+
 const addToCart = async (req, res) => {
     try {
         const userId = req.session.user;
