@@ -1,3 +1,4 @@
+const { json } = require("express");
 const Coupons = require("../../models/couponSchema");
 
 
@@ -75,13 +76,12 @@ const getEditCoupon = async (req,res) => {
 const postEditCoupon = async (req, res) => {
     try {
         const { couponCode, discountPercentage, minimumPrice, maximumPrice, createdDate, endDate } = req.body;
-        const couponId = req.query.id;  // Access couponId from the query string
-        console.log(couponId);
-
-        // Validate the discount percentage as it maps to the "price" field in the schema
-        const price = discountPercentage; // Assuming discountPercentage corresponds to "price"
+        const couponId = req.query.id;  
+        console.log(req.body);
         
-        // Check if a coupon with the same code already exists (excluding the current one)
+        const price = discountPercentage; 
+        
+        
         const existingCoupon = await Coupons.findOne({
             code: couponCode,
             _id: { $ne: couponId },
@@ -91,25 +91,25 @@ const postEditCoupon = async (req, res) => {
             return res.status(400).json({ error: "Coupon code already exists. Please choose a different code." });
         }
 
-        // Prepare the fields to update based on the schema
+        
         const updateFields = {
             code: couponCode,
             price: price,
             minimumAmount: minimumPrice,
             maximumAmount: maximumPrice,
-            createdOn: new Date(createdDate), // Convert the string date into a Date object
-            endOn: new Date(endDate), // Convert the string date into a Date object
+            createdOn: new Date(createdDate), 
+            endOn: new Date(endDate), 
         };
 
-        // Update the coupon in the database
+        
         const updatedCoupon = await Coupons.findByIdAndUpdate(couponId, updateFields, { new: true });
 
         if (!updatedCoupon) {
             return res.status(404).json({ error: "Coupon not found." });
         }
 
-        // Redirect to the coupon list page or send a success message
-        res.redirect('/admin/coupons');  // You can modify this as needed (redirect, success message, etc.)
+        
+        res.redirect('/admin/coupons');  
 
     } catch (error) {
         console.error(error);

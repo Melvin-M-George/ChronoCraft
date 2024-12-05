@@ -49,63 +49,72 @@
             <h5 style="color: white;" class="mb-0">Edit Coupon</h5>
         </div>
         <div class="card-body">
-            <form id="couponForm" action="/admin/editCoupon" method="post" onsubmit="return validateCouponForm()">
+            <form id="couponForm" action="/admin/editCoupon?id=<%= coupons._id%>" method="post">
                 <div class="mb-4">
                     <label for="couponCode" class="form-label">Coupon Code</label>
-                    <input type="text" placeholder="Type here" class="form-control" id="couponCode"
-                        name="couponCode" value="<%= coupons.code %>"/>
+                    <input type="text" placeholder="Type here" class="form-control" id="couponCode" name="couponCode" value="<%= coupons.code %>"/>
                     <small id="codeError" class="error-message" style="display: none;">Code is required</small>
                 </div>
-
+            
                 <div class="mb-4">
                     <label class="form-label">Discount Percentage (%)</label>
-                    <input type="number" placeholder="Enter discount percentage" class="form-control"
-                        id="discountPercentage" name="discountPercentage" value="<%= coupons.price %>"/>
-                    <small id="discountError" class="error-message" style="display: none;">Discount percentage must be
-                        between 1 and 100</small>
+                    <input type="number" placeholder="Enter discount percentage" class="form-control" id="discountPercentage" name="discountPercentage" value="<%= coupons.price %>"/>
+                    <small id="discountError" class="error-message" style="display: none;">Discount percentage must be between 1 and 100</small>
                 </div>
-
+            
                 <div class="mb-4">
                     <label class="form-label">Minimum Price</label>
-                    <input type="number" placeholder="Enter minimum price" class="form-control"
-                        id="minimumPrice" name="minimumPrice" value="<%= coupons.minimumAmount %>"/>
-                    <small id="minimumError" class="error-message" style="display: none;">Minimum price can't be
-                        empty</small>
+                    <input type="number" placeholder="Enter minimum price" class="form-control" id="minimumPrice" name="minimumPrice" value="<%= coupons.minimumAmount %>"/>
+                    <small id="minimumError" class="error-message" style="display: none;">Minimum price can't be empty</small>
                 </div>
+            
                 <div class="mb-4">
                     <label class="form-label">Maximum Price</label>
-                    <input type="number" placeholder="Enter maximum price" class="form-control"
-                        id="maximumPrice" name="maximumPrice" value="<%= coupons.maximumAmount %>"/>
-                    <small id="maximumError" class="error-message" style="display: none;">Maximum price can't be
-                        empty</small>
+                    <input type="number" placeholder="Enter maximum price" class="form-control" id="maximumPrice" name="maximumPrice" value="<%= coupons.maximumAmount %>"/>
+                    <small id="maximumError" class="error-message" style="display: none;">Maximum price can't be empty</small>
                 </div>
-
+            
                 <div class="mb-4">
                     <label class="form-label">Created On</label>
                     <input type="date" class="form-control" id="createdDate" name="createdDate" value="<%= coupons.createdOn %>" />
-                    <small id="createdError" class="error-message" style="display: none;">Created date is
-                        required</small>
+                    <small id="createdError" class="error-message" style="display: none;">Created date is required</small>
                 </div>
-
+            
                 <div class="mb-4">
                     <label class="form-label">End Date</label>
                     <input type="date" class="form-control" id="endDate" name="endDate" value="<%= coupons.endOn %>" />
                     <small id="endDateError" class="error-message" style="display: none;">End date is required</small>
                 </div>
-
+            
                 <div class="btn-container">
-                    <button class="btn btn-primary me-3" type="button" onclick="document.getElementById('couponForm').submit();">Save</button>
+                    <button class="btn btn-primary me-3" type="button" onclick="submitForm()">Save</button>
                     <a class="btn btn-secondary me-3" href="/admin/coupons">Cancel</a>
                 </div>
-                
-                
             </form>
+            
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 <script>
-    function validateCouponForm() {
+    document.getElementById("couponCode").addEventListener("input", validateCouponCode);
+document.getElementById("discountPercentage").addEventListener("input", validateDiscountPercentage);
+document.getElementById("minimumPrice").addEventListener("input", validateMinimumPrice);
+document.getElementById("maximumPrice").addEventListener("input", validateMaximumPrice);
+document.getElementById("createdDate").addEventListener("input", validateCreatedDate);
+document.getElementById("endDate").addEventListener("input", validateEndDate);
+
+function submitForm() {
+    const isFormValid = validateCouponForm();
+    if (isFormValid) {
+        document.getElementById("couponForm").submit();
+    }
+}
+
+function validateCouponForm() {
     const isCouponCodeValid = validateCouponCode();
     const isDiscountValid = validateDiscountPercentage();
     const isMinimumPriceValid = validateMinimumPrice();
@@ -113,7 +122,6 @@
     const isCreatedDateValid = validateCreatedDate();
     const isEndDateValid = validateEndDate();
 
-    // Return false if any validation fails
     return isCouponCodeValid && isDiscountValid && isMinimumPriceValid && isMaximumPriceValid && isCreatedDateValid && isEndDateValid;
 }
 
