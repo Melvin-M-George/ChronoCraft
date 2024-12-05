@@ -65,14 +65,14 @@ const updateOrderStatus = async (req, res) => {
 const getAdminOrderDetails = async (req, res) => {
     if(req.session.admin){
         try {
-            const orderId = req.query.id; // Get the order ID from the query string
+            const orderId = req.query.id; 
     
-            // Check if the order ID is provided
+            
             if (!orderId) {
                 return res.status(400).send("Order ID is required.");
             }
     
-            // Find the order by ID and populate the ordered items
+           
             const order = await Order.findById(orderId)
                 .populate(
                     'orderedItems.product',
@@ -82,19 +82,18 @@ const getAdminOrderDetails = async (req, res) => {
                 return res.status(404).send("Order not found.");
             }
     
-            // Fetch the address details associated with the order
-            const addressDoc = await Address.findOne({ userId: order.user }); // Get the address document using the `userId`
             
-            // Filter to find the exact address used for this order
+            const addressDoc = await Address.findOne({ userId: order.user }); 
+            
+           
             const address = addressDoc.address.filter(
                 (addr) => addr._id.toString() === order.address.toString()
             );
     
-            // Render the admin-specific order details page
             res.render('adminOrderDetails', { order, address });
         } catch (error) {
             console.error("Error fetching admin order details:", error);
-            res.redirect('/pageNotFound'); // Redirect to a generic error page
+            res.redirect('/pageNotFound'); 
         }
     }
 };

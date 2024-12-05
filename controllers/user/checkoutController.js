@@ -40,7 +40,7 @@ const getCheckout = async (req, res) => {
           } else {
             const cartItems = await Cart.findOne({ userId: user }).populate('items.productId');
             if (!cartItems) {
-              return res.redirect('/cart');
+              return res.redirect('/cart');``
             }
             totalAmount = cartItems.items.reduce((sum, item) => sum + item.totalPrice, 0);
             return res.render('checkout', { cart: cartItems, products: cartItems.items, addresses, totalAmount, product: null });
