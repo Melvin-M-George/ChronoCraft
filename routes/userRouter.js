@@ -12,6 +12,7 @@ const wishlistController = require("../controllers/user/wishlistController");
 const paymentController = require("../controllers/user/paymentController");
 const walletController = require("../controllers/user/walletController");
 const shopController = require("../controllers/user/shopController");
+const invoiceController = require("../controllers/user/invoiceController");
 const User = require("../models/userSchema");
 const Cart = require("../models/cartSchema");
 const Wishlist = require("../models/wishlistSchema");
@@ -103,6 +104,7 @@ router.post('/updateQuantity', cartController.updateCartQuantity);
 
 //order management
 router.get("/orderDetails",orderController.getIndividualOrderDetails)
+router.get("/invoiceDownload",invoiceController.invoiceDownload);
 
 //Checkout management
 router.get("/checkout",userAuth,checkoutController.getCheckout);
