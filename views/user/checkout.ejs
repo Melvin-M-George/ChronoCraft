@@ -189,8 +189,8 @@
                                     <% address.address.forEach((addr, addrIndex)=> { %>
                                         <div class="address-box mb-3">
                                             <input type="radio" name="selectedAddress"
-                                                id="address-<%= index %>-<%= addrIndex %>"
-                                                value="<%= addr._id %>" class="address-radio" required>
+                                                id="address-<%= index %>-<%= addrIndex %>" value="<%= addr._id %>"
+                                                class="address-radio" required>
                                             <label class="address-label" for="address-<%= index %>-<%= addrIndex %>">
                                                 <div class="address-type-badge <%= addr.addressType.toLowerCase() %>">
                                                     <%= addr.addressType %>
@@ -379,12 +379,12 @@
                                             <a href="/couponList?id=<%= product._id %>" class="btn btn-success">Show
                                                 Available coupons</a>
 
-                                                <% }else{ %>
+                                            <% }else{ %>
 
-                                                    <a href="/couponList" class="btn btn-success">Show
-                                                        Available coupons</a>
+                                                <a href="/couponList" class="btn btn-success">Show
+                                                    Available coupons</a>
 
-                                                        <% } %>
+                                                <% } %>
                                     </div>
                                 </div>
                             </div>
@@ -427,7 +427,7 @@
                                             value="<%= JSON.stringify(product) %>">
                                         <% } %>
 
-                                            
+
                                             <div id="paymentButtons" class="mt-4">
                                                 <button type="submit" class="btn btn-fill-out btn-block"
                                                     id="submitButton" onclick="syncDiscount()">Place Order</button>
@@ -454,57 +454,84 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
+
+
+        function validateCOD() {
+            const paymentOption = document.querySelector('input[name="payment_option"]:checked').value;
+            const totalAmount = parseFloat(document.getElementById('totalamount').value.replace(/,/g, ''));
+
+            if (paymentOption === "COD" && totalAmount > 1000) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'COD Not Allowed',
+                    text: 'Cash on Delivery is not available for orders above ₹1000.',
+                    confirmButtonText: 'OK',
+                });
+                return false; 
+            }
+            return true; 
+        }
+
+        
+        document.getElementById('orderForm').onsubmit = function () {
+            return validateAddress();
+        };
+
+
+
+
+
         if (performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
             window.location.reload();
         }
 
         //Razorpay
-        function startRazorpayPayment(){
+        function startRazorpayPayment() {
             const finalAmount = document.getElementById("totalamount").value.replace(/,/g, '');
             const discount = document.getElementById('discountInput').value || 0;
 
-            fetch('/createPayment',{
-                method:"POST",
-                headers:{
-                    'Content-Type':'application/json',
+            fetch('/createPayment', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                body:JSON.stringify({amount:finalAmount,discount})
+                body: JSON.stringify({ amount: finalAmount, discount })
             })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success){
-                    const options = {
-                        key:"rzp_test_lK0Qx1aLqyD7Ks",
-                        amount:Number(finalAmount-discount) * 100,
-                        currency:'INR',
-                        name:"ChronoCraft",
-                        description:"Order Payment",
-                        order_id:data.order.id,
-                        method:{
-                            card:true,
-                            netbanking:true,
-                            wallet:true,
-                            upi:true,
-                        },
-                        handler: function(response){
-                            document.getElementById("orderForm").submit();
-                        },
-                        prefill:{
-                            name:"Your Name",
-                            email:"your@example.com",
-                            contact:"1234567890"
-                        },
-                        theme:{
-                            color:"#39b4ac"
-                        }
-                    };
-                    const razorpay = new Razorpay(options);
-                    razorpay.open();
-                }else{
-                    Swal.fire("Error","Order Creation failed","error");
-                }
-            })
-            .catch(error => console.error("Error initializing Razorpay payment:",error));
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const options = {
+                            key: "rzp_test_lK0Qx1aLqyD7Ks",
+                            amount: Number(finalAmount - discount) * 100,
+                            currency: 'INR',
+                            name: "ChronoCraft",
+                            description: "Order Payment",
+                            order_id: data.order.id,
+                            method: {
+                                card: true,
+                                netbanking: true,
+                                wallet: true,
+                                upi: true,
+                            },
+                            handler: function (response) {
+                                document.getElementById("orderForm").submit();
+                            },
+                            prefill: {
+                                name: "Your Name",
+                                email: "your@example.com",
+                                contact: "1234567890"
+                            },
+                            theme: {
+                                color: "#39b4ac"
+                            }
+                        };
+                        const razorpay = new Razorpay(options);
+                        razorpay.open();
+                    } else {
+                        Swal.fire("Error", "Order Creation failed", "error");
+                    }
+                })
+                .catch(error => console.error("Error initializing Razorpay payment:", error));
         }
 
 
@@ -522,7 +549,7 @@
         document.querySelectorAll('.address-radio').forEach(radio => {
             radio.addEventListener('change', function () {
                 const selectedAddressField = document.getElementById('selectedAddressId');
-                selectedAddressField.value = this.value || ''; 
+                selectedAddressField.value = this.value || '';
             });
         });
 
@@ -548,10 +575,11 @@
                 return false;
             }
             if (paymentOption === "online") {
-                    startRazorpayPayment(); 
-                    return false;  
-                }
-            return true;
+                startRazorpayPayment();
+                return false;
+            }
+           // Proceed to COD validation only after address validation
+            return validateCOD(); 
         }
 
 

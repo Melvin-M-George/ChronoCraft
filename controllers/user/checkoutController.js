@@ -123,6 +123,11 @@ const placeOrder = async (req, res) => {
         }
 
         let finalAmount = totalPrice-discountInput;
+
+        //COD for orders above 1000 not allowed
+        if (payment_option === "COD" && finalAmount > 1000) {
+            return res.status(400).send("Cash on Delivery is not available for orders above ₹1000.");
+        }
         
         const newOrder = new Order({
             orderedItems,
