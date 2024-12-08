@@ -50,6 +50,8 @@ router.use(async (req, res, next) => {
     }
 });
 
+//Header Badge count
+router.get("/headerBadgeCount",userAuth,userController.headerBadgeCount);
 
 //Error management
 router.get("/pageNotFound",userController.pageNotFound)

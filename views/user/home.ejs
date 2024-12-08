@@ -255,6 +255,24 @@
 
 
 <script>
+
+async function updateCounts() {
+    try {
+        const response = await fetch('/headerBadgeCount');
+        const data = await response.json();
+
+        if (data.success) {
+            // Update the badge counts
+            document.getElementById('cart-count').textContent = data.cartlen;
+            document.getElementById('wishlist-count').textContent = data.wishlistlen;
+        } else {
+            console.error("Failed to fetch counts:", data.message);
+        }
+    } catch (error) {
+        console.error("Error fetching counts:", error);
+    }
+}
+
 async function addToCart(productId) {
     try {
         const response = await fetch(`/addToCart?id=${productId}`, { method: "POST" });
@@ -271,11 +289,9 @@ async function addToCart(productId) {
                 timer: 1500,
                 timerProgressBar: true,
             }).then(() => {
-                
-                location.reload();
+                updateCounts(); // Update counts after adding to cart
             });
         } else {
-           
             Swal.fire({
                 icon: "warning",
                 title: "Limit Reached",
@@ -300,8 +316,6 @@ async function addToCart(productId) {
     }
 }
 
-
-
 async function addToWishlist(productId) {
     try {
         const response = await fetch(`/addToWishlist?id=${productId}`, { method: "GET" });
@@ -313,20 +327,19 @@ async function addToWishlist(productId) {
                 title: "Success!",
                 text: data.message,
                 showConfirmButton: false,
-                toast:true,
-                position:"top-end",
-                timer:1500,
-                timerProgressBar:true,
+                toast: true,
+                position: "top-end",
+                timer: 1500,
+                timerProgressBar: true,
             }).then(() => {
-                
-                location.reload();
+                updateCounts(); // Update counts after adding to wishlist
             });
         } else {
             Swal.fire({
-                toast:true,
-                position:"top-end",
-                timer:1500,
-                timerProgressBar:true,
+                toast: true,
+                position: "top-end",
+                timer: 1500,
+                timerProgressBar: true,
                 icon: "error",
                 title: "Oops!",
                 text: data.message
@@ -334,10 +347,10 @@ async function addToWishlist(productId) {
         }
     } catch (error) {
         Swal.fire({
-            toast:true,
-            position:"top-end",
-            timer:1500,
-            timerProgressBar:true,
+            toast: true,
+            position: "top-end",
+            timer: 1500,
+            timerProgressBar: true,
             icon: "error",
             title: "Error!",
             text: "An unexpected error occurred"

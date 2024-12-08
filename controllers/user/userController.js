@@ -1,6 +1,8 @@
 const User = require("../../models/userSchema")
 const Category = require("../../models/categorySchema");
 const Product = require("../../models/ProductSchema");
+const Cart = require("../../models/cartSchema");
+const Wishlist = require("../../models/wishlistSchema");
 const nodemailer = require("nodemailer")
 const env = require("dotenv").config();
 const bcrypt = require('bcrypt');
@@ -308,6 +310,30 @@ const sortAndFilterProducts = async (req, res) => {
   };
   
 
+  const headerBadgeCount = async (req,res) => {
+    try {
+        const userId = req.session.user;
+        let cartlen = 0;
+        let wishlistlen = 0;
+
+        if (userId) {
+            const cart = await Cart.findOne({ userId });
+            const wishlist = await Wishlist.findOne({ userId });
+
+            if (wishlist && wishlist.products) {
+                wishlistlen = wishlist.products.length;
+            }
+            if (cart && cart.items) {
+                cartlen = cart.items.length;
+            }
+        }
+
+        res.json({ success: true, cartlen, wishlistlen });
+    } catch (error) {
+        console.error("Error fetching counts:", error);
+        res.json({ success: false, message: "Failed to fetch counts" });
+    }
+  }
 
 
 
@@ -324,6 +350,8 @@ module.exports = {
     logout,
     getProductDetails,
     sortAndFilterProducts,
+    headerBadgeCount,
+    
 
 
     
