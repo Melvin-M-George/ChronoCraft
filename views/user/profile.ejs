@@ -405,12 +405,15 @@
                                                                             <td id="order-action-<%= order._id %>">
                                                                                 <% if (order.status === 'Pending') { %>
                                                                                     <button class="cancel-btn" onclick="confirmCancelOrder('<%= order._id %>')">Cancel</button>
+                                                                                <% } else if (order.status === 'Delivered') { %>
+                                                                                    <button class="return-btn" onclick="confirmReturn('<%= order._id %>')">Return</button>
                                                                                 <% } else if (order.status === 'Processing' || order.status === 'Shipped') { %>
                                                                                     <button class="return-btn" disabled>Return/Cancel Not Available</button>
                                                                                 <% } else { %>
                                                                                     <span>--</span>
                                                                                 <% } %>
                                                                             </td>
+                                                                            
                                                                         </tr>
                                                                         <% }) %>
                                                                             <% } else { %>
@@ -469,6 +472,58 @@
     </main>
 
     <script>
+
+async function confirmReturn(orderId) {
+    try {
+        const result = await Swal.fire({
+            title: "Return Order?",
+            icon: "warning",
+            text: "Reason for Returning Product",
+            html: `<textarea id="returnReason" class="swal2-textarea" placeholder="Enter your reason here"></textarea>`,
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            cancelButtonText: 'Cancel',
+            preConfirm: () => {
+                const reason = document.getElementById('returnReason').value.trim();
+                if (!reason) {
+                    Swal.showValidationMessage('Reason cannot be empty');
+                }
+                return reason;
+            }
+        });
+
+        if (result.isConfirmed) {
+            const reason = result.value;
+
+            const response = await fetch('/returnRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    orderId: orderId,
+                    reason: reason,
+                }),
+            });
+
+            const responseData = await response.json();
+            if (response.ok) {
+                Swal.fire('Success!', responseData.message, 'success').then(() => {
+                    // Reload the page after user clicks "OK"
+                    location.reload();
+                });
+            } else {
+                Swal.fire('Error!', responseData.message, 'error');
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+    }
+}
+
+
+
         async function confirmDelete(addressId) {
     const result = await Swal.fire({
         title: "Are you sure?",

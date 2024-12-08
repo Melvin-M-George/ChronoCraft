@@ -9,6 +9,7 @@ const stockController = require("../controllers/admin/stockController");
 const orderController = require("../controllers/admin/orderController");
 const couponController = require("../controllers/admin/couponController");
 const salescontroller = require("../controllers/admin/salesController");
+const returnController = require("../controllers/admin/returnController");
 const {adminAuth} = require("../middlewares/auth")
 const multer = require("multer")
 const storage = require("../helpers/multer")
@@ -81,6 +82,10 @@ router.post("/editCoupon",adminAuth,couponController.postEditCoupon);
 
 //sales
 router.get("/salesReport",adminAuth,salescontroller.getSalesReport);
+
+//Return Approval
+router.get('/returnApprovals',adminAuth,returnController.getReturnApprovals)
+router.post('/returnDataUpdate',adminAuth,returnController.returnUpdate);
 
 
 module.exports = router;

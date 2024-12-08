@@ -19,6 +19,7 @@ const Wishlist = require("../models/wishlistSchema");
 
 
 
+
 router.use(async (req, res, next) => {
     try {
         const userId = req.session.user;
@@ -107,11 +108,14 @@ router.post('/updateQuantity', cartController.updateCartQuantity);
 //order management
 router.get("/orderDetails",orderController.getIndividualOrderDetails)
 router.get("/invoiceDownload",invoiceController.invoiceDownload);
+router.post("/cancelOrder",orderController.cancelOrder);
+router.post("/returnRequest", orderController.returnOrder);
+
 
 //Checkout management
 router.get("/checkout",userAuth,checkoutController.getCheckout);
 router.post("/placeOrder",checkoutController.placeOrder);
-router.post("/cancelOrder",orderController.cancelOrder);
+
 
 //coupon management
 router.get("/couponList",couponController.getCouponList);
@@ -131,6 +135,8 @@ router.get("/wallet",walletController.getWallet);
 
 //shop management
 router.get("/shop",shopController.getShop);
+
+
 
 
 module.exports = router;

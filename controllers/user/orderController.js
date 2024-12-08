@@ -4,6 +4,7 @@ const Address = require("../../models/addressSchema");
 const Order = require("../../models/orderSchema");
 const Product = require("../../models/ProductSchema");
 const Wallet = require("../../models/walletSchema");
+const Return = require("../../models/returnSchema");
 
 
 
@@ -105,9 +106,51 @@ const cancelOrder = async (req, res) => {
 };
 
 
+const returnOrder = async (req, res) => {
+    try {
+        const { orderId, reason } = req.body;
+        const userId = req.session.user._id;
+
+        const orderData = await Order.findById(orderId);
+        if (!orderData) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        
+        if (orderData.status !== 'Delivered') {
+            return res.status(400).json({ message: 'Only delivered orders can be returned' });
+        }
+
+        const existingReturn = await Return.findOne({ orderId });
+        if (existingReturn) {
+            return res.status(400).json({ message: 'Return request already submitted for this order' });
+        }
+
+        const returnRequest = new Return({
+            userId,
+            orderId,
+            reason,
+            refundAmount: orderData.finalAmount,
+        });
+
+        await returnRequest.save();
+
+        orderData.status = 'Return Request';
+        await orderData.save();
+
+        return res.status(200).json({ message: 'Return request submitted successfully' });
+    } catch (error) {
+        console.error('Error processing return request:', error);
+        return res.status(500).json({ message: 'Something went wrong, please try again later.' });
+    }
+};
+
+
 module.exports = {
     
     cancelOrder,
     getIndividualOrderDetails,
+    returnOrder,
+
 
 }
