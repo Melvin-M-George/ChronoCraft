@@ -62,7 +62,7 @@ const addCategoryOffer = async (req,res) => {
             return res.status(404).json({status:false,message:"Category not found"})
         }
         const products = await Product.find({category:category._id});
-        const hasProductOffer = products.some((product)=>product.productOffer > percentage);
+        const hasProductOffer = products.some((product)=>product.productOffer >= percentage);
         if(hasProductOffer){
             return res.json({status:false,message:"Product within this category already have product offers"});
         }
@@ -70,7 +70,7 @@ const addCategoryOffer = async (req,res) => {
 
         for(const product of products){
             product.productOffer = 0;
-            product.salePrice = product.regularPrice;
+            product.salePrice = product.regularPrice - Math.floor(product.regularPrice * (percentage / 100));
             await product.save();
         }
         res.json({status:true})
