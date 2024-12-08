@@ -42,18 +42,12 @@
                                                         <span class="color3 font-weight-bold">In Stock</span>
                                                     </td>
                                                     <td class="text-right" data-title="Cart">
-                                                        <form id="add-to-cart-form-<%= products[i].productId._id %>" 
-                                                            action="/addToCart?id=<%= products[i].productId._id %>" 
-                                                            method="post" 
-                                                            style="display:inline;" 
-                                                            onsubmit="addToCart(event)">
-                                                          <input type="hidden" name="quantity" value="1"> <!-- Default quantity is 1 -->
-                                                          <button type="submit" class="btn btn-sm btn-success">
-                                                              <i class="fi-rs-shopping-bag mr-5"></i>Add to cart
-                                                          </button>
-                                                      </form>
-                                                      
+                                                        <button class="btn btn-sm btn-success" onclick="addToCart('<%= products[i].productId._id %>')">
+                                                            Add to Cart
+                                                        </button>
                                                     </td>
+                                                    
+                                                    
                                                 <%}else{%>
                                                     <td class="text-center" data-title="Stock">
                                                         <span class="color3 font-weight-bold">No Stock</span>
@@ -94,50 +88,63 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-async function addToCart(event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    const form = event.target;
-    const formData = new FormData(form); // Get form data, including hidden inputs
-    const quantity = formData.get('quantity'); // Get the quantity value (default to 1)
-
+async function updateCounts() {
     try {
-        const response = await fetch(form.action, {
-            method: 'POST',
-            body: formData,
-        });
+        const response = await fetch('/headerBadgeCount');
+        const data = await response.json();
 
-        const result = await response.json();
+        if (data.success) {
+            // Update the badge counts
+            document.getElementById('cart-count').textContent = data.cartlen;
+            document.getElementById('wishlist-count').textContent = data.wishlistlen;
+        } else {
+            console.error("Failed to fetch counts:", data.message);
+        }
+    } catch (error) {
+        console.error("Error fetching counts:", error);
+    }
+}
 
-        if (response.ok) {
+async function addToCart(productId) {
+    try {
+        const response = await fetch(`/addToCart?id=${productId}`, { method: "POST" });
+        const data = await response.json();
+
+        if (data.success) {
             Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: result.message,
+                icon: "success",
+                title: "Success!",
+                text: data.message,
                 showConfirmButton: false,
-                timer: 3000
+                toast: true,
+                position: "top-end",
+                timer: 1500,
+                timerProgressBar: true,
+            }).then(() => {
+                updateCounts(); // Update counts after adding to cart
             });
         } else {
             Swal.fire({
+                icon: "warning",
+                title: "Limit Reached",
+                text: data.message,
                 toast: true,
-                position: 'top-end',
-                icon: 'error',
-                title: result.message || 'Failed to add to cart',
-                showConfirmButton: false,
-                timer: 3000
+                position: "top-end",
+                timer: 1500,
+                timerProgressBar: true,
             });
         }
     } catch (error) {
-        console.error('Error adding to cart:', error);
         Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "An unexpected error occurred",
             toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: 'Something went wrong!',
-            showConfirmButton: false,
-            timer: 3000
+            position: "top-end",
+            timer: 1500,
+            timerProgressBar: true,
         });
+        console.error("Error:", error);
     }
 }
 
