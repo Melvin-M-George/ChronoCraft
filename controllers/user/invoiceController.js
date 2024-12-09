@@ -104,8 +104,8 @@ const generateInvoiceTable = (doc, order) => {
 
     doc
         .fontSize(10)
-        .text('Item', 50, tableTop)
-        .text('Description', 150, tableTop)
+        .text('Serial No.', 50, tableTop,{ width: 60 })
+        .text('Item', 150, tableTop,{ width: 150, align: 'left' })
         .text('Unit Price', 280, tableTop, { width: 90, align: 'right' })
         .text('Quantity', 370, tableTop, { width: 90, align: 'right' })
         .text('Line Total', 470, tableTop, { width: 90, align: 'right' });
@@ -123,8 +123,8 @@ const generateInvoiceTable = (doc, order) => {
 
         doc
             .fontSize(10)
-            .text(`${index + 1}`, 50, position)
-            .text(item.product.productName, 150, position)
+            .text(`${index + 1}`, 60, position)
+            .text(item.product.productName, 150, position,{width:180})
             .text("Rs. " + item.price.toLocaleString(), 280, position, { width: 90, align: 'right' })
             .text(item.quantity.toString(), 370, position, { width: 90, align: 'right' })
             .text("Rs. " + (item.quantity * item.price).toLocaleString(), 470, position, { width: 90, align: 'right' });

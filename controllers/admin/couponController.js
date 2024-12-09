@@ -77,7 +77,6 @@ const postEditCoupon = async (req, res) => {
     try {
         const { couponCode, discountPercentage, minimumPrice, maximumPrice, createdDate, endDate } = req.body;
         const couponId = req.query.id;  
-        console.log(req.body);
         
         const price = discountPercentage; 
         
