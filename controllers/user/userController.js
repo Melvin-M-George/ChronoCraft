@@ -258,7 +258,7 @@ const sortAndFilterProducts = async (req, res) => {
     try {
       const { sort = 'default', category = '', search = '' } = req.query;
   
-      // Define sorting criteria
+      
       let sortCriteria;
       switch (sort) {
         case 'popularity':
@@ -286,7 +286,7 @@ const sortAndFilterProducts = async (req, res) => {
           sortCriteria = { createdAt: -1 };
       }
   
-      // Build filter conditions
+      
       const filterConditions = { isBlocked: false, status: "Available" };
   
       if (category) {
@@ -294,13 +294,13 @@ const sortAndFilterProducts = async (req, res) => {
       }
   
       if (search) {
-        filterConditions.productName = { $regex: search, $options: 'i' }; // Case-insensitive search
+        filterConditions.productName = { $regex: search, $options: 'i' }; 
       }
   
-      // Fetch products based on conditions and sort criteria
+      
       const products = await Product.find(filterConditions)
         .sort(sortCriteria)
-        .populate('category', 'name'); // Populate category name
+        .populate('category', 'name'); 
   
       res.json({ products });
     } catch (error) {

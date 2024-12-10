@@ -9,7 +9,6 @@ const getSalesReport = async (req, res) => {
         const limit = 20;
         const skip = (page - 1) * limit;
 
-        // Exclude orders with status "Cancelled" or "Returned"
         const filterOrders = { status: { $nin: ["Cancelled", "Returned"] } };
         const count = await Order.countDocuments(filterOrders);
         const totalPages = Math.ceil(count / limit);

@@ -51,7 +51,7 @@ const addToCart = async (req, res) => {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
 
-        // Check stock availability
+        
         const itemIndex = cart.items.findIndex(item => item.productId.equals(productId));
         const currentCartQuantity = itemIndex > -1 ? cart.items[itemIndex].quantity : 0;
 
@@ -114,7 +114,7 @@ const removeFromCart = async (req, res) => {
         }
 
        
-        cart.items.splice(itemIndex, 1); //Removes the product from the cart
+        cart.items.splice(itemIndex, 1); 
 
         
         await cart.save();
@@ -163,7 +163,7 @@ const updateCartQuantity = async (req, res) => {
         res.json({
             success: true,
             newTotalPrice: cart.items[itemIndex].totalPrice,
-            totalCartAmount: totalAmount, // Include total amount in the response
+            totalCartAmount: totalAmount, 
         });
     } catch (error) {
         console.error(error);
