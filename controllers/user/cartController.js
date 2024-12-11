@@ -133,7 +133,7 @@ const updateCartQuantity = async (req, res) => {
         const userId = req.session.user;
         
 
-       
+       //finding cart
         const cart = await Cart.findOne({ userId });
         if (!cart) return res.status(404).json({ success: false, message: "Cart not found" });
 
