@@ -53,22 +53,22 @@ router.use(async (req, res, next) => {
 
 //Handle blocked users
 
-// router.use(async (req, res, next) => {
-//     if (req.path === "/login") {
-//         return next();
-//     }
+router.use(async (req, res, next) => {
+    if (req.path === "/login") {
+        return next();
+    }
 
-//     if (req.session.user) {
-//         const user = await User.findById(req.session.user);
-//         if (user && user.isBlocked) {
-//             return res.redirect("/login");
-//         } else if (user) {
+    if (req.session.user) {
+        const user = await User.findById(req.session.user._id);
+        if (user && user.isBlocked) {
+            return res.redirect("/login");
+        } else if (user) {
 
-//             return next();
-//         }
-//     }
-//     next();
-// });
+            return next();
+        }
+    }
+    next();
+});
 
 //Header Badge count
 router.get("/headerBadgeCount",userAuth,userController.headerBadgeCount);

@@ -182,17 +182,28 @@ const resendOtp = async (req,res) => {
         res.status(500).json({success:false,message:"Internal server error. Please try again"});
     }
 }
-const loadLogin = async (req,res) => {
+
+const loadLogin = async (req, res) => {
     try {
-        if(!req.session.user){
-             return res.render("login",{message:""});   
-        }else{
-            return res.redirect("/");  
+  
+      // const message = req.query.msg || ""
+  
+      if (req.session.user) {
+        const user = await User.findById(req.session.user._id);
+        if (user && user.isBlocked) {
+          req.session.user = null;
+          return res.render("login", { message: "User is blocked" });
         }
+        return res.redirect("/");
+      } else {
+        return res.render("login", { message: '' });
+      }
+  
     } catch (error) {
-        res.redirect("/PageNotFound");
+      res.redirect('/page-not-found')
     }
-}
+  };
+
 
 const login = async (req,res)=>{
     try {
@@ -286,7 +297,8 @@ const sortAndFilterProducts = async (req, res) => {
                 sortCriteria = { productName: -1 };
                 break;
             default:
-                sortCriteria = { createdAt: -1 };
+                sortCriteria = { createdAt: 1 };
+
         }
 
         // Apply filters
