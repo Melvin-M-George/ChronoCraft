@@ -316,19 +316,37 @@ async function addToWishlist(productId) {
 
 
 <script>
-    async function fetchProducts() {
-  const sort = document.getElementById('sort-by').value;
-  const category = document.getElementById('categorySelect').value;
-  const search = document.getElementById('search-bar').value;
+    function renderPagination(totalPages, currentPage) {
+    const paginationContainer = document.querySelector('.pagination');
+    paginationContainer.innerHTML = '';
 
-  try {
-    const response = await fetch(`/sortAndFilterProducts?sort=${sort}&category=${category}&search=${search}`);
-    const { products } = await response.json();
-    renderProducts(products);
-  } catch (error) {
-    console.error('Error fetching products:', error);
-  }
+    for (let i = 1; i <= totalPages; i++) {
+        paginationContainer.innerHTML += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="?page=${i}">
+                    ${i}
+                </a>
+            </li>
+        `;
+    }
 }
+
+// Update pagination dynamically
+async function fetchProducts() {
+    const sort = document.getElementById('sort-by').value;
+    const category = document.getElementById('categorySelect').value;
+    const search = document.getElementById('search-bar').value;
+
+    try {
+        const response = await fetch(`/sortAndFilterProducts?sort=${sort}&category=${category}&search=${search}`);
+        const { products, totalPages, currentPage } = await response.json();
+        renderProducts(products);
+        renderPagination(totalPages, currentPage);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
+}
+
 
 
 function renderProducts(products) {

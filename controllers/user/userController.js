@@ -256,59 +256,68 @@ const getProductDetails = async (req,res) => {
 
 const sortAndFilterProducts = async (req, res) => {
     try {
-      const { sort = 'default', category = '', search = '' } = req.query;
-  
-      
-      let sortCriteria;
-      switch (sort) {
-        case 'popularity':
-          sortCriteria = { popularity: -1 };
-          break;
-        case 'price-low-high':
-          sortCriteria = { salePrice: 1 };
-          break;
-        case 'price-high-low':
-          sortCriteria = { salePrice: -1 };
-          break;
-        case 'rating':
-          sortCriteria = { rating: -1 };
-          break;
-        case 'new-arrivals':
-          sortCriteria = { createdAt: -1 };
-          break;
-        case 'alphabetical-a-z':
-          sortCriteria = { productName: 1 };
-          break;
-        case 'alphabetical-z-a':
-          sortCriteria = { productName: -1 };
-          break;
-        default:
-          sortCriteria = { createdAt: -1 };
-      }
-  
-      
-      const filterConditions = { isBlocked: false, status: "Available" };
-  
-      if (category) {
-        filterConditions.category = category;
-      }
-  
-      if (search) {
-        filterConditions.productName = { $regex: search, $options: 'i' }; 
-      }
-  
-      
-      const products = await Product.find(filterConditions)
-        .sort(sortCriteria)
-        .populate('category', 'name'); 
-  
-      res.json({ products });
+        const { sort = 'default', category = '', search = '' } = req.query;
+        const page = parseInt(req.query.page) || 1;
+        const limit = 8;
+        const skip = (page - 1) * limit;
+
+        // Determine sort criteria
+        let sortCriteria;
+        switch (sort) {
+            case 'popularity':
+                sortCriteria = { popularity: -1 };
+                break;
+            case 'price-low-high':
+                sortCriteria = { salePrice: 1 };
+                break;
+            case 'price-high-low':
+                sortCriteria = { salePrice: -1 };
+                break;
+            case 'rating':
+                sortCriteria = { rating: -1 };
+                break;
+            case 'new-arrivals':
+                sortCriteria = { createdAt: -1 };
+                break;
+            case 'alphabetical-a-z':
+                sortCriteria = { productName: 1 };
+                break;
+            case 'alphabetical-z-a':
+                sortCriteria = { productName: -1 };
+                break;
+            default:
+                sortCriteria = { createdAt: -1 };
+        }
+
+        // Apply filters
+        const filterConditions = { isBlocked: false, status: "Available" };
+
+        if (category) {
+            filterConditions.category = category;
+        }
+
+        if (search) {
+            filterConditions.productName = { $regex: search, $options: 'i' };
+        }
+
+        // Count filtered products
+        const filteredCount = await Product.countDocuments(filterConditions);
+        const totalPages = Math.ceil(filteredCount / limit);
+
+        // Fetch filtered products
+        const products = await Product.find(filterConditions)
+            .sort(sortCriteria)
+            .skip(skip)
+            .limit(limit)
+            .populate('category', 'name');
+
+        res.json({ products, totalPages, currentPage: page });
     } catch (error) {
-      console.error('Error fetching filtered and sorted products:', error);
-      res.status(500).json({ message: 'An error occurred while fetching products.' });
+        console.error('Error fetching filtered and sorted products:', error);
+        res.status(500).json({ message: 'An error occurred while fetching products.' });
     }
-  };
-  
+};
+
 
   const headerBadgeCount = async (req,res) => {
     try {
