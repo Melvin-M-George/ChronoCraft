@@ -301,7 +301,7 @@ const sortAndFilterProducts = async (req, res) => {
 
         }
 
-        // Apply filters
+       
         const filterConditions = { isBlocked: false, status: "Available" };
 
         if (category) {
@@ -312,11 +312,11 @@ const sortAndFilterProducts = async (req, res) => {
             filterConditions.productName = { $regex: search, $options: 'i' };
         }
 
-        // Count filtered products
+        
         const filteredCount = await Product.countDocuments(filterConditions);
         const totalPages = Math.ceil(filteredCount / limit);
 
-        // Fetch filtered products
+       
         const products = await Product.find(filterConditions)
             .sort(sortCriteria)
             .skip(skip)

@@ -401,6 +401,7 @@
                                     onsubmit="return validateAddress()">
                                     <div class="payment_option">
                                         <h4>Select Payment Method</h4>
+                                        <br>
                                         <div class="custome-radio">
                                             <input class="form-check-input" required type="radio" value="COD"
                                                 name="payment_option" id="exampleRadios3" checked>
@@ -412,6 +413,14 @@
                                                 name="payment_option" id="exampleRadios5">
                                             <label class="form-check-label" for="exampleRadios5">Online Payment</label>
                                         </div>
+                                       
+
+                                        <div class="custome-radio">
+                                            <input class="form-check-input" required type="radio" value="wallet" name="payment_option" id="exampleRadios6">
+                                            <label class="form-check-label" for="exampleRadios6">Wallet Payment ( Balance: ₹<%= walletData.balance %> )</label>
+
+                                        </div>
+                                        
                                     </div>
 
                                     <!-- Hidden fields to store cart and totals -->
@@ -454,6 +463,8 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
+
+        
 
 
         function validateCOD() {
