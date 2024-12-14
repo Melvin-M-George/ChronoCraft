@@ -20,12 +20,47 @@ const getSalesReport = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
+
+            const totalSales = await Order.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        totalSalesAmount: { $sum: "$finalAmount" }
+                    }
+                }
+            ]);
+
+            const totalOrders = await Order.countDocuments();
+
+            const totalDiscount = await Order.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        totalDiscountAmount: { $sum: "$discount" }
+                    }
+                }
+            ]);
+
+            const uniqueUserIds = await Order.distinct("user");
+            const uniqueUsersCount = uniqueUserIds.length;
+
+
+            let salesTotal = totalSales[0];
+            let discountTotal = totalDiscount[0];
+            console.log(totalDiscount);
+
         res.render("salesreport", {
             orders: orderData,
             count,
             totalPages,
             currentPage: page,
+            totalSales:salesTotal,
+            totalOrders,
+            totalDiscount:discountTotal,
+            totalUsers:uniqueUsersCount,
         });
+
+
     } catch (error) {
         console.error("Error loading sales report", error);
         res.redirect("/pageerror");

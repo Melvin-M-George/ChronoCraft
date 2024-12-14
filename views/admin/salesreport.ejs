@@ -61,7 +61,7 @@
                 <div class="card shadow-sm text-center">
                     <div class="card-body">
                         <h6 class="text-muted">Total Sales</h6>
-                        <h3 class="text-primary">₹45,000</h3>
+                        <h3 class="text-primary">₹ <%= totalSales.totalSalesAmount.toLocaleString() %></h3>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                     <div class="card-body">
                         <h6 class="text-muted">Total Orders</h6>
                         <h3 class="text-success">
-                            <%= count %>
+                            <%= totalOrders %>
                         </h3>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                 <div class="card shadow-sm text-center">
                     <div class="card-body">
                         <h6 class="text-muted">Total Discount</h6>
-                        <h3 class="text-warning">₹5,000</h3>
+                        <h3 class="text-warning">₹ <%= totalDiscount.totalDiscountAmount.toLocaleString() %></h3>
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                 <div class="card shadow-sm text-center">
                     <div class="card-body">
                         <h6 class="text-muted">Total Customers</h6>
-                        <h3 class="text-info">85</h3>
+                        <h3 class="text-info"><%=totalUsers %></h3>
                     </div>
                 </div>
             </div>
@@ -416,26 +416,26 @@
                     }).replace('INR', '₹');
                 };
 
-                const summaryCards = document.querySelectorAll('.card .card-body');
-                summaryCards.forEach(card => {
-                    const title = card.querySelector('h6').textContent.trim();
-                    const valueSpan = card.querySelector('h3');
+                // const summaryCards = document.querySelectorAll('.card .card-body');
+                // summaryCards.forEach(card => {
+                //     const title = card.querySelector('h6').textContent.trim();
+                //     const valueSpan = card.querySelector('h3');
 
-                    switch (title) {
-                        case 'Total Sales':
-                            valueSpan.textContent = formatCurrency(totalSales);
-                            break;
-                        case 'Total Orders':
-                            valueSpan.textContent = visibleRows;
-                            break;
-                        case 'Total Discount':
-                            valueSpan.textContent = formatCurrency(totalDiscount);
-                            break;
-                        case 'Total Customers':
-                            valueSpan.textContent = uniqueCustomers.size;
-                            break;
-                    }
-                });
+                //     switch (title) {
+                //         case 'Total Sales':
+                //             valueSpan.textContent = formatCurrency(totalSales);
+                //             break;
+                //         case 'Total Orders':
+                //             valueSpan.textContent = visibleRows;
+                //             break;
+                //         case 'Total Discount':
+                //             valueSpan.textContent = formatCurrency(totalDiscount);
+                //             break;
+                //         case 'Total Customers':
+                //             valueSpan.textContent = uniqueCustomers.size;
+                //             break;
+                //     }
+                // });
             }
 
 

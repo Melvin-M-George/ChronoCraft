@@ -59,41 +59,26 @@ const getCheckout = async (req, res) => {
 const placeOrder = async (req, res) => {
     try {
         const { addressId, payment_option, singleProduct, discountInput, couponCodeInput } = req.body;
-        const userId = req.session.user;
+        // console.log("asad",req.body)
 
-        if (!userId) {
-            console.log("User not logged in");
-            return res.redirect('/login');
-        }
+        const userId = req.session.user;
+        if (!userId) return res.redirect('/login');
 
         const user = await User.findById(userId).populate('addresses');
-        if (!user) {
-            console.log("User not found");
-            return res.status(404).send("User not found");
-        }
+        if (!user) return res.status(404).send("User not found");
 
         if (!addressId || !mongoose.Types.ObjectId.isValid(addressId)) {
-            console.error("Invalid or missing addressId:", addressId);
-            return res.status(400).send("Invalid address selected");
-        }
-
-        const selectedAddress = user.addresses.filter(addr => addr._id.toString() === addressId);
-        if (!selectedAddress) {
-            console.log("Selected address not found");
             return res.status(400).send("Invalid address selected");
         }
 
         const cart = await Cart.findOne({ userId }).populate("items.productId");
-        let totalPrice = cart.items.reduce((acc, item) => acc + item.totalPrice, 0);
 
-        if (isNaN(totalPrice)) {
-            console.log("Invalid totalPrice:", totalPrice);
-            return res.status(400).send("Invalid total price");
-        }
-
+        let totalPrice = 0;
         let orderedItems = [];
-        if (singleProduct) {
-            const product = JSON.parse(singleProduct);
+
+        const product = singleProduct ? JSON.parse(singleProduct) : null;
+        
+        if (product) {
             orderedItems.push({
                 product: product._id,
                 quantity: 1,
@@ -101,45 +86,42 @@ const placeOrder = async (req, res) => {
             });
             totalPrice = product.salePrice;
             await Product.findByIdAndUpdate(product._id, { $inc: { quantity: -1 } });
-        } else if (cart) {
-            const cartItems = cart.items;
-            orderedItems = cartItems.map(item => ({
+        } else if (cart && cart.items.length > 0) {
+            orderedItems = cart.items.map(item => ({
                 product: item.productId._id,
                 quantity: item.quantity,
                 price: item.totalPrice / item.quantity,
             }));
-            cartItems.forEach(async item => {
+            totalPrice = cart.items.reduce((acc, item) => acc + item.totalPrice, 0);
+            for (const item of cart.items) {
                 await Product.findByIdAndUpdate(item.productId.id, { $inc: { quantity: -item.quantity } });
-            });
+            }
+        } else {
+            return res.status(400).send("No products found to place an order");
         }
+        console.log(totalPrice);
 
-        let finalAmount = totalPrice - discountInput;
-
-        if (payment_option === "COD" && finalAmount > 1000) {
-            return res.status(400).send("Cash on Delivery is not available for orders above ₹1000.");
-        }
-
+        let discount = isNaN(Number(discountInput)) || !discountInput ? 0 : Number(discountInput);
+        let finalAmount = Number(totalPrice) - discount;
 
         const newOrder = new Order({
             orderedItems,
             user: userId,
-            totalPrice: totalPrice,
-            finalAmount: finalAmount,
+            totalPrice,
+            finalAmount,
             address: addressId,
             paymentMethod: payment_option,
             couponCode: couponCodeInput,
-            discount: discountInput,
-            couponApplied: Boolean(couponCodeInput && discountInput),
+            discount,
+            couponApplied: !!(couponCodeInput && discount),
             paymentStatus: payment_option === "wallet" ? "Completed" : "Pending",
         });
-        
 
         if (payment_option === "wallet") {
             const wallet = await Wallet.findOne({ userId });
             if (!wallet || wallet.balance < finalAmount) {
                 return res.status(400).send("Insufficient wallet balance.");
             }
-
             wallet.balance -= finalAmount;
             wallet.transactions.push({
                 type: "debit",
@@ -147,20 +129,30 @@ const placeOrder = async (req, res) => {
                 description: "Purchase using wallet",
                 orderId: newOrder._id,
             });
-
             await wallet.save();
         }
 
-        
+
 
         await newOrder.save();
 
-        if (!singleProduct) {
-            cart.items = [];
+        if (payment_option === 'COD') {
+            newOrder.status = 'Pending'; // Default status for all orders
+            newOrder.paymentStatus = 'Not Applicable'; // COD doesn't require payment completion online
+        } else if (payment_option === 'online') {
+            newOrder.status = 'Pending'; // Default status for all orders
+            newOrder.paymentStatus = 'Pending'; // Online payment pending initially
+        } else if (payment_option === 'wallet') {
+            newOrder.status = 'Pending'; // Default status for all orders
+            newOrder.paymentStatus = 'Pending'; // Wallet payment to be validated
         }
-        await cart.save();
+        
 
-        res.render("orderConfirmation", { orderId: newOrder._id });
+        if (cart) {
+            cart.items = [];
+            await cart.save();
+        }
+        res.status(200).json({ orderId: newOrder._id, finalAmount });
     } catch (error) {
         console.error("Error placing order:", error);
         res.status(500).send("Internal Server Error");

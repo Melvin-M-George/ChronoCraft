@@ -397,14 +397,13 @@
                             </div>
                             <div class="row">
 
-                                <form id="orderForm" method="POST" action="/placeOrder"
-                                    onsubmit="return validateAddress()">
+                                <form id="orderForm">
                                     <div class="payment_option">
                                         <h4>Select Payment Method</h4>
                                         <br>
                                         <div class="custome-radio">
                                             <input class="form-check-input" required type="radio" value="COD"
-                                                name="payment_option" id="exampleRadios3" checked>
+                                                name="payment_option" id="exampleRadios3">
                                             <label class="form-check-label" for="exampleRadios3">Cash on
                                                 Delivery</label>
                                         </div>
@@ -413,20 +412,21 @@
                                                 name="payment_option" id="exampleRadios5">
                                             <label class="form-check-label" for="exampleRadios5">Online Payment</label>
                                         </div>
-                                       
+
 
                                         <div class="custome-radio">
-                                            <input class="form-check-input" required type="radio" value="wallet" name="payment_option" id="exampleRadios6">
-                                            <label class="form-check-label" for="exampleRadios6">Wallet Payment ( Balance: ₹<%= walletData.balance %> )</label>
+                                            <input class="form-check-input" required type="radio" value="wallet"
+                                                name="payment_option" id="exampleRadios6">
+                                            <label class="form-check-label" for="exampleRadios6">Wallet Payment (
+                                                Balance: ₹<%= walletData.balance %> )</label>
 
                                         </div>
-                                        
+
                                     </div>
 
                                     <!-- Hidden fields to store cart and totals -->
                                     <input type="hidden" name="cart" value='<%= JSON.stringify(cart) %>'>
-                                    <input type="hidden" id="totalamount" name="totalPrice"
-                                        value="<%= totalAmount.toLocaleString() %>">
+                                    <input type="hidden" id="totalamount" name="totalPrice" value="<%= totalAmount%>">
                                     <input type="hidden" id="selectedAddressId" name="addressId">
                                     <input type="hidden" id="discountInput" name="discountInput">
                                     <input type="hidden" id="couponCodeInput" name="couponCodeInput">
@@ -438,8 +438,8 @@
 
 
                                             <div id="paymentButtons" class="mt-4">
-                                                <button type="submit" class="btn btn-fill-out btn-block"
-                                                    id="submitButton" onclick="syncDiscount()">Place Order</button>
+                                                <button type="button" class="btn btn-fill-out btn-block"
+                                                    id="submitButton">Place Order</button>
                                             </div>
                                 </form>
 
@@ -464,11 +464,40 @@
 
     <script>
 
-        
+        document.querySelectorAll('input[name="payment_option"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                console.log("Selected payment method:", this.value);
+            });
+        });
 
+        document.getElementById('submitButton').addEventListener('click', function () {
+            console.log("Submit button clicked");
+            validateAndOpenRazorpay('<%= totalAmount %>');
+        });
+
+        function validateAndOpenRazorpay(amount) {
+            const paymentOption = document.querySelector('input[name="payment_option"]:checked').value;
+            console.log("Function called with amount:", amount);
+            console.log("Payment option:", paymentOption);
+
+            syncDiscount();
+
+            if (validateAddress()) {
+                console.log("Address validation passed");
+
+                if (paymentOption === "online") {
+                    console.log("Opening Razorpay");
+                    openRazorpay();
+                } if (paymentOption === "COD") {
+                    validateCOD()
+                }
+            } else {
+                console.log("Address validation failed");
+            }
+        }
 
         function validateCOD() {
-            const paymentOption = document.querySelector('input[name="payment_option"]:checked').value;
+
             const totalAmount = parseFloat(document.getElementById('totalamount').value.replace(/,/g, ''));
 
             if (paymentOption === "COD" && totalAmount > 1000) {
@@ -478,71 +507,185 @@
                     text: 'Cash on Delivery is not available for orders above ₹1000.',
                     confirmButtonText: 'OK',
                 });
-                return false; 
+                return false;
             }
-            return true; 
+            return true;
         }
 
-        
+
         document.getElementById('orderForm').onsubmit = function () {
             return validateAddress();
         };
-
-
-
 
 
         if (performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
             window.location.reload();
         }
 
-        //Razorpay
-        function startRazorpayPayment() {
-            const finalAmount = document.getElementById("totalamount").value.replace(/,/g, '');
-            const discount = document.getElementById('discountInput').value || 0;
 
-            fetch('/createPayment', {
+
+
+
+        //Razorpay
+
+        function openRazorpay() {
+            const finalAmount = parseFloat(document.getElementById("totalamount").value.replace(/,/g, ''));
+            const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+            const addressId = document.getElementById('selectedAddressId').value;
+            const couponCode = document.getElementById('couponCode').value || null;
+            const singleProduct = document.querySelector('input[name="singleProduct"]') ? document.querySelector('input[name="singleProduct"]').value : null;
+
+            const orderData = {
+                cart: document.querySelector('input[name="cart"]').value,
+                totalPrice: finalAmount,
+                payment_option: 'online',
+                addressId,
+                singleProduct,
+                discount,
+                totalAmount: finalAmount - discount,
+                couponCode
+            };
+
+            fetch('/placeOrder', {
                 method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ amount: finalAmount, discount })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const options = {
-                            key: "rzp_test_lK0Qx1aLqyD7Ks",
-                            amount: Number(finalAmount - discount) * 100,
-                            currency: 'INR',
-                            name: "ChronoCraft",
-                            description: "Order Payment",
-                            order_id: data.order.id,
-                            method: {
-                                card: true,
-                                netbanking: true,
-                                wallet: true,
-                                upi: true,
-                            },
-                            handler: function (response) {
-                                document.getElementById("orderForm").submit();
-                            },
-                            prefill: {
-                                name: "Your Name",
-                                email: "your@example.com",
-                                contact: "1234567890"
-                            },
-                            theme: {
-                                color: "#39b4ac"
-                            }
-                        };
-                        const razorpay = new Razorpay(options);
-                        razorpay.open();
-                    } else {
-                        Swal.fire("Error", "Order Creation failed", "error");
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Order placement failed');
                     }
+                    return response.json();
                 })
-                .catch(error => console.error("Error initializing Razorpay payment:", error));
+                .then(placeOrderData => {
+                    console.log(placeOrderData);
+                    const amount = placeOrderData.finalAmount;
+
+                    return fetch('/createPayment', {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ amount, discount })
+                    })
+                        .then(response => {
+                            if (!response.ok) throw new Error("Payment order creation failed");
+                            return response.json();
+                        })
+                        .then(paymentData => {
+                            if (paymentData.success) {
+                                const options = {
+                                    key: "rzp_test_lK0Qx1aLqyD7Ks",
+                                    amount: paymentData.order.amount,
+                                    currency: 'INR',
+                                    name: "ChronoCraft",
+                                    description: "Order Payment",
+                                    order_id: paymentData.order.id,
+                                    handler: function (response) {
+                                        fetch('/updateOrder', {
+                                            method: "POST",
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                orderId: placeOrderData.orderId,
+                                                paymentId: response.razorpay_payment_id,
+                                                razorpayOrderId: response.razorpay_order_id,
+                                                signature: response.razorpay_signature,
+                                                status: 'Completed'
+                                            })
+                                        })
+                                            .then(updateResponse => updateResponse.json().then(data => {
+                                                if (updateResponse.ok) {
+                                                    // Redirect to success page with the order ID
+                                                    window.location.href = `/orderConfirmation?id=${placeOrderData.orderId}`;
+                                                } else {
+                                                    console.error("Order update failed:", data);
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Order Update Failed',
+                                                        text: data.message || 'Payment was successful, but updating the order failed. Please contact support.',
+                                                        confirmButtonColor: '#39b4ac',
+                                                    });
+                                                }
+                                            }))
+                                            .catch(error => {
+                                                console.error("Error updating order:", error);
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Order Update Error',
+                                                    text: 'Payment was successful, but there was an error updating your order. Please contact support.',
+                                                    confirmButtonColor: '#39b4ac',
+                                                });
+                                            });
+                                    },
+                                    prefill: {
+                                        name: "Your Name",
+                                        email: "your@example.com",
+                                        contact: "1234567890"
+                                    },
+                                    theme: { color: "#39b4ac" }
+                                };
+
+                                const razorpay = new Razorpay(options);
+
+                                razorpay.on('payment.failed', function (response) {
+                                    console.error("Payment failed:", response.error);
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Payment Failed',
+                                        text: 'The payment process failed. Please try again.',
+                                        confirmButtonColor: '#39b4ac',
+                                    });
+
+                                    fetch('/update-order', {
+                                        method: "POST",
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            orderId: placeOrderData.orderId,
+                                            status: 'Payment Failed',
+                                            paymentError: response.error
+                                        })
+                                    }).catch(error => console.error("Error updating order to 'Payment Failed':", error));
+                                });
+
+                                razorpay.open();
+                            } else {
+                                Swal.fire("Error", "Order creation failed", "error");
+                            }
+                        });
+                })
+                .catch(error => {
+                    console.error("Error during order placement or payment initialization:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Order or Payment Error',
+                        text: 'There was an error processing your order. Please try again.',
+                        confirmButtonColor: '#39b4ac',
+                    });
+                });
+        }
+
+
+
+        function validateAddress() {
+            const addressRadioButtons = document.querySelectorAll('input[name="selectedAddress"]');
+            let addressSelected = false;
+
+            addressRadioButtons.forEach((radio) => {
+                if (radio.checked) {
+                    addressSelected = true;
+                }
+            });
+
+            if (!addressSelected) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Address Selected',
+                    text: 'Please select an address before proceeding.',
+                    confirmButtonColor: '#39b4ac',
+                });
+                return false;
+            }
+
+            return true;
         }
 
 
@@ -563,35 +706,6 @@
                 selectedAddressField.value = this.value || '';
             });
         });
-
-
-        function validateAddress() {
-            const addressRadioButtons = document.querySelectorAll('input[name="selectedAddress"]');
-            const paymentOption = document.querySelector('input[name="payment_option"]:checked').value;
-            let addressSelected = false;
-
-            addressRadioButtons.forEach((radio) => {
-                if (radio.checked) {
-                    addressSelected = true;
-                }
-            });
-
-            if (!addressSelected) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'No Address Selected',
-                    text: 'Please select an address before proceeding.',
-                    confirmButtonColor: '#39b4ac',
-                });
-                return false;
-            }
-            if (paymentOption === "online") {
-                startRazorpayPayment();
-                return false;
-            }
-           // Proceed to COD validation only after address validation
-            return validateCOD(); 
-        }
 
 
         // Apply coupon

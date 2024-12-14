@@ -39,7 +39,8 @@ const addToCart = async (req, res) => {
         }
 
         const productId = req.query.id;
-        const quantity = parseInt(req.body.quantity) || 1;
+        const { quantity } = req.body; // Get quantity from request body
+        const qty = parseInt(quantity) || 1;
 
         let cart = await Cart.findOne({ userId });
         if (!cart) {
@@ -51,18 +52,17 @@ const addToCart = async (req, res) => {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
 
-        
         const itemIndex = cart.items.findIndex(item => item.productId.equals(productId));
         const currentCartQuantity = itemIndex > -1 ? cart.items[itemIndex].quantity : 0;
 
-        if (currentCartQuantity + quantity > 5) {
+        if (currentCartQuantity + qty > 5) {
             return res.status(400).json({ 
                 success: false, 
                 message: "Maximum quantity of 5 items per product allowed in cart" 
             });
         }
 
-        if (currentCartQuantity + quantity > product.quantity) {
+        if (currentCartQuantity + qty > product.quantity) {
             return res.status(400).json({ 
                 success: false, 
                 message: `${product.quantity - currentCartQuantity} items left in stock` 
@@ -70,14 +70,14 @@ const addToCart = async (req, res) => {
         }
 
         if (itemIndex > -1) {
-            cart.items[itemIndex].quantity += quantity;
+            cart.items[itemIndex].quantity += qty;
             cart.items[itemIndex].totalPrice = cart.items[itemIndex].quantity * product.salePrice;
         } else {
             cart.items.push({
                 productId,
-                quantity,
+                quantity: qty,
                 price: product.salePrice,
-                totalPrice: quantity * product.salePrice
+                totalPrice: qty * product.salePrice
             });
         }
 
@@ -88,6 +88,7 @@ const addToCart = async (req, res) => {
         res.status(500).json({ success: false, message: "An error occurred" });
     }
 };
+
 
 
 

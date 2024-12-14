@@ -129,6 +129,7 @@ router.get("/orderDetails",orderController.getIndividualOrderDetails)
 router.get("/invoiceDownload",invoiceController.invoiceDownload);
 router.post("/cancelOrder",orderController.cancelOrder);
 router.post("/returnRequest", orderController.returnOrder);
+router.get("/orderConfirmation",orderController.getOrderConfimation);
 
 
 //Checkout management
@@ -148,6 +149,8 @@ router.post("/removeFromWishlist",wishlistController.removeFromWishlist);
 
 //Razorpay Payment
 router.post("/createPayment",paymentController.createRazorpay);
+router.post('/updateOrder',paymentController.updateOrder);
+router.get('/retryPayment',paymentController.retryPayment);
 
 //Wallet
 router.get("/wallet",walletController.getWallet);
