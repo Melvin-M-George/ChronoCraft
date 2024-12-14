@@ -62,7 +62,7 @@ const cancelOrder = async (req, res) => {
             return res.json({ message: 'Order cancelled successfully' });
         }
         
-        if (order.paymentMethod === 'online') {
+        if (order.paymentMethod === 'online' || order.paymentMethod === 'wallet') {
             const userId = req.session.user;
 
             if (!userId) {
@@ -146,11 +146,21 @@ const returnOrder = async (req, res) => {
 };
 
 
+const getOrderConfimation = async (req,res) => {
+    try {
+        return res.render("orderConfirmation");
+    } catch (error) {
+        console.log("Error loading order confirmation page",error);
+    }
+}
+
 module.exports = {
     
     cancelOrder,
     getIndividualOrderDetails,
     returnOrder,
+    getOrderConfimation,
+    
 
 
 }
