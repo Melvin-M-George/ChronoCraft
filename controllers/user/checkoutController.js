@@ -135,7 +135,7 @@ const placeOrder = async (req, res) => {
 
         if (payment_option === 'COD') {
             newOrder.status = 'Pending'; 
-            newOrder.paymentStatus = 'Not Applicable'; 
+            newOrder.paymentStatus = 'Pending'; 
         } else if (payment_option === 'online') {
             newOrder.status = 'Pending';
             newOrder.paymentStatus = 'Pending'; 

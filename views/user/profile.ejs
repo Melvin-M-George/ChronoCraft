@@ -377,7 +377,8 @@
                                                                 <tr>
                                                                     <th>Order</th>
                                                                     <th>Date</th>
-                                                                    <th>Status</th>
+                                                                    <th>Order Status</th>
+                                                                    <th>Payment Status</th>
                                                                     <th>Total</th>
                                                                     <th>Actions</th>
                                                                 </tr>
@@ -398,22 +399,29 @@
                                                                                 class="status-<%= order.status.toLowerCase() %>">
                                                                                 <%= order.status %>
                                                                             </td>
+                                                                            <td id="payment-status-<%= order._id %>"
+                                                                                class="status-<%= order.paymentStatus.toLowerCase() %>">
+                                                                                <%= order.paymentStatus %>
+                                                                            </td>
                                                                             <td>₹ <%= order.finalAmount.toFixed(2) %>
                                                                             </td>
                                                                             <td>
                                                                                 <a href="/orderDetails?id=<%= order._id %>">View Details</a>
                                                                             </td>
                                                                             <td id="order-action-<%= order._id %>">
-                                                                                <% if (order.status === 'Pending') { %>
-                                                                                    <button class="cancel-btn" onclick="confirmCancelOrder('<%= order._id %>')">Cancel</button>
-                                                                                <% } else if (order.status === 'Delivered') { %>
+                                                                                <% if (order.status === 'Delivered') { %>
                                                                                     <button class="return-btn" onclick="confirmReturn('<%= order._id %>')">Return</button>
+                                                                                <% } else if (order.paymentStatus === 'Failed') { %>
+                                                                                    <button class="retry-btn" onclick="openRazorpay('<%= order._id %>')">Retry Payment</button>
+                                                                                <% } else if (order.paymentStatus === 'Completed' && order.status === 'Processing') { %>
+                                                                                    <button class="cancel-btn" onclick="confirmCancelOrder('<%= order._id %>')">Cancel</button>
                                                                                 <% } else if (order.status === 'Processing' || order.status === 'Shipped') { %>
                                                                                     <button class="return-btn" disabled>Return/Cancel Not Available</button>
                                                                                 <% } else { %>
                                                                                     <span>--</span>
                                                                                 <% } %>
                                                                             </td>
+                                                                            
                                                                             
                                                                         </tr>
                                                                         <% }) %>
