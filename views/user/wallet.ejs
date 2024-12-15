@@ -171,8 +171,20 @@
                         <td class="<%= transaction.type%>">
                           <%= transaction.type%>
                         </td>
-                        <td class="font-weight-bold">₹<%= transaction.amount.toFixed(2) %>
-                        </td>
+
+
+                        <td class="font-weight-bold <%= 
+                        transaction.type === 'credit' || transaction.type === 'refund' ? 'credit' : 'debit'
+                      %>">
+                        <span class="<%= transaction.type === 'credit' || transaction.type === 'refund' ? 'text-success' : 'text-danger' %>">
+                          <%= transaction.type === 'credit' || transaction.type === 'refund' 
+                              ? '+ ₹ ' + transaction.amount.toFixed(2) 
+                              : '- ₹ ' + transaction.amount.toFixed(2) 
+                          %>
+                        </span>
+                      </td>
+                      
+
                         <td>
                           <%= transaction.description || 'No description' %>
                         </td>
