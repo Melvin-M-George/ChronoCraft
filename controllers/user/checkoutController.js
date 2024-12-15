@@ -137,14 +137,14 @@ const placeOrder = async (req, res) => {
         await newOrder.save();
 
         if (payment_option === 'COD') {
-            newOrder.status = 'Pending'; // Default status for all orders
-            newOrder.paymentStatus = 'Not Applicable'; // COD doesn't require payment completion online
+            newOrder.status = 'Pending'; 
+            newOrder.paymentStatus = 'Not Applicable'; 
         } else if (payment_option === 'online') {
-            newOrder.status = 'Pending'; // Default status for all orders
-            newOrder.paymentStatus = 'Pending'; // Online payment pending initially
+            newOrder.status = 'Pending';
+            newOrder.paymentStatus = 'Pending'; 
         } else if (payment_option === 'wallet') {
-            newOrder.status = 'Pending'; // Default status for all orders
-            newOrder.paymentStatus = 'Pending'; // Wallet payment to be validated
+            newOrder.status = 'Pending';
+            newOrder.paymentStatus = 'Pending'; 
         }
         
 
