@@ -59,7 +59,7 @@ const getCheckout = async (req, res) => {
 const placeOrder = async (req, res) => {
     try {
         const { addressId, payment_option, singleProduct, discountInput, couponCodeInput } = req.body;
-        // console.log("asad",req.body)
+        console.log("asad",req.body)
 
         const userId = req.session.user;
         if (!userId) return res.redirect('/login');
@@ -133,9 +133,6 @@ const placeOrder = async (req, res) => {
         }
 
 
-
-        await newOrder.save();
-
         if (payment_option === 'COD') {
             newOrder.status = 'Pending'; 
             newOrder.paymentStatus = 'Not Applicable'; 
@@ -147,6 +144,10 @@ const placeOrder = async (req, res) => {
             newOrder.paymentStatus = 'Pending'; 
         }
         
+
+        await newOrder.save();
+
+
 
         if (cart) {
             cart.items = [];

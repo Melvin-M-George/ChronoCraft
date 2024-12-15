@@ -464,6 +464,49 @@
 
     <script>
 
+        function placeOrderWithWallet() {
+            const finalAmount = parseFloat(document.getElementById("totalamount").value.replace(/,/g, ''));
+            const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+            const addressId = document.getElementById('selectedAddressId').value;
+            const couponCode = document.getElementById('couponCode').value || null;
+            const singleProduct = document.querySelector('input[name="singleProduct"]') ? document.querySelector('input[name="singleProduct"]').value : null;
+
+            const orderData = {
+                cart: document.querySelector('input[name="cart"]').value,
+                totalPrice: finalAmount,
+                payment_option: 'wallet',
+                addressId,
+                singleProduct,
+                discount,
+                totalAmount: finalAmount - discount,
+                couponCode
+            };
+
+            fetch('/placeOrder', {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Order placement failed');
+                    }
+                    return response.json();
+                })
+                .then(placeOrderData => {
+                    window.location.href = `/orderConfirmation?id=${placeOrderData.orderId}`;
+                })
+                .catch(error => {
+                    console.error("Error during wallet order placement:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Order Error',
+                        text: 'There was an error processing your wallet payment. Please try again.',
+                        confirmButtonColor: '#39b4ac',
+                    });
+                });
+        }
+
         document.querySelectorAll('input[name="payment_option"]').forEach(radio => {
             radio.addEventListener('change', function () {
                 console.log("Selected payment method:", this.value);
@@ -491,15 +534,31 @@
                 } if (paymentOption === "COD") {
                     validateCOD()
                 }
+                if (paymentOption === "wallet") {
+                    const walletBalance = parseFloat('<%= walletData.balance %>');
+                    const totalAmount = parseFloat(document.getElementById('totalamount').value.replace(/,/g, ''));
+
+                    if (walletBalance < totalAmount) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Insufficient Wallet Balance',
+                            text: 'Your wallet does not have enough balance to complete this purchase.',
+                            confirmButtonText: 'OK',
+                        });
+                        return false;
+                    }
+                    // Proceed with wallet payment
+                    placeOrderWithWallet();
+                }
             } else {
                 console.log("Address validation failed");
             }
         }
 
         function validateCOD() {
-
+            const paymentOption = document.querySelector('input[name="payment_option"]:checked').value;
             const totalAmount = parseFloat(document.getElementById('totalamount').value.replace(/,/g, ''));
-
+            console.log("sdfs")
             if (paymentOption === "COD" && totalAmount > 1000) {
                 Swal.fire({
                     icon: 'error',
