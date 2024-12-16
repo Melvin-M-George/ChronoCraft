@@ -593,7 +593,7 @@
             const addressId = document.getElementById('selectedAddressId').value;
             const couponCode = document.getElementById('couponCode').value || null;
             const singleProduct = document.querySelector('input[name="singleProduct"]') ? document.querySelector('input[name="singleProduct"]').value : null;
-
+            console.log(finalAmount);
             const orderData = {
                 cart: document.querySelector('input[name="cart"]').value,
                 totalPrice: finalAmount,

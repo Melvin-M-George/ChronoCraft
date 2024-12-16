@@ -12,8 +12,10 @@ const razorpay = new Razorpay({
 const createRazorpay = async (req,res) => {
     try {
         const {amount,discount} = req.body;
+        console.log(amount)
         console.log("Hellooooooooo")
         const amt = Number( discount ? Math.max(amount - discount, 0) : amount);
+        console.log(amt);
         const options = {
             amount:amt * 100,
             currency:"INR",
@@ -107,7 +109,7 @@ const updateOrder = async (req, res) => {
         if (expectedSignature === signature) {
             const updatedOrderData = await Order.findOneAndUpdate(
                 { _id: orderId }, // Use `orderId` for lookup
-                { paymentStatus: "Completed", status: "Processing" }, // Updated status for a successful payment
+                { paymentStatus: "Completed", status: "Processing" },
                 { new: true }
             );
 

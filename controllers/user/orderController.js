@@ -52,10 +52,6 @@ const cancelOrder = async (req, res) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        if (order.status !== 'Pending') {
-            return res.status(403).json({ message: 'Cannot cancel this order' });
-        }
-
         if (order.paymentMethod === 'COD') {
             order.status = 'Cancelled';
             await order.save();

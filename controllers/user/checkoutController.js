@@ -84,7 +84,7 @@ const placeOrder = async (req, res) => {
                 quantity: 1,
                 price: product.salePrice,
             });
-            totalPrice = product.salePrice;
+            totalPrice = req.body.totalPrice;
             await Product.findByIdAndUpdate(product._id, { $inc: { quantity: -1 } });
         } else if (cart && cart.items.length > 0) {
             orderedItems = cart.items.map(item => ({
@@ -141,7 +141,7 @@ const placeOrder = async (req, res) => {
             newOrder.paymentStatus = 'Pending'; 
         } else if (payment_option === 'wallet') {
             newOrder.status = 'Pending';
-            newOrder.paymentStatus = 'Pending'; 
+            newOrder.paymentStatus = 'Completed'; 
         }
         
 

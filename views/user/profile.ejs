@@ -370,72 +370,64 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
-                                                    
-                                                        
-                                                        <table class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Order</th>
-                                                                    <th>Date</th>
-                                                                    <th>Order Status</th>
-                                                                    <th>Payment Status</th>
-                                                                    <th>Total</th>
-                                                                    <th>Actions</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <% if (orders.length> 0) { %>
-                                                                    <% orders.forEach(order=> { %>
-                                                                        <tr id="order-row-<%= order._id %>">
-                                                                            <td>
-                                                                                <%= order.orderId %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%= new
-                                                                                    Date(order.createdOn).toLocaleDateString()
-                                                                                    %>
-                                                                            </td>
-                                                                            <td id="order-status-<%= order._id %>"
-                                                                                class="status-<%= order.status.toLowerCase() %>">
-                                                                                <%= order.status %>
-                                                                            </td>
-                                                                            <td id="payment-status-<%= order._id %>"
-                                                                                class="status-<%= order.paymentStatus.toLowerCase() %>">
-                                                                                <%= order.paymentStatus %>
-                                                                            </td>
-                                                                            <td>₹ <%= order.finalAmount.toFixed(2) %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <a href="/orderDetails?id=<%= order._id %>">View Details</a>
-                                                                            </td>
-                                                                            <td id="order-action-<%= order._id %>">
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 15%">Order</th>
+                                                                <th style="width: 15%">Date</th>
+                                                                <th style="width: 15%">Order Status</th>
+                                                                <th style="width: 15%">Payment Status</th>
+                                                                <th style="width: 10%">Total</th>
+                                                                <th style="width: 15%">Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% if (orders.length> 0) { %>
+                                                                <% orders.forEach(order=> { %>
+                                                                    <tr id="order-row-<%= order._id %>">
+                                                                        <td>
+                                                                            <%= order.orderId %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= new Date(order.createdOn).toLocaleDateString() %>
+                                                                        </td>
+                                                                        <td id="order-status-<%= order._id %>"
+                                                                            class="status-<%= order.status.toLowerCase() %>">
+                                                                            <%= order.status %>
+                                                                        </td>
+                                                                        <td id="payment-status-<%= order._id %>"
+                                                                            class="status-<%= order.paymentStatus.toLowerCase() %>">
+                                                                            <%= order.paymentStatus %>
+                                                                        </td>
+                                                                        <td>₹ <%= order.finalAmount.toFixed(2) %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="d-flex flex-column">
+                                                                                <a href="/orderDetails?id=<%= order._id %>" class="mb-2">View Details</a>
                                                                                 <% if (order.status === 'Delivered') { %>
-                                                                                    <button class="return-btn" onclick="confirmReturn('<%= order._id %>')">Return</button>
+                                                                                    <button class="btn btn-sm btn-outline-secondary" onclick="confirmReturn('<%= order._id %>')">Return</button>
                                                                                 <% } else if (order.paymentStatus === 'Failed') { %>
-                                                                                    <button class="retry-btn" onclick="openRazorpay('<%= order._id %>')">Retry Payment</button>
+                                                                                    <button class="btn btn-sm btn-outline-primary" onclick="openRazorpay('<%= order._id %>')">Retry Payment</button>
                                                                                 <% } else if (order.paymentStatus === 'Completed' && order.status === 'Processing') { %>
-                                                                                    <button class="cancel-btn" onclick="confirmCancelOrder('<%= order._id %>')">Cancel</button>
+                                                                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmCancelOrder('<%= order._id %>')">Cancel</button>
                                                                                 <% } else if (order.status === 'Processing' || order.status === 'Shipped') { %>
-                                                                                    <button class="return-btn" disabled>Return/Cancel Not Available</button>
+                                                                                    <button class="btn btn-sm btn-secondary" disabled>Return/Cancel Not Available</button>
                                                                                 <% } else { %>
                                                                                     <span>--</span>
                                                                                 <% } %>
-                                                                            </td>
-                                                                            
-                                                                            
-                                                                        </tr>
-                                                                        <% }) %>
-                                                                            <% } else { %>
-                                                                                <tr>
-                                                                                    <td colspan="5" class="text-center">
-                                                                                        No orders found.</td>
-                                                                                </tr>
-                                                                                <% } %>
-                                                            </tbody>
-
-                                                        </table>
-
-                                                    
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                <% }) %>
+                                                            <% } else { %>
+                                                                <tr>
+                                                                    <td colspan="6" class="text-center">
+                                                                        No orders found.
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -448,7 +440,7 @@
                                                                 <%= i %>
                                                             </a>
                                                         </li>
-                                                        <% } %>
+                                                    <% } %>
                                                 </ul>
                                             </nav>
                                         </div>
