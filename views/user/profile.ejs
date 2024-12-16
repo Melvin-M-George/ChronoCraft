@@ -12,6 +12,20 @@
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
+        .custom-button {
+            background-color: #DCD6F7; /* Custom button background color */
+            color: #424874; /* Text color */
+            border-color: #DCD6F7; /* Border color */
+            border-width: 1px; /* Optional: define border thickness */
+            border-radius: 4px; /* Optional: rounded corners */
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        .custom-button:hover {
+            background-color: #424874; /* Darker color on hover */
+            border-color: #424874; /* Darker border on hover */
+        }
+
         
         .main {
             padding: 40px 0;
@@ -405,17 +419,18 @@
                                                                             <div class="d-flex flex-column">
                                                                                 <a href="/orderDetails?id=<%= order._id %>" class="mb-2">View Details</a>
                                                                                 <% if (order.status === 'Delivered') { %>
-                                                                                    <button class="btn btn-sm btn-outline-secondary" onclick="confirmReturn('<%= order._id %>')">Return</button>
-                                                                                <% } else if (order.paymentStatus === 'Failed') { %>
-                                                                                    <button class="btn btn-sm btn-outline-primary" onclick="openRazorpay('<%= order._id %>')">Retry Payment</button>
+                                                                                    <button class="btn btn-sm custom-button" onclick="confirmReturn('<%= order._id %>')">Return</button>
+                                                                                <% } else if (order.paymentStatus === 'Pending' && order.paymentMethod === "online") { %>
+                                                                                    <button class="btn btn-sm custom-button" onclick="openRazorpay('<%= JSON.stringify(order) %>')">Retry Payment</button>
                                                                                 <% } else if (order.paymentStatus === 'Completed' && order.status === 'Processing') { %>
-                                                                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmCancelOrder('<%= order._id %>')">Cancel</button>
+                                                                                    <button class="btn btn-sm custom-button" onclick="confirmCancelOrder('<%= order._id %>')">Cancel</button>
                                                                                 <% } else if (order.status === 'Processing' || order.status === 'Shipped') { %>
-                                                                                    <button class="btn btn-sm btn-secondary" disabled>Return/Cancel Not Available</button>
+                                                                                    <button class="btn btn-sm custom-button" disabled>Return/Cancel Not Available</button>
                                                                                 <% } else { %>
                                                                                     <span>--</span>
                                                                                 <% } %>
                                                                             </div>
+                                                                            
                                                                         </td>
                                                                     </tr>
                                                                 <% }) %>
@@ -471,8 +486,158 @@
                         </div>
         </section>
     </main>
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
+        
+        async function openRazorpay(order) {
+            const orderData = JSON.parse(order);
+            try {
+               
+                
+
+                // Place the order
+                const placeOrderResponse = await fetch(`/retryPayment?orderId=${orderData._id}`, {
+                    method: "GET",
+                });
+
+                if (!placeOrderResponse.ok) throw new Error('Order placement failed');
+
+                const placeOrderData = await placeOrderResponse.json();
+                
+                // Create the payment
+                const createPaymentResponse = await fetch('/createPayment', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: placeOrderData.orderDetails.finalAmount,
+                        discount:orderData.discount,
+                    })
+                });
+
+                if (!createPaymentResponse.ok) throw new Error('Payment order creation failed');
+
+                const paymentData = await createPaymentResponse.json();
+                if (paymentData.success) {
+                    const options = {
+                        key: "rzp_test_lK0Qx1aLqyD7Ks",
+                        amount: paymentData.order.amount,
+                        currency: 'INR',
+                        name: "ChronoCraft",
+                        description: "Order Payment",
+                        order_id: paymentData.order.id,
+                        handler: async function (response) {
+                            try {
+                                const updateResponse = await fetch('/updateOrder', {
+                                    method: "POST",
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        orderId: orderData._id,
+                                        paymentId: response.razorpay_payment_id,
+                                        razorpayOrderId: response.razorpay_order_id,
+                                        signature: response.razorpay_signature,
+                                        status: 'Completed'
+                                    })
+                                });
+
+                                const updateData = await updateResponse.json();
+
+                                if (updateResponse.ok) {
+                                    window.location.href = `/orderConfirmation?id=${placeOrderData.orderId}`;
+                                } else {
+                                    console.error("Order update failed:", updateData);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Order Update Failed',
+                                        text: updateData.message || 'Payment was successful, but updating the order failed. Please contact support.',
+                                        confirmButtonColor: '#39b4ac',
+                                    });
+                                }
+                            } catch (error) {
+                                console.error("Error updating order:", error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Order Update Error',
+                                    text: 'Payment was successful, but there was an error updating your order. Please contact support.',
+                                    confirmButtonColor: '#39b4ac',
+                                });
+                            }
+                        },
+                        prefill: {
+                            name: "Your Name",
+                            email: "your@example.com",
+                            contact: "1234567890"
+                        },
+                        theme: {
+                            color: "#39b4ac"
+                        },
+                        modal: {
+                            ondismiss: async () => {
+                                try {
+                                    await Swal.fire({
+                                        icon: 'error',
+                                        title: 'Payment Failed',
+                                        text: 'Online payment failed',
+                                        toast: true,
+                                    });
+
+                                    
+
+                                    window.location.href = '/';
+                                } catch (error) {
+                                    console.error('Error during modal dismiss handling:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Something went wrong while updating the stock.',
+                                    });
+                                }
+                            },
+                        }
+                    };
+
+                    const razorpay = new Razorpay(options);
+
+                    razorpay.on('payment.failed', async (response) => {
+                        console.error("Payment failed:", response.error);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Failed',
+                            text: 'The payment process failed. Please try again.',
+                            confirmButtonColor: '#39b4ac',
+                        });
+
+                        try {
+                            await fetch('/update-order', {
+                                method: "POST",
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    orderId: placeOrderData.orderId,
+                                    status: 'Payment Failed',
+                                    paymentError: response.error
+                                })
+                            });
+                        } catch (error) {
+                            console.error("Error updating order to 'Payment Failed':", error);
+                        }
+                    });
+
+                    razorpay.open();
+                } else {
+                    Swal.fire("Error", "Order creation failed", "error");
+                }
+            } catch (error) {
+                console.error("Error during order placement or payment initialization:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Order or Payment Error',
+                    text: 'There was an error processing your order. Please try again.',
+                    confirmButtonColor: '#39b4ac',
+                });
+            }
+        }
+
+
 
 function confirmLogout(event) {
     event.preventDefault(); // Prevent the default link action

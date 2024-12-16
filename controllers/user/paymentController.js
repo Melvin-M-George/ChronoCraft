@@ -5,35 +5,33 @@ require("dotenv").config();
 
 
 const razorpay = new Razorpay({
-    key_id:process.env.RAZORPAY_KEY_ID,
-    key_secret:process.env.RAZORPAY_KEY_SECRET
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
 })
 
-const createRazorpay = async (req,res) => {
+const createRazorpay = async (req, res) => {
     try {
-        const {amount,discount} = req.body;
-        console.log(amount)
-        console.log("Hellooooooooo")
-        const amt = Number( discount ? Math.max(amount - discount, 0) : amount);
+        const { amount, discount } = req.body;
+        const amt = Number(discount ? Math.max(amount - discount, 0) : amount);
         console.log(amt);
         const options = {
-            amount:amt * 100,
-            currency:"INR",
-            receipt:`receipt_${Date.now()}`,
+            amount: amt * 100,
+            currency: "INR",
+            receipt: `receipt_${Date.now()}`,
         };
 
         const order = await razorpay.orders.create(options);
-        res.status(200).json({success:true,order});
+        res.status(200).json({ success: true, order });
     } catch (error) {
-        console.error("Error creating Razorpay order",error);
-        res.status(500).json({success:false, message:"Failed to create razorpay order"},error);
+        console.error("Error creating Razorpay order", error);
+        res.status(500).json({ success: false, message: "Failed to create razorpay order" }, error);
     }
 }
 
 const retryPayment = async (req, res) => {
     try {
-        const { id: orderId } = req.query;
-
+        const { orderId } = req.query;
+        console.log(orderId);
         if (!orderId) {
             return res.status(400).json({ message: "Order ID is required" });
         }
@@ -47,7 +45,7 @@ const retryPayment = async (req, res) => {
         }
 
         const options = {
-            amount: Math.round(order.finalAmount * 100), 
+            amount: Math.round(order.finalAmount * 100),
             currency: 'INR',
             receipt: `retry_order_rcptid_${Date.now()}`
         };
@@ -85,20 +83,7 @@ const updateOrder = async (req, res) => {
         const { orderId, paymentId, razorpayOrderId, signature, status } = req.body;
         console.log(req.body);
 
-        if (status === 'Payment Failed') {
-            console.log("Updating order to Payment Failed...");
-            const updatedOrderData = await Order.findOneAndUpdate(
-                { orderId: orderId }, // Use `orderId` for lookup
-                { paymentStatus: "Failed", status: "Pending" }, 
-                { new: true } 
-            );
 
-            if (updatedOrderData) {
-                return res.status(200).json({ message: 'Order marked as failed', updatedOrderData });
-            } else {
-                return res.status(404).json({ message: 'Order not found' });
-            }
-        }
 
         const body = `${razorpayOrderId}|${paymentId}`;
         const expectedSignature = crypto
@@ -108,7 +93,7 @@ const updateOrder = async (req, res) => {
 
         if (expectedSignature === signature) {
             const updatedOrderData = await Order.findOneAndUpdate(
-                { _id: orderId }, // Use `orderId` for lookup
+                { _id: orderId },
                 { paymentStatus: "Completed", status: "Processing" },
                 { new: true }
             );
@@ -119,14 +104,26 @@ const updateOrder = async (req, res) => {
                 return res.status(404).json({ message: 'Order not found' });
             }
         } else {
-            console.log(`Order ${orderId} payment verification failed due to signature mismatch.`);
-            return res.status(400).json({ message: 'Invalid payment signature' });
+
+            console.log("Updating order to Payment Failed...");
+            const updatedOrderData = await Order.findOneAndUpdate(
+                { _id: orderId },
+                { paymentStatus: "Pending", status: "Pending" },
+                { new: true }
+            );
+
+            if (updatedOrderData) {
+                return res.status(200).json({ message: 'Order marked as Pending', updatedOrderData });
+            } else {
+                return res.status(404).json({ message: 'Order not found' });
+            }
         }
     } catch (error) {
         console.error("Error updating order:", error);
-        res.status(500).json({ message: 'Order update failed', error });
+        return res.status(500).json({ message: 'Order update failed', error });
     }
 };
+
 
 
 module.exports = {

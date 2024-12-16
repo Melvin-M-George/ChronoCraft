@@ -104,6 +104,9 @@ router.post("/verify-passForgot-otp",profileController.verifyForgotPassOtp);
 router.get("/reset-password",profileController.getResetPassPage);
 router.post("/resend-forgot-otp",profileController.resendOtp);
 router.post("/reset-password",profileController.postNewPassword);
+
+
+
 router.get("/userProfile",userAuth,profileController.userProfile);
 router.get("/changePassword",userAuth,profileController.changePassword);
 router.post("/changePassword",userAuth,profileController.changePasswordValid);
@@ -119,41 +122,40 @@ router.post("/editAddress",userAuth,profileController.postEditAddress);
 router.get("/deleteAddress",userAuth,profileController.deleteAddress);
 
 //cart management
-router.get("/cart",cartController.getCart);
-router.post("/addToCart",cartController.addToCart);
-router.get('/removeFromCart', cartController.removeFromCart);
-router.post('/updateQuantity', cartController.updateCartQuantity);
+router.get("/cart",userAuth,cartController.getCart);
+router.post("/addToCart",userAuth,cartController.addToCart);
+router.get('/removeFromCart',userAuth,cartController.removeFromCart);
+router.post('/updateQuantity',userAuth,cartController.updateCartQuantity);
 
 //order management
-router.get("/orderDetails",orderController.getIndividualOrderDetails)
-router.get("/invoiceDownload",invoiceController.invoiceDownload);
-router.post("/cancelOrder",orderController.cancelOrder);
-router.post("/returnRequest", orderController.returnOrder);
-router.get("/orderConfirmation",orderController.getOrderConfimation);
+router.get("/orderDetails",userAuth,orderController.getIndividualOrderDetails)
+router.get("/invoiceDownload",userAuth,invoiceController.invoiceDownload);
+router.post("/cancelOrder",userAuth,orderController.cancelOrder);
+router.post("/returnRequest",userAuth,orderController.returnOrder);
+router.get("/orderConfirmation",userAuth,orderController.getOrderConfimation);
 
 
 //Checkout management
 router.get("/checkout",userAuth,checkoutController.getCheckout);
-router.post("/placeOrder",checkoutController.placeOrder);
+router.post("/placeOrder",userAuth,checkoutController.placeOrder);
 
 
 //coupon management
-router.get("/couponList",couponController.getCouponList);
-router.post('/applyCoupon', couponController.applyCoupon);
+router.get("/couponList",userAuth,couponController.getCouponList);
+router.post('/applyCoupon',userAuth,couponController.applyCoupon);
 
 //wishlist management
 router.get("/wishlist",userAuth,wishlistController.getWishList);
 router.get("/addToWishlist",userAuth,wishlistController.addToWishlist);
-router.post("/removeFromWishlist",wishlistController.removeFromWishlist);
+router.post("/removeFromWishlist",userAuth,wishlistController.removeFromWishlist);
 
 
 //Razorpay Payment
-router.post("/createPayment",paymentController.createRazorpay);
-router.post('/updateOrder',paymentController.updateOrder);
-router.get('/retryPayment',paymentController.retryPayment);
-
+router.post("/createPayment",userAuth,paymentController.createRazorpay);
+router.post('/updateOrder',userAuth,paymentController.updateOrder);
+router.get('/retryPayment',userAuth,paymentController.retryPayment);
 //Wallet
-router.get("/wallet",walletController.getWallet);
+router.get("/wallet",userAuth,walletController.getWallet);
 
 //shop management
 router.get("/shop",shopController.getShop);

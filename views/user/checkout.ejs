@@ -587,139 +587,174 @@
 
         //Razorpay
 
-        function openRazorpay() {
-            const finalAmount = parseFloat(document.getElementById("totalamount").value.replace(/,/g, ''));
-            const discount = parseFloat(document.getElementById('discountInput').value) || 0;
-            const addressId = document.getElementById('selectedAddressId').value;
-            const couponCode = document.getElementById('couponCode').value || null;
-            const singleProduct = document.querySelector('input[name="singleProduct"]') ? document.querySelector('input[name="singleProduct"]').value : null;
-            console.log(finalAmount);
-            const orderData = {
-                cart: document.querySelector('input[name="cart"]').value,
-                totalPrice: finalAmount,
-                payment_option: 'online',
-                addressId,
-                singleProduct,
-                discount,
-                totalAmount: finalAmount - discount,
-                couponCode
-            };
+        async function openRazorpay() {
+            try {
+                const finalAmount = parseFloat(document.getElementById("totalamount").value.replace(/,/g, ''));
+                const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+                const addressId = document.getElementById('selectedAddressId').value;
+                const couponCode = document.getElementById('couponCode').value || null;
+                const singleProduct = document.querySelector('input[name="singleProduct"]') ? document.querySelector('input[name="singleProduct"]').value : null;
 
-            fetch('/placeOrder', {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Order placement failed');
-                    }
-                    return response.json();
-                })
-                .then(placeOrderData => {
-                    console.log(placeOrderData);
-                    const amount = placeOrderData.finalAmount;
+                const orderData = {
+                    cart: document.querySelector('input[name="cart"]').value,
+                    totalPrice: finalAmount,
+                    payment_option: 'online',
+                    addressId,
+                    singleProduct,
+                    discount,
+                    totalAmount: finalAmount - discount,
+                    couponCode
+                };
 
-                    return fetch('/createPayment', {
-                        method: "POST",
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ amount, discount })
+                // Place the order
+                const placeOrderResponse = await fetch('/placeOrder', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (!placeOrderResponse.ok) throw new Error('Order placement failed');
+
+                const placeOrderData = await placeOrderResponse.json();
+
+                // Create the payment
+                const createPaymentResponse = await fetch('/createPayment', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: placeOrderData.finalAmount,
+                        discount
                     })
-                        .then(response => {
-                            if (!response.ok) throw new Error("Payment order creation failed");
-                            return response.json();
-                        })
-                        .then(paymentData => {
-                            if (paymentData.success) {
-                                const options = {
-                                    key: "rzp_test_lK0Qx1aLqyD7Ks",
-                                    amount: paymentData.order.amount,
-                                    currency: 'INR',
-                                    name: "ChronoCraft",
-                                    description: "Order Payment",
-                                    order_id: paymentData.order.id,
-                                    handler: function (response) {
-                                        fetch('/updateOrder', {
-                                            method: "POST",
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify({
-                                                orderId: placeOrderData.orderId,
-                                                paymentId: response.razorpay_payment_id,
-                                                razorpayOrderId: response.razorpay_order_id,
-                                                signature: response.razorpay_signature,
-                                                status: 'Completed'
-                                            })
-                                        })
-                                            .then(updateResponse => updateResponse.json().then(data => {
-                                                if (updateResponse.ok) {
-                                                    // Redirect to success page with the order ID
-                                                    window.location.href = `/orderConfirmation?id=${placeOrderData.orderId}`;
-                                                } else {
-                                                    console.error("Order update failed:", data);
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        title: 'Order Update Failed',
-                                                        text: data.message || 'Payment was successful, but updating the order failed. Please contact support.',
-                                                        confirmButtonColor: '#39b4ac',
-                                                    });
-                                                }
-                                            }))
-                                            .catch(error => {
-                                                console.error("Error updating order:", error);
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    title: 'Order Update Error',
-                                                    text: 'Payment was successful, but there was an error updating your order. Please contact support.',
-                                                    confirmButtonColor: '#39b4ac',
-                                                });
-                                            });
-                                    },
-                                    prefill: {
-                                        name: "Your Name",
-                                        email: "your@example.com",
-                                        contact: "1234567890"
-                                    },
-                                    theme: { color: "#39b4ac" }
-                                };
+                });
 
-                                const razorpay = new Razorpay(options);
+                if (!createPaymentResponse.ok) throw new Error('Payment order creation failed');
 
-                                razorpay.on('payment.failed', function (response) {
-                                    console.error("Payment failed:", response.error);
+                const paymentData = await createPaymentResponse.json();
 
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Payment Failed',
-                                        text: 'The payment process failed. Please try again.',
-                                        confirmButtonColor: '#39b4ac',
-                                    });
-
-                                    fetch('/update-order', {
-                                        method: "POST",
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                            orderId: placeOrderData.orderId,
-                                            status: 'Payment Failed',
-                                            paymentError: response.error
-                                        })
-                                    }).catch(error => console.error("Error updating order to 'Payment Failed':", error));
+                if (paymentData.success) {
+                    const options = {
+                        key: "rzp_test_lK0Qx1aLqyD7Ks",
+                        amount: paymentData.order.amount,
+                        currency: 'INR',
+                        name: "ChronoCraft",
+                        description: "Order Payment",
+                        order_id: paymentData.order.id,
+                        handler: async function (response) {
+                            try {
+                                const updateResponse = await fetch('/updateOrder', {
+                                    method: "POST",
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        orderId: placeOrderData.orderId,
+                                        paymentId: response.razorpay_payment_id,
+                                        razorpayOrderId: response.razorpay_order_id,
+                                        signature: response.razorpay_signature,
+                                        status: 'Completed'
+                                    })
                                 });
 
-                                razorpay.open();
-                            } else {
-                                Swal.fire("Error", "Order creation failed", "error");
+                                const updateData = await updateResponse.json();
+
+                                if (updateResponse.ok) {
+                                    window.location.href = `/orderConfirmation?id=${placeOrderData.orderId}`;
+                                } else {
+                                    console.error("Order update failed:", updateData);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Order Update Failed',
+                                        text: updateData.message || 'Payment was successful, but updating the order failed. Please contact support.',
+                                        confirmButtonColor: '#39b4ac',
+                                    });
+                                }
+                            } catch (error) {
+                                console.error("Error updating order:", error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Order Update Error',
+                                    text: 'Payment was successful, but there was an error updating your order. Please contact support.',
+                                    confirmButtonColor: '#39b4ac',
+                                });
                             }
+                        },
+                        prefill: {
+                            name: "Your Name",
+                            email: "your@example.com",
+                            contact: "1234567890"
+                        },
+                        theme: {
+                            color: "#39b4ac"
+                        },
+                        modal: {
+                            ondismiss: async () => {
+                                try {
+                                    await Swal.fire({
+                                        icon: 'error',
+                                        title: 'Payment Failed',
+                                        text: 'Online payment failed',
+                                        toast: true,
+                                    });
+
+                                    // const response = await fetch('/ondismiss', {
+                                    //     method: 'POST',
+                                    //     headers: { 'Content-Type': 'application/json' },
+                                    //     body: JSON.stringify({ orderId: placeOrderData.orderId }),
+                                    // });
+
+                                    // if (!response.ok) throw new Error('Failed to update stock');
+
+                                    window.location.href = '/';
+                                } catch (error) {
+                                    console.error('Error during modal dismiss handling:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Something went wrong while updating the stock.',
+                                    });
+                                }
+                            },
+                        }
+                    };
+
+                    const razorpay = new Razorpay(options);
+
+                    razorpay.on('payment.failed', async (response) => {
+                        console.error("Payment failed:", response.error);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Failed',
+                            text: 'The payment process failed. Please try again.',
+                            confirmButtonColor: '#39b4ac',
                         });
-                })
-                .catch(error => {
-                    console.error("Error during order placement or payment initialization:", error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Order or Payment Error',
-                        text: 'There was an error processing your order. Please try again.',
-                        confirmButtonColor: '#39b4ac',
+
+                        try {
+                            await fetch('/update-order', {
+                                method: "POST",
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    orderId: placeOrderData.orderId,
+                                    status: 'Payment Failed',
+                                    paymentError: response.error
+                                })
+                            });
+                        } catch (error) {
+                            console.error("Error updating order to 'Payment Failed':", error);
+                        }
                     });
+
+                    razorpay.open();
+                } else {
+                    Swal.fire("Error", "Order creation failed", "error");
+                }
+            } catch (error) {
+                console.error("Error during order placement or payment initialization:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Order or Payment Error',
+                    text: 'There was an error processing your order. Please try again.',
+                    confirmButtonColor: '#39b4ac',
                 });
+            }
         }
 
 
