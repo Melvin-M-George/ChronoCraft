@@ -12,8 +12,7 @@ const razorpay = new Razorpay({
 const createRazorpay = async (req, res) => {
     try {
         const { amount, discount } = req.body;
-        const amt = Number(discount ? Math.max(amount - discount, 0) : amount);
-        console.log(amt);
+        const amt = Number(discount ? Math.max(amount, 0) : amount);
         const options = {
             amount: amt * 100,
             currency: "INR",
@@ -81,7 +80,6 @@ const retryPayment = async (req, res) => {
 const updateOrder = async (req, res) => {
     try {
         const { orderId, paymentId, razorpayOrderId, signature, status } = req.body;
-        console.log(req.body);
 
 
 

@@ -24,32 +24,32 @@ const getCheckout = async (req, res) => {
 
         const wallet = await Wallet.findOne({ userId }); // Fetch wallet data
         const walletBalance = wallet?.balance || 0;
-        
-       
+
+
         const cart = await Cart.findOne({ userId: req.session.user }).populate('items.productId');
         const addresses = await Address.find({ userId: req.session.user });
 
 
-        
+
         let totalAmount = cart.items.reduce((total, item) => total + item.totalPrice, 0);
 
-        
+
         if (req.query.productId) {
             const product = await Product.findById(req.query.productId);
             if (!product) {
-              return res.redirect('/pageNotFound');
+                return res.redirect('/pageNotFound');
             }
             totalAmount = product.salePrice * qty;
-            return res.render('checkout', { cart: null, product, addresses, totalAmount, qty, walletData: { balance: walletBalance }  });
-          } else {
+            return res.render('checkout', { cart: null, product, addresses, totalAmount, qty, walletData: { balance: walletBalance } });
+        } else {
             const cartItems = await Cart.findOne({ userId: user }).populate('items.productId');
             if (!cartItems) {
-              return res.redirect('/cart');
+                return res.redirect('/cart');
             }
             totalAmount = cartItems.items.reduce((sum, item) => sum + item.totalPrice, 0);
-            return res.render('checkout', { cart: cartItems, products: cartItems.items, addresses, totalAmount, product: null, walletData: { balance: walletBalance }  });
-          }
-       
+            return res.render('checkout', { cart: cartItems, products: cartItems.items, addresses, totalAmount, product: null, walletData: { balance: walletBalance } });
+        }
+
     } catch (error) {
         console.error('Error loading checkout page:', error);
         res.status(500).send('Server Error');
@@ -58,8 +58,8 @@ const getCheckout = async (req, res) => {
 
 const placeOrder = async (req, res) => {
     try {
-        const { addressId, payment_option, singleProduct, discountInput, couponCodeInput } = req.body;
-        console.log("asad",req.body)
+        const { addressId, payment_option, singleProduct, discount, couponCodeInput } = req.body;
+        
 
         const userId = req.session.user;
         if (!userId) return res.redirect('/login');
@@ -77,7 +77,7 @@ const placeOrder = async (req, res) => {
         let orderedItems = [];
 
         const product = singleProduct ? JSON.parse(singleProduct) : null;
-        
+
         if (product) {
             orderedItems.push({
                 product: product._id,
@@ -99,10 +99,8 @@ const placeOrder = async (req, res) => {
         } else {
             return res.status(400).send("No products found to place an order");
         }
-        console.log(totalPrice);
 
-        let discount = isNaN(Number(discountInput)) || !discountInput ? 0 : Number(discountInput);
-        let finalAmount = Number(totalPrice) - discount;
+        let finalAmount = totalPrice - discount;
 
         const newOrder = new Order({
             orderedItems,
@@ -134,16 +132,16 @@ const placeOrder = async (req, res) => {
 
 
         if (payment_option === 'COD') {
-            newOrder.status = 'Pending'; 
-            newOrder.paymentStatus = 'Pending'; 
+            newOrder.status = 'Pending';
+            newOrder.paymentStatus = 'Pending';
         } else if (payment_option === 'online') {
             newOrder.status = 'Pending';
-            newOrder.paymentStatus = 'Pending'; 
+            newOrder.paymentStatus = 'Pending';
         } else if (payment_option === 'wallet') {
             newOrder.status = 'Pending';
-            newOrder.paymentStatus = 'Completed'; 
+            newOrder.paymentStatus = 'Completed';
         }
-        
+
 
         await newOrder.save();
 
@@ -166,8 +164,8 @@ const placeOrder = async (req, res) => {
 module.exports = {
     getCheckout,
     placeOrder,
-   
-    
-    
+
+
+
 }
 
