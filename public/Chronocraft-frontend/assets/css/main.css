@@ -64,6 +64,20 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  padding-top: 60px;
+}
+
 thead {
   font-weight: 600;
 }
