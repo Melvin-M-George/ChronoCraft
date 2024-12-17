@@ -38,9 +38,6 @@ app.set("views",[path.join(__dirname,"views/user"),path.join(__dirname,"views/ad
 app.use(express.static(path.join(__dirname,"public")));
 
 console.log(path.join(__dirname, "public"));
-app.use(express.static(path.join(__dirname, "ChronoCraft-frontend")));
-app.use(express.static(path.join(__dirname, "ChronoCraft-backend")));
-
 
 app.use("/",userRouter);
 app.use("/admin",adminRouter);
